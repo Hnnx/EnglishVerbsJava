@@ -93,6 +93,9 @@ public class LoginForm {
 						
 						if(count == 1) {
 							JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo sta pravilna - pozdravljen " + username, "Prijava", JOptionPane.INFORMATION_MESSAGE);
+							Ucitelj.start();
+							frame.dispose();							
+							
 						} else if(count > 1) {
 							JOptionPane.showMessageDialog(null, "Dvojno uporabnisko ime - preveri z uciteljem", "Prijava", JOptionPane.INFORMATION_MESSAGE);
 						} else {
