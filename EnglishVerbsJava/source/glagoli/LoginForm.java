@@ -20,6 +20,9 @@ public class LoginForm {
 	private JTextField userNameField;
 	private JPasswordField passwordField;
 
+	//Uporabnisko ime ki se izpisuje na vseh ostalih okencih
+	static String username = "";
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -69,10 +72,9 @@ public class LoginForm {
 			public void actionPerformed(ActionEvent e) {
 				
 					try {
-						
-						
 						//Query
 						String query = "SELECT username,password FROM users WHERE username=? AND password=?";
+						String prikaznoIme = "SELECT username FROM users";
 						
 						//Prepare Statement
 						PreparedStatement pSTMT = conn.prepareStatement(query);
@@ -85,14 +87,14 @@ public class LoginForm {
 						
 						while(rs.next()) {
 							count++;
+							username = rs.getString(1);
 							
 						}
 						
 						if(count == 1) {
-							
-							JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo sta pravilna", "Prijava", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo sta pravilna - pozdravljen " + username, "Prijava", JOptionPane.INFORMATION_MESSAGE);
 						} else if(count > 1) {
-							JOptionPane.showMessageDialog(null, "Duplicate username & password", "Prijava", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Dvojno uporabnisko ime - preveri z uciteljem", "Prijava", JOptionPane.INFORMATION_MESSAGE);
 						} else {
 							JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo nista pravilna", "Prijava", JOptionPane.INFORMATION_MESSAGE);
 						}
