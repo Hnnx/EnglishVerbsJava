@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.SystemColor;
 
 public class LoginForm {
 
@@ -50,20 +52,23 @@ public class LoginForm {
 	//Boilerplate 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
+		frame.setBounds(100, 100, 346, 247);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel userNameLabel = new JLabel("Username");
-		userNameLabel.setBounds(110, 88, 46, 14);
+		userNameLabel.setFont(new Font("Bahnschrift", Font.BOLD, 16));
+		userNameLabel.setBounds(43, 52, 97, 14);
 		frame.getContentPane().add(userNameLabel);
 		
 		JLabel passwordLabel = new JLabel("Password");
-		passwordLabel.setBounds(110, 128, 46, 14);
+		passwordLabel.setFont(new Font("Bahnschrift", Font.BOLD, 16));
+		passwordLabel.setBounds(43, 89, 97, 14);
 		frame.getContentPane().add(passwordLabel);
 		
 		userNameField = new JTextField();
-		userNameField.setBounds(166, 85, 86, 20);
+		userNameField.setBounds(150, 48, 118, 20);
 		frame.getContentPane().add(userNameField);
 		userNameField.setColumns(10);
 		
@@ -113,11 +118,11 @@ public class LoginForm {
 				
 			}
 		});
-		loginSubmitBtn.setBounds(132, 173, 89, 23);
+		loginSubmitBtn.setBounds(95, 136, 105, 38);
 		frame.getContentPane().add(loginSubmitBtn);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(166, 125, 86, 20);
+		passwordField.setBounds(150, 89, 118, 20);
 		frame.getContentPane().add(passwordField);
 	}
 }
