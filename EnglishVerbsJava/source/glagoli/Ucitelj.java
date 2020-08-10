@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 import javax.swing.JToolBar;
 import javax.swing.JButton;
@@ -13,10 +12,16 @@ import java.awt.SystemColor;
 import java.awt.Color;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.Font;
 import javax.swing.table.DefaultTableModel;
+
+import DB.sqliteConnect;
+
 import javax.swing.JScrollPane;
 
 public class Ucitelj {
@@ -36,9 +41,12 @@ public class Ucitelj {
 			}
 		});
 	}
-
-
+	
+	Connection conn = null;
+	
 	public Ucitelj() {
+		conn = sqliteConnect.poveziBazo();
+		
 		initialize();
 	}
 	private void initialize() {
@@ -59,6 +67,24 @@ public class Ucitelj {
 		toolBar.add(urediUcenca);
 		
 		JButton seznamUcencev = new JButton("Seznam Ucencev");
+		seznamUcencev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					String query = "SELECT * FROM users";
+					PreparedStatement pSTMT = conn.prepareStatement(query);
+					
+					ResultSet rs = pSTMT.executeQuery();
+					
+					
+					
+				} catch (Exception ex) {
+					// TODO: handle exception
+				}
+				
+				
+			}
+		});
 		toolBar.add(seznamUcencev);
 		
 		JButton izhodBtn = new JButton("Izhod");
