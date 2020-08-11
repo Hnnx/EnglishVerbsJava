@@ -8,10 +8,13 @@ import java.awt.BorderLayout;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.SystemColor;
 import java.awt.Color;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import java.awt.image.DataBufferUShort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +24,7 @@ import java.awt.Font;
 import javax.swing.table.DefaultTableModel;
 
 import DB.sqliteConnect;
+import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
 
@@ -53,7 +57,7 @@ public class Ucitelj {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 539, 372);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JToolBar toolBar = new JToolBar();
@@ -75,6 +79,11 @@ public class Ucitelj {
 					PreparedStatement pSTMT = conn.prepareStatement(query);
 					
 					ResultSet rs = pSTMT.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+					
+					pSTMT.close();
+					rs.close();
 					
 					
 					
