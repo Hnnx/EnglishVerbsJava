@@ -14,7 +14,7 @@ public class sqliteConnect {
 			
 			Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:"+dbName);
-			JOptionPane.showMessageDialog(null, "Povezava z bazo "+ dbName + " vzpostavljena", "Povezava OK", JOptionPane.INFORMATION_MESSAGE);
+//			JOptionPane.showMessageDialog(null, "Povezava z bazo "+ dbName + " vzpostavljena", "Povezava OK", JOptionPane.INFORMATION_MESSAGE);
 			return conn;			
 			
 			

@@ -3,15 +3,20 @@ package glagoli;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.SystemColor;
 import java.awt.Color;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import java.awt.image.DataBufferUShort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,79 +26,144 @@ import java.awt.Font;
 import javax.swing.table.DefaultTableModel;
 
 import DB.sqliteConnect;
+import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
 
 public class Ucitelj {
-	
-	private JFrame frame;
-	private JTable table;
+
+	private JFrame frmAaaa;
+	private static JTable table;
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
-					window.frame.setVisible(true);
+					window.frmAaaa.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+
+	static Connection conn = null;
+	static PreparedStatement pSTMT = null;
+	static ResultSet rs = null;
 	
-	Connection conn = null;
-	
+
 	public Ucitelj() {
 		conn = sqliteConnect.poveziBazo();
-		
+
 		initialize();
 	}
-	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
-		frame.setBounds(100, 100, 539, 372);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+
+	protected static void refresh() {
+		String query = "SELECT * FROM users";
 		
+		try {
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		} catch(Exception ex) {
+			
+		}
+	}
+	
+	
+	
+	private void initialize() {
+		frmAaaa = new JFrame();
+		frmAaaa.setTitle("UPORABNIK: " + LoginForm.username);
+		frmAaaa.getContentPane().setBackground(SystemColor.inactiveCaption);
+		frmAaaa.setBounds(100, 100, 539, 372);
+		frmAaaa.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frmAaaa.getContentPane().setLayout(new BorderLayout(0, 0));
+
 		JToolBar toolBar = new JToolBar();
 		toolBar.setBackground(Color.WHITE);
-		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
-		
+		frmAaaa.getContentPane().add(toolBar, BorderLayout.NORTH);
+
 		JButton dodajUcencaBtn = new JButton("Dodaj Ucenca");
+		dodajUcencaBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				addUcenec.start();
+
+			}
+		});
 		toolBar.add(dodajUcencaBtn);
-		
+
 		JButton urediUcenca = new JButton("Uredi Ucenca");
 		toolBar.add(urediUcenca);
+
+		
 		
 		JButton seznamUcencev = new JButton("Seznam Ucencev");
 		seznamUcencev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
 					String query = "SELECT * FROM users";
-					PreparedStatement pSTMT = conn.prepareStatement(query);
+					pSTMT = conn.prepareStatement(query);
+
+					rs = pSTMT.executeQuery();
+
+					table.setModel(DbUtils.resultSetToTableModel(rs));
 					
-					ResultSet rs = pSTMT.executeQuery();
+					pSTMT.close();
+					rs.close();
+
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
+				}
+
+			}
+		});
+
+		JButton odstraniUcencaBtn = new JButton("Odstrani Ucenca");
+		odstraniUcencaBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
 					
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					
+					int selectedRow = table.getSelectedRow();
+					String cell = table.getModel().getValueAt(selectedRow, 0).toString();
+					
+					String query = "DELETE FROM users WHERE id= " + cell;
+					
+					pSTMT = conn.prepareStatement(query);
+					pSTMT.execute();
+					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan", JOptionPane.INFORMATION_MESSAGE);
+					
+					model.removeRow(selectedRow);
 					
 					
 				} catch (Exception ex) {
-					// TODO: handle exception
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 				}
-				
-				
+
 			}
 		});
-		toolBar.add(seznamUcencev);
 		
+		
+		toolBar.add(odstraniUcencaBtn);
+		toolBar.add(seznamUcencev);
+
 		JButton izhodBtn = new JButton("Izhod");
 		toolBar.add(izhodBtn);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
-		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-		
+		frmAaaa.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
 		table = new JTable();
+		table.setCellSelectionEnabled(true);
+		table.setColumnSelectionAllowed(true);
 		scrollPane.setViewportView(table);
 	}
 }
