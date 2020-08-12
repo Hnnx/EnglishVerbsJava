@@ -4,7 +4,7 @@ import java.sql.*;
 import javax.swing.*;
 
 
-public class sqliteConnect {
+public class SqliteConnect {
 	
 	static String dbName = "vilka.db";
 	

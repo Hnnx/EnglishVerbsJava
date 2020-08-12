@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 
-import DB.sqliteConnect;
+import DB.SqliteConnect;
 
 import javax.swing.JButton;
 import java.awt.SystemColor;
@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
-public class addUcenec {
+public class AddUcenec {
 
 	private JFrame frame;
 	private JTextField uporabniskoTxt;
@@ -29,7 +29,7 @@ public class addUcenec {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					addUcenec window = new addUcenec();
+					AddUcenec window = new AddUcenec();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,7 +39,7 @@ public class addUcenec {
 	}
 
 	
-	public addUcenec() {
+	public AddUcenec() {
 		initialize();
 	}
 
@@ -72,7 +72,7 @@ public class addUcenec {
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				Connection conn = sqliteConnect.poveziBazo();
+				Connection conn = SqliteConnect.poveziBazo();
 				
 				try {
 				String query = "INSERT INTO users (username, password) VALUES (?,?)";
