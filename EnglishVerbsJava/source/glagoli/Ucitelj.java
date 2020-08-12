@@ -9,23 +9,19 @@ import java.awt.BorderLayout;
 
 import javax.swing.JToolBar;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import java.awt.SystemColor;
 import java.awt.Color;
-import javax.swing.JPanel;
 import java.awt.event.ActionListener;
-import java.awt.image.DataBufferUShort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import java.awt.Font;
 import javax.swing.table.DefaultTableModel;
 
-import DB.sqliteConnect;
+import DB.SqliteConnect;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
@@ -54,7 +50,7 @@ public class Ucitelj {
 	
 
 	public Ucitelj() {
-		conn = sqliteConnect.poveziBazo();
+		conn = SqliteConnect.poveziBazo();
 
 		initialize();
 	}
@@ -89,8 +85,7 @@ public class Ucitelj {
 		dodajUcencaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				addUcenec.start();
-
+				AddUcenec.start();
 			}
 		});
 		toolBar.add(dodajUcencaBtn);
