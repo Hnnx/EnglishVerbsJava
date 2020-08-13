@@ -8,9 +8,6 @@ public class UcenecWindow {
 
 	private JFrame frmUporabnik;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

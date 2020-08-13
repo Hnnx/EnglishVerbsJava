@@ -47,7 +47,6 @@ public class Ucitelj {
 	static Connection conn = null;
 	static PreparedStatement pSTMT = null;
 	static ResultSet rs = null;
-	
 
 	public Ucitelj() {
 		conn = SqliteConnect.poveziBazo();
@@ -57,18 +56,16 @@ public class Ucitelj {
 
 	protected static void refresh() {
 		String query = "SELECT * FROM users";
-		
+
 		try {
 			pSTMT = conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
-		} catch(Exception ex) {
-			
+		} catch (Exception ex) {
+
 		}
 	}
-	
-	
-	
+
 	private void initialize() {
 		frmAaaa = new JFrame();
 		frmAaaa.setTitle("UPORABNIK: " + LoginForm.username);
@@ -93,8 +90,6 @@ public class Ucitelj {
 		JButton urediUcenca = new JButton("Uredi Ucenca");
 		toolBar.add(urediUcenca);
 
-		
-		
 		JButton seznamUcencev = new JButton("Seznam Ucencev");
 		seznamUcencev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -106,7 +101,7 @@ public class Ucitelj {
 					rs = pSTMT.executeQuery();
 
 					table.setModel(DbUtils.resultSetToTableModel(rs));
-					
+
 					pSTMT.close();
 					rs.close();
 
@@ -123,21 +118,21 @@ public class Ucitelj {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
+
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
-					
+
 					int selectedRow = table.getSelectedRow();
 					String cell = table.getModel().getValueAt(selectedRow, 0).toString();
-					
+
 					String query = "DELETE FROM users WHERE id= " + cell;
-					
+
 					pSTMT = conn.prepareStatement(query);
 					pSTMT.execute();
-					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan", JOptionPane.INFORMATION_MESSAGE);
-					
+					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
+							JOptionPane.INFORMATION_MESSAGE);
+
 					model.removeRow(selectedRow);
-					
-					
+
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
@@ -145,8 +140,7 @@ public class Ucitelj {
 
 			}
 		});
-		
-		
+
 		toolBar.add(odstraniUcencaBtn);
 		toolBar.add(seznamUcencev);
 

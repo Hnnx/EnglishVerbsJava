@@ -2,7 +2,6 @@ package glagoli;
 
 import java.awt.EventQueue;
 import java.sql.*;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -28,6 +27,7 @@ public class LoginForm {
 	// Uporabnisko ime ki se izpisuje na vseh ostalih okencih
 	static String username = "";
 
+	//main won't run on second branch :((
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -95,7 +95,6 @@ public class LoginForm {
 						username = rs.getString(1);
 
 					}
-					
 
 					if (count == 1 && username.equals("test")) {
 						JOptionPane.showMessageDialog(null,
@@ -104,14 +103,14 @@ public class LoginForm {
 						Ucitelj.start();
 						frame.dispose();
 
-					} else if( count == 1) {
+					} else if (count == 1) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + username, "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
 						UcenecWindow.start();
 						frame.dispose();
 					}
-					
+
 					else if (count > 1) {
 						JOptionPane.showMessageDialog(null, "Dvojno uporabnisko ime - preveri z uciteljem", "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
