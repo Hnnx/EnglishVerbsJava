@@ -145,6 +145,27 @@ public class Ucitelj {
 		toolBar.add(seznamUcencev);
 
 		JButton izhodBtn = new JButton("Izhod");
+		izhodBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					int input = JOptionPane.showConfirmDialog(null, "Ali zalite zapreti program?", "Izhod", JOptionPane.INFORMATION_MESSAGE);
+					
+					if(input == 0) {						
+						System.exit(0);					
+					} 					
+					
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(", JOptionPane.WARNING_MESSAGE);
+				}
+				
+			}
+		});
+		
+		
 		toolBar.add(izhodBtn);
 
 		JScrollPane scrollPane = new JScrollPane();
