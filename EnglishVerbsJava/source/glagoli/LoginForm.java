@@ -27,7 +27,6 @@ public class LoginForm {
 	// Uporabnisko ime ki se izpisuje na vseh ostalih okencih
 	static String username = "";
 
-	//main won't run on second branch :((
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
