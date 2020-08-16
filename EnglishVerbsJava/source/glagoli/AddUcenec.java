@@ -72,9 +72,19 @@ public class AddUcenec {
 				Connection conn = SqliteConnect.poveziBazo();
 
 				try {
+					
+					
+					
 					String query = "INSERT INTO users (username, password) VALUES (?,?)";
 
 					PreparedStatement pSTMT = conn.prepareStatement(query);
+					
+					//VALIDATION
+					if( uporabniskoTxt.getText().length() > 16) {
+						JOptionPane.showMessageDialog(null, "Shranjeno", "Uporabnisko ime mora vsebovati najvec 16 znakov",
+								JOptionPane.INFORMATION_MESSAGE);
+						
+					}
 
 					pSTMT.setString(1, uporabniskoTxt.getText());
 					pSTMT.setString(2, pwTxt.getText());
