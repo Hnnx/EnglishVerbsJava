@@ -81,6 +81,8 @@ public class AddUcenec {
 					
 					//VALIDATION
 					if( uporabniskoTxt.getText().length() > 16) {
+						JOptionPane.showMessageDialog(null, "Shranjeno", "Uporabnisko ime mora vsebovati najvec 16 znakov",
+								JOptionPane.INFORMATION_MESSAGE);
 						
 					}
 
