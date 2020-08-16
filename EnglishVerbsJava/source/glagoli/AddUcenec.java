@@ -72,9 +72,17 @@ public class AddUcenec {
 				Connection conn = SqliteConnect.poveziBazo();
 
 				try {
+					
+					
+					
 					String query = "INSERT INTO users (username, password) VALUES (?,?)";
 
 					PreparedStatement pSTMT = conn.prepareStatement(query);
+					
+					//VALIDATION
+					if( uporabniskoTxt.getText().length() > 16) {
+						
+					}
 
 					pSTMT.setString(1, uporabniskoTxt.getText());
 					pSTMT.setString(2, pwTxt.getText());
