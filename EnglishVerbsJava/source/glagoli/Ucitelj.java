@@ -14,7 +14,6 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
@@ -44,12 +43,11 @@ public class Ucitelj {
 		});
 	}
 
-	static Connection conn = null;
 	static PreparedStatement pSTMT = null;
 	static ResultSet rs = null;
 
 	public Ucitelj() {
-		conn = SqliteConnect.poveziBazo();
+		SqliteConnect.conn = SqliteConnect.poveziBazo();
 
 		initialize();
 	}
@@ -58,7 +56,7 @@ public class Ucitelj {
 		String query = "SELECT * FROM users";
 
 		try {
-			pSTMT = conn.prepareStatement(query);
+			pSTMT = SqliteConnect.conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
 		} catch (Exception ex) {
@@ -68,7 +66,7 @@ public class Ucitelj {
 
 	private void initialize() {
 		frmAaaa = new JFrame();
-		frmAaaa.setTitle("UPORABNIK: " + LoginForm.username);
+		frmAaaa.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
 		frmAaaa.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frmAaaa.setBounds(100, 100, 539, 372);
 		frmAaaa.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -96,7 +94,7 @@ public class Ucitelj {
 
 				try {
 					String query = "SELECT * FROM users";
-					pSTMT = conn.prepareStatement(query);
+					pSTMT = SqliteConnect.conn.prepareStatement(query);
 
 					rs = pSTMT.executeQuery();
 
@@ -126,7 +124,7 @@ public class Ucitelj {
 
 					String query = "DELETE FROM users WHERE id= " + cell;
 
-					pSTMT = conn.prepareStatement(query);
+					pSTMT = SqliteConnect.conn.prepareStatement(query);
 					pSTMT.execute();
 					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
 							JOptionPane.INFORMATION_MESSAGE);
