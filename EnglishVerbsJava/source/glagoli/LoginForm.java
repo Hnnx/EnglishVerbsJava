@@ -77,16 +77,16 @@ public class LoginForm {
 
 				try {
 					
-					uporabniskoIme = userNameField.getText();
-					String uporabniskoGeslo = passwordField.getPassword().toString();
+					uporabniskoIme = userNameField.getText().toLowerCase();
+					String uporabniskoGeslo = String.valueOf( passwordField.getPassword() );
 					
 					// Query
 					String query = "SELECT username,password FROM users WHERE username=? AND password=?";
 
 					// Prepare Statement
 					PreparedStatement pSTMT = SqliteConnect.conn.prepareStatement(query);
-					pSTMT.setString(1, uporabniskoIme);
-					pSTMT.setString(2, uporabniskoGeslo);
+					pSTMT.setString(1, uporabniskoIme.toLowerCase());
+					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
 
 					// Result Set
 					ResultSet rs = pSTMT.executeQuery();

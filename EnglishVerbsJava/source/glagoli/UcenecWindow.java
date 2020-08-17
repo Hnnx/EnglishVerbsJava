@@ -27,7 +27,7 @@ public class UcenecWindow {
 
 	private void initialize() {
 		frmUporabnik = new JFrame();
-		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.username);
+		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme);
 		frmUporabnik.setBounds(100, 100, 969, 638);
 		frmUporabnik.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmUporabnik.getContentPane().setLayout(null);

@@ -96,8 +96,8 @@ public class AddUcenec {
 								JOptionPane.WARNING_MESSAGE);
 					} else {
 						
-						pSTMT.setString(1, uporabnisko);
-						pSTMT.setString(2, password);
+						pSTMT.setString(1, uporabnisko.toLowerCase());
+						pSTMT.setString(2, password.toLowerCase());
 						
 						pSTMT.execute();
 						
