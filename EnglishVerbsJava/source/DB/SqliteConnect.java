@@ -7,6 +7,11 @@ public class SqliteConnect {
 
 	static String dbName = "vilka.db";
 	public static Connection conn = null;
+	public String query = null;
+	public ResultSet rs = null;
+	public PreparedStatement pSTMT = null;
+	public Statement stmt = null;
+	
 
 	public static Connection poveziBazo() {
 

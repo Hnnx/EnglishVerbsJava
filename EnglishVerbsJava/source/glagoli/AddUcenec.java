@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.awt.event.ActionEvent;
 
-public class AddUcenec {
+public class AddUcenec extends SqliteConnect{
 
 	private JFrame frame;
 	private JTextField uporabniskoTxt;
@@ -80,7 +80,7 @@ public class AddUcenec {
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				SqliteConnect.conn = SqliteConnect.poveziBazo();
+				conn = poveziBazo();
 				
 				String uporabnisko = uporabniskoTxt.getText();
 				String password = pwTxt.getText();
@@ -88,7 +88,7 @@ public class AddUcenec {
 				try {
 					String query = "INSERT INTO users (username, password) VALUES (?,?)";
 
-					PreparedStatement pSTMT = SqliteConnect.conn.prepareStatement(query);
+					PreparedStatement pSTMT = conn.prepareStatement(query);
 					
 					//VALIDATION
 					if( ! isValidUsername(uporabnisko) && ! isValidEmail(password) ) {

@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.SystemColor;
 
-public class LoginForm {
+public class LoginForm extends SqliteConnect {
 
 	// Open Frame, WindowBuilder Boiler Plate
 	private JFrame frame;
@@ -45,7 +45,7 @@ public class LoginForm {
 		initialize();
 
 		// Connection to DB
-		SqliteConnect.conn = SqliteConnect.poveziBazo();
+		conn = poveziBazo();
 	}
 
 	// Boilerplate
@@ -84,7 +84,7 @@ public class LoginForm {
 					String query = "SELECT username,password FROM users WHERE username=? AND password=?";
 
 					// Prepare Statement
-					PreparedStatement pSTMT = SqliteConnect.conn.prepareStatement(query);
+					PreparedStatement pSTMT = conn.prepareStatement(query);
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
 					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
 

@@ -25,7 +25,7 @@ import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
 
-public class Ucitelj {
+public class Ucitelj extends SqliteConnect{
 
 	private JFrame frmAaaa;
 	private static JTable table;
@@ -47,7 +47,7 @@ public class Ucitelj {
 	static ResultSet rs = null;
 
 	public Ucitelj() {
-		SqliteConnect.conn = SqliteConnect.poveziBazo();
+		conn = poveziBazo();
 
 		initialize();
 	}
@@ -56,7 +56,7 @@ public class Ucitelj {
 		String query = "SELECT * FROM users";
 
 		try {
-			pSTMT = SqliteConnect.conn.prepareStatement(query);
+			pSTMT = conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
 		} catch (Exception ex) {
@@ -94,7 +94,7 @@ public class Ucitelj {
 
 				try {
 					String query = "SELECT * FROM users";
-					pSTMT = SqliteConnect.conn.prepareStatement(query);
+					pSTMT = conn.prepareStatement(query);
 
 					rs = pSTMT.executeQuery();
 
@@ -124,7 +124,7 @@ public class Ucitelj {
 
 					String query = "DELETE FROM users WHERE id= " + cell;
 
-					pSTMT = SqliteConnect.conn.prepareStatement(query);
+					pSTMT = conn.prepareStatement(query);
 					pSTMT.execute();
 					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
 							JOptionPane.INFORMATION_MESSAGE);
