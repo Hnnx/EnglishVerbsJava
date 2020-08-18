@@ -17,15 +17,13 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.SystemColor;
 
-public class LoginForm {
+public class LoginForm extends SqliteConnect {
 
 	// Open Frame, WindowBuilder Boiler Plate
 	private JFrame frame;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
 
-	// Uporabnisko ime ki se izpisuje na vseh ostalih okencih
-	static String username = "";
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -40,14 +38,14 @@ public class LoginForm {
 		});
 	}
 
-	Connection conn = null;
+	static String uporabniskoIme = null;
 
 	// Constructor (Boilerplate)
 	public LoginForm() {
 		initialize();
 
 		// Connection to DB
-		conn = SqliteConnect.poveziBazo();
+		conn = poveziBazo();
 	}
 
 	// Boilerplate
@@ -78,33 +76,37 @@ public class LoginForm {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
+					
+					uporabniskoIme = userNameField.getText().toLowerCase();
+					String uporabniskoGeslo = String.valueOf( passwordField.getPassword() );
+					
 					// Query
 					String query = "SELECT username,password FROM users WHERE username=? AND password=?";
 
 					// Prepare Statement
 					PreparedStatement pSTMT = conn.prepareStatement(query);
-					pSTMT.setString(1, userNameField.getText());
-					pSTMT.setString(2, passwordField.getText());
+					pSTMT.setString(1, uporabniskoIme.toLowerCase());
+					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
 
 					// Result Set
 					ResultSet rs = pSTMT.executeQuery();
 					int count = 0;
 					while (rs.next()) {
 						count++;
-						username = rs.getString(1);
+						uporabniskoIme = rs.getString(1);
 
 					}
 
-					if (count == 1 && username.equals("test")) {
+					if (count == 1 && uporabniskoIme.toLowerCase().equals("test")) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + username, "Prijava",
+								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme, "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
 						Ucitelj.start();
 						frame.dispose();
 
 					} else if (count == 1) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + username, "Prijava",
+								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme, "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
 						UcenecWindow.start();
 						frame.dispose();

@@ -14,7 +14,6 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
@@ -26,7 +25,7 @@ import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
 
-public class Ucitelj {
+public class Ucitelj extends SqliteConnect{
 
 	private JFrame frmAaaa;
 	private static JTable table;
@@ -44,12 +43,11 @@ public class Ucitelj {
 		});
 	}
 
-	static Connection conn = null;
 	static PreparedStatement pSTMT = null;
 	static ResultSet rs = null;
 
 	public Ucitelj() {
-		conn = SqliteConnect.poveziBazo();
+		conn = poveziBazo();
 
 		initialize();
 	}
@@ -68,7 +66,7 @@ public class Ucitelj {
 
 	private void initialize() {
 		frmAaaa = new JFrame();
-		frmAaaa.setTitle("UPORABNIK: " + LoginForm.username);
+		frmAaaa.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
 		frmAaaa.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frmAaaa.setBounds(100, 100, 539, 372);
 		frmAaaa.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
