@@ -365,6 +365,8 @@ public class UcenecWindow extends SqliteConnect {
 		progressPanel.add(progressBarLabel);
 		
 		progressBar = new JProgressBar();
+		progressBar.setValue(50);
 		progressPanel.add(progressBar);
+		
 	}
 }
