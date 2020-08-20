@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 
 import DB.SqliteConnect;
+import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
@@ -21,6 +22,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
+import javax.swing.JTable;
 
 public class UcenecWindow extends SqliteConnect {
 
@@ -62,9 +64,9 @@ public class UcenecWindow extends SqliteConnect {
 	private JTextField textField_34;
 	private JTextField textField_35;
 	private JPanel progressPanel;
-	private JProgressBar progressBar;
-	private JLabel progressBarLabel;
 	private JButton izpisiGlagoleBtn;
+	private JTable table;
+	private JButton btnNewButton;
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -123,6 +125,7 @@ public class UcenecWindow extends SqliteConnect {
 					ArrayList<String> tenseArr = new ArrayList<String>();
 					ArrayList<String> partArr = new ArrayList<String>();
 					
+					
 					while(rst.next()) {
 						
 						pomen = rst.getString(1);
@@ -145,18 +148,21 @@ public class UcenecWindow extends SqliteConnect {
 					pomenR4.setText(pomenArr.get(3));
 					pomenR5.setText(pomenArr.get(4));
 					pomenR6.setText(pomenArr.get(5));
+						
 					
 					glagolR1.setText(glagolArr.get(0));
 					glagolR2.setText(glagolArr.get(1));
 					glagolR3.setText(glagolArr.get(2));
 					glagolR4.setText(glagolArr.get(3));
 					glagolR5.setText(glagolArr.get(4));
+					glagolR6.setText(glagolArr.get(5));
 					
 					tenseR1.setText(tenseArr.get(0));
 					tenseR2.setText(tenseArr.get(1));
 					tenseR3.setText(tenseArr.get(2));
 					tenseR4.setText(tenseArr.get(3));
 					tenseR5.setText(tenseArr.get(4));
+					tenseR6.setText(tenseArr.get(5));
 					
 					partR1.setText(partArr.get(0));
 					partR2.setText(partArr.get(1));
@@ -166,14 +172,6 @@ public class UcenecWindow extends SqliteConnect {
 					partR6.setText(partArr.get(5));
 					
 					
-					
-					System.out.println(pomenArr);
-					System.out.println(glagolArr);
-					System.out.println(tenseArr);
-					System.out.println(partArr);
-					
-					
-					 
 				} catch(Exception ex) {
 					System.out.println("error" + ex);
 					
@@ -193,6 +191,26 @@ public class UcenecWindow extends SqliteConnect {
 			}
 		});
 		bottomPanelZaGumb.add(izhod);
+		
+		btnNewButton = new JButton("TableBtn");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					
+					String query = "SELECT * FROM glagoli";
+					pSTMT = conn.prepareStatement(query);
+
+					rs = pSTMT.executeQuery();
+
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+					
+				} catch (Exception ex) {
+					
+				}
+			}
+		});
+		bottomPanelZaGumb.add(btnNewButton);
 		
 		JPanel mainPanel = new JPanel();
 		frmUporabnik.getContentPane().add(mainPanel, BorderLayout.CENTER);
@@ -361,12 +379,8 @@ public class UcenecWindow extends SqliteConnect {
 		progressPanel = new JPanel();
 		frmUporabnik.getContentPane().add(progressPanel, BorderLayout.EAST);
 		
-		progressBarLabel = new JLabel("Tocke");
-		progressPanel.add(progressBarLabel);
-		
-		progressBar = new JProgressBar();
-		progressBar.setValue(50);
-		progressPanel.add(progressBar);
+		table = new JTable();
+		progressPanel.add(table);
 		
 	}
 }
