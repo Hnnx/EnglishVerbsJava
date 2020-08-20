@@ -85,9 +85,6 @@ public class Ucitelj extends SqliteConnect{
 		});
 		toolBar.add(dodajUcencaBtn);
 
-		JButton urediUcenca = new JButton("Uredi Ucenca");
-		toolBar.add(urediUcenca);
-
 		JButton seznamUcencev = new JButton("Seznam Ucencev");
 		seznamUcencev.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -138,6 +135,21 @@ public class Ucitelj extends SqliteConnect{
 
 			}
 		});
+		
+		JButton dodajGlagolBtn = new JButton("Dodaj glagol");
+		dodajGlagolBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					
+					AddGlagol.start();					
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		toolBar.add(dodajGlagolBtn);
 
 		toolBar.add(odstraniUcencaBtn);
 		toolBar.add(seznamUcencev);
@@ -145,7 +157,6 @@ public class Ucitelj extends SqliteConnect{
 		JButton izhodBtn = new JButton("Izhod");
 		izhodBtn.addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					
@@ -165,7 +176,7 @@ public class Ucitelj extends SqliteConnect{
 		
 		
 		toolBar.add(izhodBtn);
-
+		
 		JScrollPane scrollPane = new JScrollPane();
 		frmAaaa.getContentPane().add(scrollPane, BorderLayout.CENTER);
 

@@ -41,13 +41,13 @@ public class AddUcenec extends SqliteConnect{
 	
 	private static boolean isValidEmail(String mail) {
 		
-		return mail.length() > 4 && mail.length() < 20 ? true:false;
+		return mail.length() >= 4 && mail.length() <= 20 ? true:false;
 		
 	}
 	
 	private static boolean isValidUsername(String username) {
 		
-		return username.length() > 3 && username.length() > 16 ? true:false;
+		return username.length() >= 3 && username.length() >= 16 ? true:false;
 	}
 
 	private void initialize() {
