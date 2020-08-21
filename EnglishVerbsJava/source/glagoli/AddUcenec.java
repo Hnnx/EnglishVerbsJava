@@ -120,7 +120,18 @@ public class AddUcenec extends SqliteConnect{
 
 			}
 		});
-		addBtn.setBounds(66, 66, 89, 23);
+		addBtn.setBounds(127, 69, 86, 23);
 		frame.getContentPane().add(addBtn);
+		
+		JButton nazajBtn = new JButton("NAZAJ");
+		nazajBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				frame.dispose();
+				
+			}
+		});
+		nazajBtn.setBounds(20, 66, 81, 23);
+		frame.getContentPane().add(nazajBtn);
 	}
 }
