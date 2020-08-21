@@ -135,7 +135,7 @@ public class AddGlagol extends SqliteConnect {
 
 			}
 		});
-		dodajGlagolBtn.setBackground(new Color(50, 205, 50));
+		dodajGlagolBtn.setBackground(SystemColor.activeCaption);
 		dodajGlagolBtn.setBounds(144, 148, 89, 23);
 		frame.getContentPane().add(dodajGlagolBtn);
 
