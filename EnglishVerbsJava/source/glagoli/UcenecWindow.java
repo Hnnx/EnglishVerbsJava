@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.JPanel;
 import javax.sound.midi.Soundbank;
 import javax.swing.JButton;
@@ -67,6 +69,13 @@ public class UcenecWindow extends SqliteConnect {
 	private JButton izpisiGlagoleBtn;
 	private JTable table;
 	private JButton btnNewButton;
+	private static ArrayList<String> pomenArr = new ArrayList<String>();
+	private static ArrayList<String> glagolArr = new ArrayList<String>();
+	private static ArrayList<String> tenseArr = new ArrayList<String>();
+	private static 	ArrayList<String> partArr = new ArrayList<String>();
+	
+	static Color incorrect = new Color(255,102,102);
+	static Color correct = new Color(102,255,102);
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -83,6 +92,24 @@ public class UcenecWindow extends SqliteConnect {
 
 	public UcenecWindow() {
 		initialize();
+	}
+	
+	private static void check(String input, String expected, JTextField cell) {
+		
+		if(input.isEmpty() || input.isBlank()  || expected.isBlank() || expected.isEmpty()) {
+			cell.setBackground(Color.gray);
+			cell.setEnabled(false);
+			
+		} else if ( ! input.equals(expected)) {
+			cell.setEnabled(false);
+			cell.setBackground(incorrect);
+			cell.setForeground(Color.black);
+		} else {
+			cell.setEnabled(true);
+			cell.setBackground(correct);
+		}
+		
+		
 	}
 
 	private void initialize() {
@@ -120,10 +147,6 @@ public class UcenecWindow extends SqliteConnect {
 					String tense = null;
 					String part = null;
 					
-					ArrayList<String> pomenArr = new ArrayList<String>();
-					ArrayList<String> glagolArr = new ArrayList<String>();
-					ArrayList<String> tenseArr = new ArrayList<String>();
-					ArrayList<String> partArr = new ArrayList<String>();
 					
 					
 					while(rst.next()) {
@@ -180,7 +203,28 @@ public class UcenecWindow extends SqliteConnect {
 		});
 		bottomPanelZaGumb.add(izpisiGlagoleBtn);
 		
+		
+		
 		JButton preveriBtn = new JButton("Preveri");
+		preveriBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				if(!pomenR1.getText().isBlank() || pomenArr.get(0).isBlank()) {
+					
+					check(pomenR1.getText(), pomenArr.get(0), pomenR1);
+				}
+				else {
+					pomenR1.setEnabled(false);
+					pomenR1.setBackground(incorrect);
+					
+				}
+				
+				
+				
+				
+			}
+		});
 		bottomPanelZaGumb.add(preveriBtn);
 		
 		JButton izhod = new JButton("Izhod");
