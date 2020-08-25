@@ -29,30 +29,30 @@ import javax.swing.JTable;
 public class UcenecWindow extends SqliteConnect {
 
 	private JFrame frmUporabnik;
-	private JTextField pomenR1;
-	private JTextField glagolR1;
-	private JTextField tenseR1;
-	private JTextField partR1;
-	private JTextField pomenR2;
-	private JTextField glagolR2;
-	private JTextField tenseR2;
-	private JTextField partR2;
-	private JTextField pomenR3;
-	private JTextField glagolR3;
-	private JTextField tenseR3;
-	private JTextField partR3;
-	private JTextField pomenR4;
-	private JTextField glagolR4;
-	private JTextField tenseR4;
-	private JTextField partR4;
-	private JTextField pomenR5;
-	private JTextField glagolR5;
-	private JTextField tenseR5;
-	private JTextField partR5;
-	private JTextField pomenR6;
-	private JTextField glagolR6;
-	private JTextField tenseR6;
-	private JTextField partR6;
+	static private JTextField pomenR1;
+	static private JTextField glagolR1;
+	static private JTextField tenseR1;
+	static private JTextField partR1;
+	static private JTextField pomenR2;
+	static private JTextField glagolR2;
+	static private JTextField tenseR2;
+	static private JTextField partR2;
+	static private JTextField pomenR3;
+	static private JTextField glagolR3;
+	static private JTextField tenseR3;
+	static private JTextField partR3;
+	static private JTextField pomenR4;
+	static private JTextField glagolR4;
+	static private JTextField tenseR4;
+	static private JTextField partR4;
+	static private JTextField pomenR5;
+	static private JTextField glagolR5;
+	static private JTextField tenseR5;
+	static private JTextField partR5;
+	static private JTextField pomenR6;
+	static private JTextField glagolR6;
+	static private JTextField tenseR6;
+	static private JTextField partR6;
 	private JTextField textField_24;
 	private JTextField textField_25;
 	private JTextField textField_26;
@@ -73,6 +73,7 @@ public class UcenecWindow extends SqliteConnect {
 	private static ArrayList<String> glagolArr = new ArrayList<String>();
 	private static ArrayList<String> tenseArr = new ArrayList<String>();
 	private static 	ArrayList<String> partArr = new ArrayList<String>();
+	private static ArrayList<JTextField> fieldsArr = new ArrayList<JTextField>();
 	
 	static Color incorrect = new Color(255,102,102);
 	static Color correct = new Color(102,255,102);
@@ -92,6 +93,13 @@ public class UcenecWindow extends SqliteConnect {
 
 	public UcenecWindow() {
 		initialize();
+	}
+	
+	private static void fillField() {
+		
+		fieldsArr.add(pomenR1);
+		fieldsArr.add(pomenR2);
+		
 	}
 	
 	private static void check(String input, String expected, JTextField cell) {
