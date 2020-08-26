@@ -53,9 +53,9 @@ public class UcenecWindow extends SqliteConnect {
 	static private JTextField glagolR6;
 	static private JTextField tenseR6;
 	static private JTextField partR6;
-	private JTextField textField_24;
-	private JTextField textField_25;
-	private JTextField textField_26;
+	static private JTextField textField_24;
+	static private JTextField textField_25;
+	static private JTextField textField_26;
 	private JTextField textField_27;
 	private JTextField textField_28;
 	private JTextField textField_29;
