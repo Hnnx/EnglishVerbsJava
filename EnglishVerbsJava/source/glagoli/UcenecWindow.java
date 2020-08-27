@@ -95,6 +95,8 @@ public class UcenecWindow extends SqliteConnect {
 		initialize();
 	}
 	
+	
+	//Starting fill field method, later implement check() method which runs on fieldsArray
 	private static void fillField() {
 		
 		fieldsArr.add(pomenR1);
