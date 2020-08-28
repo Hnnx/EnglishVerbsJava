@@ -95,12 +95,17 @@ public class UcenecWindow extends SqliteConnect {
 		initialize();
 	}
 	
+	
+	//Starting fill field method, later implement check() method which runs on fieldsArray
 	private static void fillField() {
 		
 		fieldsArr.add(pomenR1);
 		fieldsArr.add(pomenR2);
+		fieldsArr.add(pomenR3);
 		
 	}
+	
+	
 	
 	private static void check(String input, String expected, JTextField cell) {
 		
@@ -135,6 +140,8 @@ public class UcenecWindow extends SqliteConnect {
 		
 		JPanel bottomPanelZaGumb = new JPanel();
 		frmUporabnik.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
+		
+		System.out.println(fieldsArr);
 		
 		izpisiGlagoleBtn = new JButton("New button");
 		izpisiGlagoleBtn.addActionListener(new ActionListener() {
