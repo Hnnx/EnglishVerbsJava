@@ -141,7 +141,7 @@ public class UcenecWindow extends SqliteConnect {
 		JPanel bottomPanelZaGumb = new JPanel();
 		frmUporabnik.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
 		
-		System.out.println(fieldsArr);
+		System.out.println(fieldsArr.get(0));
 		
 		izpisiGlagoleBtn = new JButton("New button");
 		izpisiGlagoleBtn.addActionListener(new ActionListener() {
