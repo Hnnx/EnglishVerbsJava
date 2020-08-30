@@ -180,6 +180,11 @@ public class UcenecWindow extends SqliteConnect {
 						
 					}
 					
+					
+					
+					
+					//try with array
+					
 					pomenR1.setText(pomenArr.get(0));
 					pomenR2.setText(pomenArr.get(1));
 					pomenR3.setText(pomenArr.get(2));
@@ -237,7 +242,6 @@ public class UcenecWindow extends SqliteConnect {
 				
 				
 				
-				
 			}
 		});
 		bottomPanelZaGumb.add(preveriBtn);
@@ -249,6 +253,8 @@ public class UcenecWindow extends SqliteConnect {
 				System.exit(0);
 			}
 		});
+		
+		
 		bottomPanelZaGumb.add(izhod);
 		
 		btnNewButton = new JButton("TableBtn");
