@@ -253,6 +253,8 @@ public class UcenecWindow extends SqliteConnect {
 				System.exit(0);
 			}
 		});
+		
+		
 		bottomPanelZaGumb.add(izhod);
 		
 		btnNewButton = new JButton("TableBtn");
