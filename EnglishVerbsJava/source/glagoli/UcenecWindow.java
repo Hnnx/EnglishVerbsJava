@@ -242,7 +242,6 @@ public class UcenecWindow extends SqliteConnect {
 				
 				
 				
-				
 			}
 		});
 		bottomPanelZaGumb.add(preveriBtn);
