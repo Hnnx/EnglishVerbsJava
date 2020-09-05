@@ -24,16 +24,10 @@ public class UcenecWindow2 {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public UcenecWindow2() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
@@ -41,3 +35,4 @@ public class UcenecWindow2 {
 	}
 
 }
+	
