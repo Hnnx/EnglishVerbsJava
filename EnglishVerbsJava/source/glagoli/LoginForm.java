@@ -29,8 +29,14 @@ public class LoginForm extends SqliteConnect {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					/*
 					LoginForm window = new LoginForm();
 					window.frame.setVisible(true);
+					*/
+					
+					UcenecWindow.start();
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

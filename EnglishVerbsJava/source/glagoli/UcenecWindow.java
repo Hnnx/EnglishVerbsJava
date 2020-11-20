@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.JPanel;
-import javax.sound.midi.Soundbank;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -20,10 +19,8 @@ import net.proteanit.sql.DbUtils;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 
 public class UcenecWindow extends SqliteConnect {
@@ -107,6 +104,26 @@ public class UcenecWindow extends SqliteConnect {
 					fieldArray.add(glagolR8);
 					fieldArray.add(glagolR9);
 					
+					fieldArray.add(tenseR1);
+					fieldArray.add(tenseR2);
+					fieldArray.add(tenseR3);
+					fieldArray.add(tenseR4);
+					fieldArray.add(tenseR5);
+					fieldArray.add(tenseR6);
+					fieldArray.add(tenseR7);
+					fieldArray.add(tenseR8);
+					fieldArray.add(tenseR9);
+					
+					fieldArray.add(partR1);
+					fieldArray.add(partR2);
+					fieldArray.add(partR3);
+					fieldArray.add(partR4);
+					fieldArray.add(partR5);
+					fieldArray.add(partR6);
+					fieldArray.add(partR7);
+					fieldArray.add(partR8);
+					fieldArray.add(partR9);
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -178,7 +195,6 @@ public class UcenecWindow extends SqliteConnect {
 
 				try {
 
-					conn = poveziBazo();
 					pstmt = conn.prepareStatement(myQuery);
 					rst = pstmt.executeQuery();
 					String pomen = null;
@@ -202,36 +218,32 @@ public class UcenecWindow extends SqliteConnect {
 
 					}
 					
-					//PROBLEM #2
-
-					pomenR1.setText(pomenArr.get(0));
-					pomenR2.setText(pomenArr.get(1));
-					pomenR3.setText(pomenArr.get(2));
-					pomenR4.setText(pomenArr.get(3));
-					pomenR5.setText(pomenArr.get(4));
-					pomenR6.setText(pomenArr.get(5));
-					pomenR7.setText(pomenArr.get(6));
-
-					glagolR1.setText(glagolArr.get(0));
-					glagolR2.setText(glagolArr.get(1));
-					glagolR3.setText(glagolArr.get(2));
-					glagolR4.setText(glagolArr.get(3));
-					glagolR5.setText(glagolArr.get(4));
-					glagolR6.setText(glagolArr.get(5));
-
-					tenseR1.setText(tenseArr.get(0));
-					tenseR2.setText(tenseArr.get(1));
-					tenseR3.setText(tenseArr.get(2));
-					tenseR4.setText(tenseArr.get(3));
-					tenseR5.setText(tenseArr.get(4));
-					tenseR6.setText(tenseArr.get(5));
-
-					partR1.setText(partArr.get(0));
-					partR2.setText(partArr.get(1));
-					partR3.setText(partArr.get(2));
-					partR4.setText(partArr.get(3));
-					partR5.setText(partArr.get(4));
-					partR6.setText(partArr.get(5));
+					
+					int cntr = 0;
+					for (int j = 0; j < 9; j++) {
+						fieldArray.get(j).setText(pomenArr.get(cntr));
+						cntr++;
+					}
+					cntr = 0;
+					
+					for (int j = 9; j < 18; j++) {
+						fieldArray.get(j).setText(glagolArr.get(cntr));
+						cntr++;
+					}
+					
+					cntr = 0;
+					for (int j = 18; j < 27; j++) {	
+						fieldArray.get(j).setText(tenseArr.get(cntr));
+						cntr++;
+					}
+					
+					cntr = 0;					
+					for (int j = 27; j < 36; j++) {	
+						fieldArray.get(j).setText(partArr.get(cntr));
+						cntr++;
+					}
+					
+							
 
 				} catch (Exception ex) {
 					System.out.println("error" + ex);
@@ -284,7 +296,7 @@ public class UcenecWindow extends SqliteConnect {
 				//ZACETEK PROBLEMA
 				
 				int checkCounter = 0;
-				while(  checkCounter < 12) {
+				while(  checkCounter < 18) {
 					checkEmpty(fieldArray, checkCounter);
 					checkCounter++;
 				}
