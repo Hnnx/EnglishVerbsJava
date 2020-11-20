@@ -30,41 +30,41 @@ public class UcenecWindow extends SqliteConnect {
 
 	private JFrame frmUporabnik;
 	private static JTextField pomenR1;
-	private JTextField glagolR1;
-	private JTextField tenseR1;
-	private JTextField partR1;
+	private static JTextField glagolR1;
+	private static JTextField tenseR1;
+	private static JTextField partR1;
 	private static JTextField pomenR2;
-	private JTextField glagolR2;
-	private JTextField tenseR2;
-	private JTextField partR2;
+	private static JTextField glagolR2;
+	private static JTextField tenseR2;
+	private static JTextField partR2;
 	private static JTextField pomenR3;
-	private JTextField glagolR3;
-	private JTextField tenseR3;
-	private JTextField partR3;
+	private static JTextField glagolR3;
+	private static JTextField tenseR3;
+	private static JTextField partR3;
 	private static JTextField pomenR4;
-	private JTextField glagolR4;
-	private JTextField tenseR4;
-	private JTextField partR4;
+	private static JTextField glagolR4;
+	private static JTextField tenseR4;
+	private static JTextField partR4;
 	private static JTextField pomenR5;
-	private JTextField glagolR5;
-	private JTextField tenseR5;
-	private JTextField partR5;
+	private static JTextField glagolR5;
+	private static JTextField tenseR5;
+	private static JTextField partR5;
 	private static JTextField pomenR6;
-	private JTextField glagolR6;
-	private JTextField tenseR6;
-	private JTextField partR6;
-	private JTextField textField_24;
-	private JTextField textField_25;
-	private JTextField textField_26;
-	private JTextField textField_27;
-	private JTextField textField_28;
-	private JTextField textField_29;
-	private JTextField textField_30;
-	private JTextField textField_31;
-	private JTextField textField_32;
-	private JTextField textField_33;
-	private JTextField textField_34;
-	private JTextField textField_35;
+	private static JTextField glagolR6;
+	private static JTextField tenseR6;
+	private static JTextField partR6;
+	private static JTextField pomenR7;
+	private static JTextField glagolR7;
+	private static JTextField tenseR7;
+	private static JTextField partR7;
+	private static JTextField pomenR8;
+	private static JTextField glagolR8;
+	private static JTextField tenseR8;
+	private static JTextField partR8;
+	private static JTextField pomenR9;
+	private static JTextField glagolR9;
+	private static JTextField tenseR9;
+	private static JTextField partR9;
 	private JPanel progressPanel;
 	private JButton izpisiGlagoleBtn;
 	private JTable table;
@@ -93,6 +93,19 @@ public class UcenecWindow extends SqliteConnect {
 					fieldArray.add(pomenR4);
 					fieldArray.add(pomenR5);
 					fieldArray.add(pomenR6);
+					fieldArray.add(pomenR7);
+					fieldArray.add(pomenR8);
+					fieldArray.add(pomenR9);
+					
+					fieldArray.add(glagolR1);
+					fieldArray.add(glagolR2);
+					fieldArray.add(glagolR3);
+					fieldArray.add(glagolR4);
+					fieldArray.add(glagolR5);
+					fieldArray.add(glagolR6);
+					fieldArray.add(glagolR7);
+					fieldArray.add(glagolR8);
+					fieldArray.add(glagolR9);
 					
 					
 				} catch (Exception e) {
@@ -188,6 +201,8 @@ public class UcenecWindow extends SqliteConnect {
 						partArr.add(part);
 
 					}
+					
+					//PROBLEM #2
 
 					pomenR1.setText(pomenArr.get(0));
 					pomenR2.setText(pomenArr.get(1));
@@ -195,6 +210,7 @@ public class UcenecWindow extends SqliteConnect {
 					pomenR4.setText(pomenArr.get(3));
 					pomenR5.setText(pomenArr.get(4));
 					pomenR6.setText(pomenArr.get(5));
+					pomenR7.setText(pomenArr.get(6));
 
 					glagolR1.setText(glagolArr.get(0));
 					glagolR2.setText(glagolArr.get(1));
@@ -268,7 +284,7 @@ public class UcenecWindow extends SqliteConnect {
 				//ZACETEK PROBLEMA
 				
 				int checkCounter = 0;
-				while(  checkCounter < 5) {
+				while(  checkCounter < 12) {
 					checkEmpty(fieldArray, checkCounter);
 					checkCounter++;
 				}
@@ -421,53 +437,53 @@ public class UcenecWindow extends SqliteConnect {
 		partR6.setColumns(10);
 		mainPanel.add(partR6);
 
-		textField_24 = new JTextField();
-		textField_24.setColumns(10);
-		mainPanel.add(textField_24);
+		pomenR7 = new JTextField();
+		pomenR7.setColumns(10);
+		mainPanel.add(pomenR7);
 
-		textField_25 = new JTextField();
-		textField_25.setColumns(10);
-		mainPanel.add(textField_25);
+		glagolR7 = new JTextField();
+		glagolR7.setColumns(10);
+		mainPanel.add(glagolR7);
 
-		textField_26 = new JTextField();
-		textField_26.setColumns(10);
-		mainPanel.add(textField_26);
+		tenseR7 = new JTextField();
+		tenseR7.setColumns(10);
+		mainPanel.add(tenseR7);
 
-		textField_27 = new JTextField();
-		textField_27.setColumns(10);
-		mainPanel.add(textField_27);
+		partR7 = new JTextField();
+		partR7.setColumns(10);
+		mainPanel.add(partR7);
 
-		textField_28 = new JTextField();
-		textField_28.setColumns(10);
-		mainPanel.add(textField_28);
+		pomenR8 = new JTextField();
+		pomenR8.setColumns(10);
+		mainPanel.add(pomenR8);
 
-		textField_29 = new JTextField();
-		textField_29.setColumns(10);
-		mainPanel.add(textField_29);
+		glagolR8 = new JTextField();
+		glagolR8.setColumns(10);
+		mainPanel.add(glagolR8);
 
-		textField_30 = new JTextField();
-		textField_30.setColumns(10);
-		mainPanel.add(textField_30);
+		tenseR8 = new JTextField();
+		tenseR8.setColumns(10);
+		mainPanel.add(tenseR8);
 
-		textField_31 = new JTextField();
-		textField_31.setColumns(10);
-		mainPanel.add(textField_31);
+		partR8 = new JTextField();
+		partR8.setColumns(10);
+		mainPanel.add(partR8);
 
-		textField_32 = new JTextField();
-		textField_32.setColumns(10);
-		mainPanel.add(textField_32);
+		pomenR9 = new JTextField();
+		pomenR9.setColumns(10);
+		mainPanel.add(pomenR9);
 
-		textField_33 = new JTextField();
-		textField_33.setColumns(10);
-		mainPanel.add(textField_33);
+		glagolR9 = new JTextField();
+		glagolR9.setColumns(10);
+		mainPanel.add(glagolR9);
 
-		textField_34 = new JTextField();
-		textField_34.setColumns(10);
-		mainPanel.add(textField_34);
+		tenseR9 = new JTextField();
+		tenseR9.setColumns(10);
+		mainPanel.add(tenseR9);
 
-		textField_35 = new JTextField();
-		textField_35.setColumns(10);
-		mainPanel.add(textField_35);
+		partR9 = new JTextField();
+		partR9.setColumns(10);
+		mainPanel.add(partR9);
 
 		JPanel panel = new JPanel();
 		frmUporabnik.getContentPane().add(panel, BorderLayout.WEST);
