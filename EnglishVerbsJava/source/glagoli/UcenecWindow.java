@@ -29,27 +29,27 @@ import javax.swing.JTable;
 public class UcenecWindow extends SqliteConnect {
 
 	private JFrame frmUporabnik;
-	private JTextField pomenR1;
+	private static JTextField pomenR1;
 	private JTextField glagolR1;
 	private JTextField tenseR1;
 	private JTextField partR1;
-	private JTextField pomenR2;
+	private static JTextField pomenR2;
 	private JTextField glagolR2;
 	private JTextField tenseR2;
 	private JTextField partR2;
-	private JTextField pomenR3;
+	private static JTextField pomenR3;
 	private JTextField glagolR3;
 	private JTextField tenseR3;
 	private JTextField partR3;
-	private JTextField pomenR4;
+	private static JTextField pomenR4;
 	private JTextField glagolR4;
 	private JTextField tenseR4;
 	private JTextField partR4;
-	private JTextField pomenR5;
+	private static JTextField pomenR5;
 	private JTextField glagolR5;
 	private JTextField tenseR5;
 	private JTextField partR5;
-	private JTextField pomenR6;
+	private static JTextField pomenR6;
 	private JTextField glagolR6;
 	private JTextField tenseR6;
 	private JTextField partR6;
@@ -73,6 +73,9 @@ public class UcenecWindow extends SqliteConnect {
 	private static ArrayList<String> glagolArr = new ArrayList<String>();
 	private static ArrayList<String> tenseArr = new ArrayList<String>();
 	private static ArrayList<String> partArr = new ArrayList<String>();
+	
+	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
+	
 
 	static Color incorrect = new Color(255, 102, 102);
 	static Color correct = new Color(102, 255, 102);
@@ -83,6 +86,15 @@ public class UcenecWindow extends SqliteConnect {
 				try {
 					UcenecWindow window = new UcenecWindow();
 					window.frmUporabnik.setVisible(true);
+					
+					fieldArray.add(pomenR1);
+					fieldArray.add(pomenR2);
+					fieldArray.add(pomenR3);
+					fieldArray.add(pomenR4);
+					fieldArray.add(pomenR5);
+					fieldArray.add(pomenR6);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -90,17 +102,19 @@ public class UcenecWindow extends SqliteConnect {
 		});
 	}
 	
-	public static void checkEmpty(JTextField pomen, int n) {
+	public static void checkEmpty(ArrayList<JTextField> pomen, int n) {
 		
-		if(!pomen.getText().isBlank() || pomenArr.get(n).isBlank()) {
-			check(pomen.getText(), pomenArr.get(n), pomen);
+		
+		if(!fieldArray.get(n).getText().isBlank() || pomenArr.get(n).isBlank()) {
+			check(pomen.get(n).getText(), pomenArr.get(n), pomen.get(n));
 		}
 		else {
-			pomen.setEnabled(false);
-			pomen.setBackground(incorrect);
+			pomen.get(n).setEnabled(false);
+			pomen.get(n).setBackground(incorrect);
 		}
-		
 	}
+	
+	
 	
 
 	public UcenecWindow() {
@@ -253,25 +267,13 @@ public class UcenecWindow extends SqliteConnect {
 				
 				//ZACETEK PROBLEMA
 				
-				checkEmpty(pomenR1, 0);
-				checkEmpty(pomenR2, 1);
-				checkEmpty(pomenR3, 2);
-				checkEmpty(pomenR4, 3);
-				checkEmpty(pomenR5, 4);
-				checkEmpty(pomenR6, 5);
-				
-				
-/*
-				if (!pomenR1.getText().isBlank() || pomenArr.get(0).isBlank()) {
-
-					check(pomenR1.getText(), pomenArr.get(0), pomenR1);
-				} else {
-					pomenR1.setEnabled(false);
-					pomenR1.setBackground(incorrect);
+				int checkCounter = 0;
+				while(  checkCounter < 5) {
+					checkEmpty(fieldArray, checkCounter);
+					checkCounter++;
 				}
 				
-				*/
-
+				
 			}
 		});
 		bottomPanelZaGumb.add(preveriBtn);
