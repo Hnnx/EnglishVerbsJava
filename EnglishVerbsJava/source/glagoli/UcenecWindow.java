@@ -90,10 +90,10 @@ public class UcenecWindow extends SqliteConnect {
 		});
 	}
 	
-	public static void checkEmpty(JTextField pomen,ArrayList<String> pomenArr) {
+	public static void checkEmpty(JTextField pomen, int n) {
 		
-		if(!pomen.getText().isBlank() || pomenArr.get(0).isBlank()) {
-			check(pomen.getText(), pomenArr.get(0), pomen);
+		if(!pomen.getText().isBlank() || pomenArr.get(n).isBlank()) {
+			check(pomen.getText(), pomenArr.get(n), pomen);
 		}
 		else {
 			pomen.setEnabled(false);
@@ -252,7 +252,16 @@ public class UcenecWindow extends SqliteConnect {
 				}
 				
 				//ZACETEK PROBLEMA
-
+				
+				checkEmpty(pomenR1, 0);
+				checkEmpty(pomenR2, 1);
+				checkEmpty(pomenR3, 2);
+				checkEmpty(pomenR4, 3);
+				checkEmpty(pomenR5, 4);
+				checkEmpty(pomenR6, 5);
+				
+				
+/*
 				if (!pomenR1.getText().isBlank() || pomenArr.get(0).isBlank()) {
 
 					check(pomenR1.getText(), pomenArr.get(0), pomenR1);
@@ -260,6 +269,8 @@ public class UcenecWindow extends SqliteConnect {
 					pomenR1.setEnabled(false);
 					pomenR1.setBackground(incorrect);
 				}
+				
+				*/
 
 			}
 		});
