@@ -76,6 +76,52 @@ public class UcenecWindow extends SqliteConnect {
 
 	static Color incorrect = new Color(255, 102, 102);
 	static Color correct = new Color(102, 255, 102);
+	
+	private static void fillArrayWithVerbs() {
+		
+		fieldArray.add(pomenR1);
+		fieldArray.add(pomenR2);
+		fieldArray.add(pomenR3);
+		fieldArray.add(pomenR4);
+		fieldArray.add(pomenR5);
+		fieldArray.add(pomenR6);
+		fieldArray.add(pomenR7);
+		fieldArray.add(pomenR8);
+		fieldArray.add(pomenR9);
+		
+		fieldArray.add(glagolR1);
+		fieldArray.add(glagolR2);
+		fieldArray.add(glagolR3);
+		fieldArray.add(glagolR4);
+		fieldArray.add(glagolR5);
+		fieldArray.add(glagolR6);
+		fieldArray.add(glagolR7);
+		fieldArray.add(glagolR8);
+		fieldArray.add(glagolR9);
+		
+		fieldArray.add(tenseR1);
+		fieldArray.add(tenseR2);
+		fieldArray.add(tenseR3);
+		fieldArray.add(tenseR4);
+		fieldArray.add(tenseR5);
+		fieldArray.add(tenseR6);
+		fieldArray.add(tenseR7);
+		fieldArray.add(tenseR8);
+		fieldArray.add(tenseR9);
+		
+		fieldArray.add(partR1);
+		fieldArray.add(partR2);
+		fieldArray.add(partR3);
+		fieldArray.add(partR4);
+		fieldArray.add(partR5);
+		fieldArray.add(partR6);
+		fieldArray.add(partR7);
+		fieldArray.add(partR8);
+		fieldArray.add(partR9);
+
+		
+		
+	}
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -84,45 +130,8 @@ public class UcenecWindow extends SqliteConnect {
 					UcenecWindow window = new UcenecWindow();
 					window.frmUporabnik.setVisible(true);
 					
-					fieldArray.add(pomenR1);
-					fieldArray.add(pomenR2);
-					fieldArray.add(pomenR3);
-					fieldArray.add(pomenR4);
-					fieldArray.add(pomenR5);
-					fieldArray.add(pomenR6);
-					fieldArray.add(pomenR7);
-					fieldArray.add(pomenR8);
-					fieldArray.add(pomenR9);
+					fillArrayWithVerbs();
 					
-					fieldArray.add(glagolR1);
-					fieldArray.add(glagolR2);
-					fieldArray.add(glagolR3);
-					fieldArray.add(glagolR4);
-					fieldArray.add(glagolR5);
-					fieldArray.add(glagolR6);
-					fieldArray.add(glagolR7);
-					fieldArray.add(glagolR8);
-					fieldArray.add(glagolR9);
-					
-					fieldArray.add(tenseR1);
-					fieldArray.add(tenseR2);
-					fieldArray.add(tenseR3);
-					fieldArray.add(tenseR4);
-					fieldArray.add(tenseR5);
-					fieldArray.add(tenseR6);
-					fieldArray.add(tenseR7);
-					fieldArray.add(tenseR8);
-					fieldArray.add(tenseR9);
-					
-					fieldArray.add(partR1);
-					fieldArray.add(partR2);
-					fieldArray.add(partR3);
-					fieldArray.add(partR4);
-					fieldArray.add(partR5);
-					fieldArray.add(partR6);
-					fieldArray.add(partR7);
-					fieldArray.add(partR8);
-					fieldArray.add(partR9);
 					
 					
 				} catch (Exception e) {
@@ -287,18 +296,16 @@ public class UcenecWindow extends SqliteConnect {
 						partArr.add(part);
 
 					}
+					
+					//ZACETEK PROBLEMA
+					for (int i = 0; i < fieldArray.size() ; i++) {
+						checkEmpty(fieldArray, i);
+						System.out.println(fieldArray.get(i).getText());
+					}
 
 				} catch (Exception ex) {
 					System.out.println("error" + ex);
 
-				}
-				
-				//ZACETEK PROBLEMA
-				
-				int checkCounter = 0;
-				while(  checkCounter < 18) {
-					checkEmpty(fieldArray, checkCounter);
-					checkCounter++;
 				}
 				
 				
