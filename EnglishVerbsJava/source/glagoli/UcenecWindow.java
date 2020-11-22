@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
-import javax.swing.SwingConstants;
 
 import DB.SqliteConnect;
 import net.proteanit.sql.DbUtils;
@@ -62,67 +61,32 @@ public class UcenecWindow extends SqliteConnect {
 	private static JTextField glagolR9;
 	private static JTextField tenseR9;
 	private static JTextField partR9;
+	
 	private JPanel progressPanel;
 	private JButton izpisiGlagoleBtn;
 	private JTable table;
-	private JButton btnNewButton;
-	private static ArrayList<String> pomenArr = new ArrayList<String>();
-	private static ArrayList<String> glagolArr = new ArrayList<String>();
-	private static ArrayList<String> tenseArr = new ArrayList<String>();
-	private static ArrayList<String> partArr = new ArrayList<String>();
 	
+	private JButton gumbPrevod;
+	private JButton gumbSimpleTense;
+	
+	//Posamezni ArrayListi z glagoli in oblikami
+	private static ArrayList<String> prevodArr = new ArrayList<String>();
+	private static ArrayList<String> verbArr = new ArrayList<String>();
+	private static ArrayList<String> pastSimpleArr = new ArrayList<String>();
+	private static ArrayList<String> pastParticipleArr = new ArrayList<String>();
+	
+	//ArrayList ki zdruzi VSE TextJield-e za preverjanje
 	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
 	
 
+	//Barve
 	static Color incorrect = new Color(255, 102, 102);
 	static Color correct = new Color(102, 255, 102);
+	private JButton pastSimpleGumb;
+	private JButton pastParticipleGumb;
 	
-	private static void fillArrayWithVerbs() {
 		
-		fieldArray.add(pomenR1);
-		fieldArray.add(pomenR2);
-		fieldArray.add(pomenR3);
-		fieldArray.add(pomenR4);
-		fieldArray.add(pomenR5);
-		fieldArray.add(pomenR6);
-		fieldArray.add(pomenR7);
-		fieldArray.add(pomenR8);
-		fieldArray.add(pomenR9);
-		
-		fieldArray.add(glagolR1);
-		fieldArray.add(glagolR2);
-		fieldArray.add(glagolR3);
-		fieldArray.add(glagolR4);
-		fieldArray.add(glagolR5);
-		fieldArray.add(glagolR6);
-		fieldArray.add(glagolR7);
-		fieldArray.add(glagolR8);
-		fieldArray.add(glagolR9);
-		
-		fieldArray.add(tenseR1);
-		fieldArray.add(tenseR2);
-		fieldArray.add(tenseR3);
-		fieldArray.add(tenseR4);
-		fieldArray.add(tenseR5);
-		fieldArray.add(tenseR6);
-		fieldArray.add(tenseR7);
-		fieldArray.add(tenseR8);
-		fieldArray.add(tenseR9);
-		
-		fieldArray.add(partR1);
-		fieldArray.add(partR2);
-		fieldArray.add(partR3);
-		fieldArray.add(partR4);
-		fieldArray.add(partR5);
-		fieldArray.add(partR6);
-		fieldArray.add(partR7);
-		fieldArray.add(partR8);
-		fieldArray.add(partR9);
-
-		
-		
-	}
-
+	//Boilerplate 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -130,8 +94,9 @@ public class UcenecWindow extends SqliteConnect {
 					UcenecWindow window = new UcenecWindow();
 					window.frmUporabnik.setVisible(true);
 					
+					//Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za delo in upravljanje z njimi
+					conn = poveziBazo();
 					fillArrayWithVerbs();
-					
 					
 					
 				} catch (Exception e) {
@@ -141,38 +106,95 @@ public class UcenecWindow extends SqliteConnect {
 		});
 	}
 	
-	public static void checkEmpty(ArrayList<JTextField> pomen, int n) {
-		
-		
-		if(!fieldArray.get(n).getText().isBlank() || pomenArr.get(n).isBlank()) {
-			check(pomen.get(n).getText(), pomenArr.get(n), pomen.get(n));
-		}
-		else {
-			pomen.get(n).setEnabled(false);
-			pomen.get(n).setBackground(incorrect);
-		}
-	}
-	
-	
-	
-
 	public UcenecWindow() {
 		initialize();
 	}
+	
+	
+	//Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo check(opisana kasneje)
+	//Ce je TextField prazen, oznaci kot napacen odgovor in jo zaklene
+	private static void checkEmpty(ArrayList<JTextField> pomen, int n) {
+		
+		JTextField pomenVar = pomen.get(n);
+		
+		
+		if(!fieldArray.get(n).getText().isBlank()) {
+			checkInputVSexpected(pomenVar.getText(), fieldArray.get(n).getText(), pomenVar);
+			
+			System.out.println("Input: " + pomenVar.getText());
+			System.out.println("Expeced: "+ fieldArray.get(n).getText());
+			System.out.println(fieldArray.get(n).getText());
+		}
+		else {
+			pomenVar.setEditable(false);
+			pomenVar.setBackground(Color.orange);
+			pomenVar.setForeground(Color.black);
+			pomenVar.setText("neizpolnjeno");
+		}
+	}
+	
+	//Funkcija ki ArrayList od vseh polji z glagoli v vseh oblikah
+	//Spisana za lazje delanje z loopi, preverjanje, resetiranje itd
+		private static void fillArrayWithVerbs() {
+			
+			fieldArray.add(pomenR1);
+			fieldArray.add(pomenR2);
+			fieldArray.add(pomenR3);
+			fieldArray.add(pomenR4);
+			fieldArray.add(pomenR5);
+			fieldArray.add(pomenR6);
+			fieldArray.add(pomenR7);
+			fieldArray.add(pomenR8);
+			fieldArray.add(pomenR9);
+			
+			fieldArray.add(glagolR1);
+			fieldArray.add(glagolR2);
+			fieldArray.add(glagolR3);
+			fieldArray.add(glagolR4);
+			fieldArray.add(glagolR5);
+			fieldArray.add(glagolR6);
+			fieldArray.add(glagolR7);
+			fieldArray.add(glagolR8);
+			fieldArray.add(glagolR9);
+			
+			fieldArray.add(tenseR1);
+			fieldArray.add(tenseR2);
+			fieldArray.add(tenseR3);
+			fieldArray.add(tenseR4);
+			fieldArray.add(tenseR5);
+			fieldArray.add(tenseR6);
+			fieldArray.add(tenseR7);
+			fieldArray.add(tenseR8);
+			fieldArray.add(tenseR9);
+			
+			fieldArray.add(partR1);
+			fieldArray.add(partR2);
+			fieldArray.add(partR3);
+			fieldArray.add(partR4);
+			fieldArray.add(partR5);
+			fieldArray.add(partR6);
+			fieldArray.add(partR7);
+			fieldArray.add(partR8);
+			fieldArray.add(partR9);
 
-	private static void check(String input, String expected, JTextField cell) {
+		}
 
-		if (input.isEmpty() || input.isBlank() || expected.isBlank() || expected.isEmpty()) {
-			cell.setBackground(Color.gray);
-			cell.setEnabled(false);
+	
 
-		} else if (!input.equals(expected)) {
-			cell.setEnabled(false);
-			cell.setBackground(incorrect);
-			cell.setForeground(Color.black);
-		} else {
-			cell.setEnabled(true);
-			cell.setBackground(correct);
+
+	//Funkcija za preverjanje vnosa 
+	private static void checkInputVSexpected(String input, String expected, JTextField cell) {
+		
+		if(cell.isEditable()) {
+			
+			if (!input.equals(expected)) {
+				cell.setEnabled(false);
+				cell.setBackground(incorrect);
+				cell.setForeground(Color.black);
+			} else {
+				cell.setEditable(false);
+				cell.setBackground(correct);
+			}
 		}
 
 	}
@@ -193,11 +215,10 @@ public class UcenecWindow extends SqliteConnect {
 		JPanel bottomPanelZaGumb = new JPanel();
 		frmUporabnik.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
 
-		izpisiGlagoleBtn = new JButton("Izpisi");
+		izpisiGlagoleBtn = new JButton("Izpisi Vse");
 		izpisiGlagoleBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				conn = poveziBazo();
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
 				String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
@@ -214,43 +235,43 @@ public class UcenecWindow extends SqliteConnect {
 					while (rst.next()) {
 
 						pomen = rst.getString(1);
-						pomenArr.add(pomen);
+						prevodArr.add(pomen);
 
 						glagol = rst.getString(2);
-						glagolArr.add(glagol);
+						verbArr.add(glagol);
 
 						tense = rst.getString(3);
-						tenseArr.add(tense);
+						pastSimpleArr.add(tense);
 
 						part = rst.getString(4);
-						partArr.add(part);
+						pastParticipleArr.add(part);
 
 					}
-					
 					
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
-						fieldArray.get(j).setText(pomenArr.get(cntr));
+						fieldArray.get(j).setText(prevodArr.get(cntr));
 						cntr++;
 					}
-					cntr = 0;
 					
+					cntr = 0;
 					for (int j = 9; j < 18; j++) {
-						fieldArray.get(j).setText(glagolArr.get(cntr));
+						fieldArray.get(j).setText(verbArr.get(cntr));
 						cntr++;
 					}
 					
 					cntr = 0;
 					for (int j = 18; j < 27; j++) {	
-						fieldArray.get(j).setText(tenseArr.get(cntr));
+						fieldArray.get(j).setText(pastSimpleArr.get(cntr));
 						cntr++;
 					}
 					
 					cntr = 0;					
 					for (int j = 27; j < 36; j++) {	
-						fieldArray.get(j).setText(partArr.get(cntr));
+						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
 					}
+					
 					
 							
 
@@ -266,14 +287,12 @@ public class UcenecWindow extends SqliteConnect {
 		preveriBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				conn = poveziBazo();
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
 				String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
 
 				try {
 
-					conn = poveziBazo();
 					pstmt = conn.prepareStatement(myQuery);
 					rst = pstmt.executeQuery();
 					String pomen = null;
@@ -284,23 +303,21 @@ public class UcenecWindow extends SqliteConnect {
 					while (rst.next()) {
 
 						pomen = rst.getString(1);
-						pomenArr.add(pomen);
+						prevodArr.add(pomen);
 
 						glagol = rst.getString(2);
-						glagolArr.add(glagol);
+						verbArr.add(glagol);
 
 						tense = rst.getString(3);
-						tenseArr.add(tense);
+						pastSimpleArr.add(tense);
 
 						part = rst.getString(4);
-						partArr.add(part);
+						pastParticipleArr.add(part);
 
 					}
 					
-					//ZACETEK PROBLEMA
 					for (int i = 0; i < fieldArray.size() ; i++) {
 						checkEmpty(fieldArray, i);
-						System.out.println(fieldArray.get(i).getText());
 					}
 
 				} catch (Exception ex) {
@@ -323,42 +340,114 @@ public class UcenecWindow extends SqliteConnect {
 		});
 		bottomPanelZaGumb.add(izhod);
 
-		btnNewButton = new JButton("TableBtn");
-		btnNewButton.addActionListener(new ActionListener() {
+		JPanel mainPanel = new JPanel();
+		frmUporabnik.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		mainPanel.setLayout(new GridLayout(0, 4, 20, 30));
+		
+		
+		
+		// POSAMEZNI GUMBI
+		// PREVOD
+		gumbPrevod = new JButton("Prevod");
+		gumbPrevod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				PreparedStatement pstmt = null;
+				ResultSet rst = null;
+				String myQuery = "SELECT pomen FROM glagoli";
+
 				try {
+					pstmt = conn.prepareStatement(myQuery);
+					rst = pstmt.executeQuery();
+					String pomen = null;
 
-					String query = "SELECT * FROM glagoli";
-					pSTMT = conn.prepareStatement(query);
-
-					rs = pSTMT.executeQuery();
-
-					table.setModel(DbUtils.resultSetToTableModel(rs));
+					while (rst.next()) {
+						pomen = rst.getString(1);
+						prevodArr.add(pomen);
+					}
+					
+					int cntr = 0;
+					for (int j = 0; j < 9; j++) {
+						fieldArray.get(j).setText(prevodArr.get(cntr));
+						cntr++;
+						fieldArray.get(j).setEditable(false);
+					}
 
 				} catch (Exception ex) {
+					System.out.println("error" + ex);
 
 				}
 			}
 		});
-		bottomPanelZaGumb.add(btnNewButton);
+		mainPanel.add(gumbPrevod);
+		
+		
+		// VERB SIMPLE TENSE 
+		gumbSimpleTense = new JButton("Verb (infinitive)");
+		gumbSimpleTense.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-		JPanel mainPanel = new JPanel();
-		frmUporabnik.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		mainPanel.setLayout(new GridLayout(0, 4, 20, 30));
+				PreparedStatement pstmt = null;
+				ResultSet rst = null;
+				String myQuery = "SELECT glagol FROM glagoli";
 
-		JLabel sloLabel = new JLabel("Pomen");
-		sloLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		mainPanel.add(sloLabel);
+				try {
 
-		JLabel glagolLabel = new JLabel("Glagol");
-		mainPanel.add(glagolLabel);
+					pstmt = conn.prepareStatement(myQuery);
+					rst = pstmt.executeQuery();
+					String pomen = null;
 
-		JLabel tenseLabel = new JLabel("Past Tense");
-		mainPanel.add(tenseLabel);
+					while (rst.next()) {
+						pomen = rst.getString(1);
+						verbArr.add(pomen);
+					}
+					
+					int cntr = 0;
+					for (int j = 9; j < 18; j++) {
+						fieldArray.get(j).setText(verbArr.get(cntr));
+						cntr++;
+						fieldArray.get(j).setEditable(false);
+					}
 
-		JLabel partLabel = new JLabel("Past Participle");
-		mainPanel.add(partLabel);
+				} catch (Exception ex) {
+					System.out.println("error" + ex);
+
+				}
+				
+			}
+		});
+		mainPanel.add(gumbSimpleTense);
+		
+		// PAST SIMPLE GUMB
+		pastSimpleGumb = new JButton("Past simple form");
+		pastSimpleGumb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int cntr = 0;
+				for (int j = 18; j < 27; j++) {
+					fieldArray.get(j).setText(pastSimpleArr.get(cntr));
+					cntr++;
+					fieldArray.get(j).setEditable(false);
+				}
+			}
+		});
+		mainPanel.add(pastSimpleGumb);
+		
+		// PAST PARTICIPLE GUMB
+		pastParticipleGumb = new JButton("Past participle");
+		pastParticipleGumb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int cntr = 0;
+				for (int j = 27; j < 36; j++) {
+					fieldArray.get(j).setText(pastParticipleArr.get(cntr));
+					cntr++;
+					fieldArray.get(j).setEditable(false);
+				}
+			
+			}
+		});
+		mainPanel.add(pastParticipleGumb);
 
 		pomenR1 = new JTextField();
 		mainPanel.add(pomenR1);
