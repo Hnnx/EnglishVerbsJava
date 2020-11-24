@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 
@@ -119,10 +120,10 @@ public class UcenecWindow extends SqliteConnect {
 		
 		
 		if(!fieldArray.get(n).getText().isBlank()) {
-			checkInputVSexpected(pomenVar.getText(), fieldArray.get(n).getText(), pomenVar);
+			checkInputVSexpected(pomenVar.getText(), prevodArr.get(n), pomenVar);
 			
 			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expeced: "+ fieldArray.get(n).getText());
+			System.out.println("Expeced: "+ prevodArr.get(n));
 			System.out.println(fieldArray.get(n).getText());
 		}
 		else {
@@ -247,7 +248,7 @@ public class UcenecWindow extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					
+					/*
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
 						fieldArray.get(j).setText(prevodArr.get(cntr));
@@ -271,7 +272,18 @@ public class UcenecWindow extends SqliteConnect {
 						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
 					}
+					*/
 					
+					List<String> combined = new ArrayList<String>();
+					combined.addAll(prevodArr);
+					combined.addAll(verbArr);
+					combined.addAll(pastSimpleArr);
+					combined.addAll(pastParticipleArr);
+					
+					for (int i = 0; i < combined.size(); i++) {
+						
+						System.out.println(combined.get(i));
+					}
 					
 							
 
