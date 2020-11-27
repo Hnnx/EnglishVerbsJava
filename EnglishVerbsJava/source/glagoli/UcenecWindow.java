@@ -79,6 +79,9 @@ public class UcenecWindow extends SqliteConnect {
 	//ArrayList ki zdruzi VSE TextJield-e za preverjanje
 	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
 	
+	//ArrayList ki zdruzi VSE glagole iz DB
+	static ArrayList<String> combined = new ArrayList<String>();
+	
 
 	//Barve
 	static Color incorrect = new Color(255, 102, 102);
@@ -98,6 +101,8 @@ public class UcenecWindow extends SqliteConnect {
 					//Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za delo in upravljanje z njimi
 					conn = poveziBazo();
 					fillArrayWithVerbs();
+					fetchFromDB();
+					
 					
 					
 				} catch (Exception e) {
@@ -114,17 +119,16 @@ public class UcenecWindow extends SqliteConnect {
 	
 	//Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo check(opisana kasneje)
 	//Ce je TextField prazen, oznaci kot napacen odgovor in jo zaklene
-	private static void checkEmpty(ArrayList<JTextField> pomen, int n) {
+	private static void checkEmpty(JTextField jTextField, int n) {
 		
-		JTextField pomenVar = pomen.get(n);
+		JTextField pomenVar = jTextField;
 		
 		
 		if(!fieldArray.get(n).getText().isBlank()) {
-			checkInputVSexpected(pomenVar.getText(), prevodArr.get(n), pomenVar);
+			checkInputVSexpected(pomenVar.getText(), combined.get(n), pomenVar);
 			
 			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expeced: "+ prevodArr.get(n));
-			System.out.println(fieldArray.get(n).getText());
+			System.out.println("Expected: "+ combined.get(n));
 		}
 		else {
 			pomenVar.setEditable(false);
@@ -182,13 +186,60 @@ public class UcenecWindow extends SqliteConnect {
 
 	
 
+	//Funkcija prebere vnose iz DB in jih vnese v Array za nadaljno delo
+	private static void fetchFromDB() {
+
+		PreparedStatement pstmt = null;
+		ResultSet rst = null;
+		String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
+
+		try {
+
+			pstmt = conn.prepareStatement(myQuery);
+			rst = pstmt.executeQuery();
+			String pomen = null;
+			String glagol = null;
+			String tense = null;
+			String part = null;
+
+			while (rst.next()) {
+
+				pomen = rst.getString(1);
+				prevodArr.add(pomen);
+
+				glagol = rst.getString(2);
+				verbArr.add(glagol);
+
+				tense = rst.getString(3);
+				pastSimpleArr.add(tense);
+
+				part = rst.getString(4);
+				pastParticipleArr.add(part);
+
+			}
+			
+			combined = new ArrayList<String>();
+			combined.addAll(prevodArr);
+			combined.addAll(verbArr);
+			combined.addAll(pastSimpleArr);
+			combined.addAll(pastParticipleArr);
+			
+
+		} catch (Exception ex) {
+			System.out.println("error" + ex);
+
+		}
+	
+		
+	}
 
 	//Funkcija za preverjanje vnosa 
 	private static void checkInputVSexpected(String input, String expected, JTextField cell) {
 		
+		
 		if(cell.isEditable()) {
 			
-			if (!input.equals(expected)) {
+			if (!input.equalsIgnoreCase(expected)) {
 				cell.setEnabled(false);
 				cell.setBackground(incorrect);
 				cell.setForeground(Color.black);
@@ -248,7 +299,6 @@ public class UcenecWindow extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					/*
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
 						fieldArray.get(j).setText(prevodArr.get(cntr));
@@ -267,23 +317,16 @@ public class UcenecWindow extends SqliteConnect {
 						cntr++;
 					}
 					
-					cntr = 0;					
 					for (int j = 27; j < 36; j++) {	
 						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
 					}
-					*/
 					
 					List<String> combined = new ArrayList<String>();
 					combined.addAll(prevodArr);
 					combined.addAll(verbArr);
 					combined.addAll(pastSimpleArr);
 					combined.addAll(pastParticipleArr);
-					
-					for (int i = 0; i < combined.size(); i++) {
-						
-						System.out.println(combined.get(i));
-					}
 					
 							
 
@@ -329,7 +372,8 @@ public class UcenecWindow extends SqliteConnect {
 					}
 					
 					for (int i = 0; i < fieldArray.size() ; i++) {
-						checkEmpty(fieldArray, i);
+						System.out.println(fieldArray.size());
+						checkEmpty(fieldArray.get(i), i);
 					}
 
 				} catch (Exception ex) {

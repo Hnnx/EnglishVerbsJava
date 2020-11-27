@@ -19,8 +19,8 @@ import java.awt.Color;
 public class AddGlagol extends SqliteConnect {
 
 	private JFrame frame;
-	private JTextField glagolField;
 	private JTextField prevodField;
+	private JTextField verbField;
 	private JTextField simpleField;
 	private JTextField participleField;
 
@@ -52,11 +52,11 @@ public class AddGlagol extends SqliteConnect {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		JLabel glagolLabel = new JLabel("Glagol");
+		JLabel glagolLabel = new JLabel("Prevod");
 		glagolLabel.setBounds(10, 30, 46, 14);
 		frame.getContentPane().add(glagolLabel);
 
-		JLabel prevodLabel = new JLabel("Prevod");
+		JLabel prevodLabel = new JLabel("Verb");
 		prevodLabel.setBounds(10, 55, 46, 14);
 		frame.getContentPane().add(prevodLabel);
 
@@ -68,15 +68,15 @@ public class AddGlagol extends SqliteConnect {
 		pastPariticpleLabel.setBounds(10, 107, 77, 14);
 		frame.getContentPane().add(pastPariticpleLabel);
 
-		glagolField = new JTextField();
-		glagolField.setBounds(88, 27, 134, 20);
-		frame.getContentPane().add(glagolField);
-		glagolField.setColumns(10);
-
 		prevodField = new JTextField();
-		prevodField.setColumns(10);
-		prevodField.setBounds(88, 52, 134, 20);
+		prevodField.setBounds(88, 27, 134, 20);
 		frame.getContentPane().add(prevodField);
+		prevodField.setColumns(10);
+
+		verbField = new JTextField();
+		verbField.setColumns(10);
+		verbField.setBounds(88, 52, 134, 20);
+		frame.getContentPane().add(verbField);
 
 		simpleField = new JTextField();
 		simpleField.setColumns(10);
@@ -94,8 +94,8 @@ public class AddGlagol extends SqliteConnect {
 
 				conn = poveziBazo();
 
-				String glagolStr = glagolField.getText();
-				String prevodStr = prevodField.getText();
+				String glagolStr = prevodField.getText();
+				String prevodStr = verbField.getText();
 				String simpleStr = simpleField.getText();
 				String participleStr = participleField.getText();
 
