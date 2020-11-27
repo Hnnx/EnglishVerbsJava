@@ -88,6 +88,7 @@ public class UcenecWindow extends SqliteConnect {
 	static Color correct = new Color(102, 255, 102);
 	private JButton pastSimpleGumb;
 	private JButton pastParticipleGumb;
+	private JButton gumbPonastavi;
 	
 		
 	//Boilerplate 
@@ -129,6 +130,7 @@ public class UcenecWindow extends SqliteConnect {
 			
 			System.out.println("Input: " + pomenVar.getText());
 			System.out.println("Expected: "+ combined.get(n));
+			System.out.println();
 		}
 		else {
 			pomenVar.setEditable(false);
@@ -138,7 +140,7 @@ public class UcenecWindow extends SqliteConnect {
 		}
 	}
 	
-	//Funkcija ki ArrayList od vseh polji z glagoli v vseh oblikah
+	//Funkcija ki polni ArrayList od vseh polji z glagoli v vseh oblikah
 	//Spisana za lazje delanje z loopi, preverjanje, resetiranje itd
 		private static void fillArrayWithVerbs() {
 			
@@ -372,7 +374,6 @@ public class UcenecWindow extends SqliteConnect {
 					}
 					
 					for (int i = 0; i < fieldArray.size() ; i++) {
-						System.out.println(fieldArray.size());
 						checkEmpty(fieldArray.get(i), i);
 					}
 
@@ -380,7 +381,6 @@ public class UcenecWindow extends SqliteConnect {
 					System.out.println("error" + ex);
 
 				}
-				
 				
 			}
 		});
@@ -394,6 +394,23 @@ public class UcenecWindow extends SqliteConnect {
 				System.exit(0);
 			}
 		});
+		
+		gumbPonastavi = new JButton("Ponastavi");
+		gumbPonastavi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				for (int i = 0; i < 36; i++) {
+					
+					fieldArray.get(i).setText("");
+					fieldArray.get(i).setEditable(true);
+					fieldArray.get(i).setEnabled(true);
+					fieldArray.get(i).setBackground(null);
+					fieldArray.get(i).setForeground(null);
+				}
+				
+			}
+		});
+		bottomPanelZaGumb.add(gumbPonastavi);
 		bottomPanelZaGumb.add(izhod);
 
 		JPanel mainPanel = new JPanel();
