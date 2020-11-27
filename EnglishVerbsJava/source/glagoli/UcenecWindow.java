@@ -119,17 +119,16 @@ public class UcenecWindow extends SqliteConnect {
 	
 	//Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo check(opisana kasneje)
 	//Ce je TextField prazen, oznaci kot napacen odgovor in jo zaklene
-	private static void checkEmpty(ArrayList<JTextField> pomen, int n) {
+	private static void checkEmpty(JTextField jTextField, int n) {
 		
-		JTextField pomenVar = pomen.get(n);
+		JTextField pomenVar = jTextField;
 		
 		
 		if(!fieldArray.get(n).getText().isBlank()) {
-			checkInputVSexpected(pomenVar.getText(), verbArr.get(n), pomenVar);
+			checkInputVSexpected(pomenVar.getText(), combined.get(n), pomenVar);
 			
 			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expeced: "+ prevodArr.get(n));
-			System.out.println(fieldArray.get(n).getText());
+			System.out.println("Expected: "+ combined.get(n));
 		}
 		else {
 			pomenVar.setEditable(false);
@@ -225,12 +224,6 @@ public class UcenecWindow extends SqliteConnect {
 			combined.addAll(pastSimpleArr);
 			combined.addAll(pastParticipleArr);
 			
-			for (int i = 0; i < combined.size(); i++) {
-				
-				System.out.println(combined.get(i));
-			}
-			
-					
 
 		} catch (Exception ex) {
 			System.out.println("error" + ex);
@@ -243,9 +236,10 @@ public class UcenecWindow extends SqliteConnect {
 	//Funkcija za preverjanje vnosa 
 	private static void checkInputVSexpected(String input, String expected, JTextField cell) {
 		
+		
 		if(cell.isEditable()) {
 			
-			if (!input.equals(expected)) {
+			if (!input.equalsIgnoreCase(expected)) {
 				cell.setEnabled(false);
 				cell.setBackground(incorrect);
 				cell.setForeground(Color.black);
@@ -305,7 +299,6 @@ public class UcenecWindow extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					/*
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
 						fieldArray.get(j).setText(prevodArr.get(cntr));
@@ -324,23 +317,16 @@ public class UcenecWindow extends SqliteConnect {
 						cntr++;
 					}
 					
-					cntr = 0;					
 					for (int j = 27; j < 36; j++) {	
 						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
 					}
-					*/
 					
 					List<String> combined = new ArrayList<String>();
 					combined.addAll(prevodArr);
 					combined.addAll(verbArr);
 					combined.addAll(pastSimpleArr);
 					combined.addAll(pastParticipleArr);
-					
-					for (int i = 0; i < combined.size(); i++) {
-						
-						System.out.println(combined.get(i));
-					}
 					
 							
 
@@ -386,7 +372,8 @@ public class UcenecWindow extends SqliteConnect {
 					}
 					
 					for (int i = 0; i < fieldArray.size() ; i++) {
-						checkEmpty(fieldArray, i);
+						System.out.println(fieldArray.size());
+						checkEmpty(fieldArray.get(i), i);
 					}
 
 				} catch (Exception ex) {
