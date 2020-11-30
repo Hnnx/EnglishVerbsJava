@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.JProgressBar;
 
 public class UcenecWindow extends SqliteConnect {
 
@@ -89,6 +90,11 @@ public class UcenecWindow extends SqliteConnect {
 	private JButton pastSimpleGumb;
 	private JButton pastParticipleGumb;
 	private JButton gumbPonastavi;
+	
+	//User Score
+	static int userScore = 0;
+	static private JProgressBar progressBar;
+	static private JLabel tockeTotal;
 	
 		
 	//Boilerplate 
@@ -248,6 +254,9 @@ public class UcenecWindow extends SqliteConnect {
 			} else {
 				cell.setEditable(false);
 				cell.setBackground(correct);
+				userScore++;
+				progressBar.setValue(userScore);
+				tockeTotal.setText(userScore + " / 36");
 			}
 		}
 
@@ -265,6 +274,12 @@ public class UcenecWindow extends SqliteConnect {
 
 		JLabel uporabniskoIme = new JLabel(LoginForm.uporabniskoIme);
 		uporabnikToolbar.add(uporabniskoIme);
+		
+		progressBar = new JProgressBar(0,36);
+		uporabnikToolbar.add(progressBar);
+		
+		tockeTotal = new JLabel( userScore + " / 36");
+		uporabnikToolbar.add(tockeTotal);
 
 		JPanel bottomPanelZaGumb = new JPanel();
 		frmUporabnik.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
@@ -398,6 +413,10 @@ public class UcenecWindow extends SqliteConnect {
 		gumbPonastavi = new JButton("Ponastavi");
 		gumbPonastavi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				userScore = 0;
+				tockeTotal.setText(userScore + " / 36");
+				progressBar.setValue(0);
 
 				for (int i = 0; i < 36; i++) {
 					
