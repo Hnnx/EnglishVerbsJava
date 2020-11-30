@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 import java.awt.GridLayout;
 
 import DB.SqliteConnect;
-import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
@@ -93,6 +92,7 @@ public class UcenecWindow extends SqliteConnect {
 	
 	//User Score
 	static int userScore = 0;
+	static int totalPossibleScore = 36;
 	static private JProgressBar progressBar;
 	static private JLabel tockeTotal;
 	
@@ -256,7 +256,7 @@ public class UcenecWindow extends SqliteConnect {
 				cell.setBackground(correct);
 				userScore++;
 				progressBar.setValue(userScore);
-				tockeTotal.setText(userScore + " / 36");
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 			}
 		}
 
@@ -275,10 +275,10 @@ public class UcenecWindow extends SqliteConnect {
 		JLabel uporabniskoIme = new JLabel(LoginForm.uporabniskoIme);
 		uporabnikToolbar.add(uporabniskoIme);
 		
-		progressBar = new JProgressBar(0,36);
+		progressBar = new JProgressBar(0,totalPossibleScore);
 		uporabnikToolbar.add(progressBar);
 		
-		tockeTotal = new JLabel( userScore + " / 36");
+		tockeTotal = new JLabel( userScore + " / " + totalPossibleScore);
 		uporabnikToolbar.add(tockeTotal);
 
 		JPanel bottomPanelZaGumb = new JPanel();
@@ -415,7 +415,8 @@ public class UcenecWindow extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 				
 				userScore = 0;
-				tockeTotal.setText(userScore + " / 36");
+				totalPossibleScore = 36;
+				tockeTotal.setText(userScore + " / "+ totalPossibleScore);
 				progressBar.setValue(0);
 
 				for (int i = 0; i < 36; i++) {
@@ -443,6 +444,10 @@ public class UcenecWindow extends SqliteConnect {
 		gumbPrevod = new JButton("Prevod");
 		gumbPrevod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				totalPossibleScore -= 9;
+				progressBar.setMaximum(totalPossibleScore);
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
@@ -478,6 +483,10 @@ public class UcenecWindow extends SqliteConnect {
 		gumbSimpleTense = new JButton("Verb (infinitive)");
 		gumbSimpleTense.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				totalPossibleScore -= 9;
+				progressBar.setMaximum(totalPossibleScore);
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
@@ -515,6 +524,10 @@ public class UcenecWindow extends SqliteConnect {
 		pastSimpleGumb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				totalPossibleScore -= 9;
+				progressBar.setMaximum(totalPossibleScore);
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
+				
 				int cntr = 0;
 				for (int j = 18; j < 27; j++) {
 					fieldArray.get(j).setText(pastSimpleArr.get(cntr));
@@ -529,6 +542,10 @@ public class UcenecWindow extends SqliteConnect {
 		pastParticipleGumb = new JButton("Past participle");
 		pastParticipleGumb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				totalPossibleScore -= 9;
+				progressBar.setMaximum(totalPossibleScore);
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 
 				int cntr = 0;
 				for (int j = 27; j < 36; j++) {
