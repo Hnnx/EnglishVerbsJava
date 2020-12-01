@@ -101,7 +101,7 @@ public class AddUcenec extends SqliteConnect{
 						
 						pSTMT.execute();
 						
-						Ucitelj.refresh();
+						Ucitelj.refreshUcenecList();
 						
 						JOptionPane.showMessageDialog(null, "Shranjeno", "Uporabnik dodan",
 								JOptionPane.INFORMATION_MESSAGE);

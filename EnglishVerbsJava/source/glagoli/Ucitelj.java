@@ -27,15 +27,31 @@ import javax.swing.JScrollPane;
 
 public class Ucitelj extends SqliteConnect{
 
-	private JFrame frmAaaa;
+	//Frame
+	private JFrame frame;
 	private static JTable table;
 
+	//Gumbi
+	private JButton btnAddUcenec;
+	private JButton btnRemoveUcenec;
+	private JButton btnSeznamUcenec;
+	private JButton btnAddGlagol;
+	private JButton btnRemoveGlagol;
+	private JButton btnSeznamGlagolov;
+	private JButton btnIzhod; 
+
+
+	static PreparedStatement pSTMT = null;
+	static ResultSet rs = null;
+
+
+	//BoilerPlate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
-					window.frmAaaa.setVisible(true);
+					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -43,16 +59,14 @@ public class Ucitelj extends SqliteConnect{
 		});
 	}
 
-	static PreparedStatement pSTMT = null;
-	static ResultSet rs = null;
 
 	public Ucitelj() {
 		conn = poveziBazo();
-
 		initialize();
 	}
 
-	protected static void refresh() {
+	//Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
+	protected static void refreshUcenecList() {
 		String query = "SELECT * FROM users";
 
 		try {
@@ -63,30 +77,51 @@ public class Ucitelj extends SqliteConnect{
 
 		}
 	}
+	
+	protected static void refreshGlagolList() {
+		String query = "SELECT * FROM glagoli";
+		
+		try {
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.WARNING_MESSAGE);
+		}
+	}
 
+
+	//Boilerplate GUI
 	private void initialize() {
-		frmAaaa = new JFrame();
-		frmAaaa.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
-		frmAaaa.getContentPane().setBackground(SystemColor.inactiveCaption);
-		frmAaaa.setBounds(100, 100, 539, 372);
-		frmAaaa.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frmAaaa.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame = new JFrame();
+		frame.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
+		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
+		frame.setBounds(100, 100, 683, 372);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+
+
 
 		JToolBar toolBar = new JToolBar();
 		toolBar.setBackground(Color.WHITE);
-		frmAaaa.getContentPane().add(toolBar, BorderLayout.NORTH);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-		JButton dodajUcencaBtn = new JButton("Dodaj Ucenca");
-		dodajUcencaBtn.addActionListener(new ActionListener() {
+		//Gumb za dodajanje ucenca (odpre novo okno)
+
+		btnAddUcenec = new JButton("Dodaj Ucenca");
+		btnAddUcenec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				AddUcenec.start();
 			}
 		});
-		toolBar.add(dodajUcencaBtn);
+		toolBar.add(btnAddUcenec);
 
-		JButton seznamUcencev = new JButton("Seznam Ucencev");
-		seznamUcencev.addActionListener(new ActionListener() {
+
+		//Gumb za izpis seznama ucencev
+		btnSeznamUcenec = new JButton("Seznam Ucencev");
+		btnSeznamUcenec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -107,9 +142,58 @@ public class Ucitelj extends SqliteConnect{
 
 			}
 		});
+		toolBar.add(btnSeznamUcenec);
 
-		JButton odstraniUcencaBtn = new JButton("Odstrani Ucenca");
-		odstraniUcencaBtn.addActionListener(new ActionListener() {
+		//Gumb za dodajanje glagolov (odpre novo okno)
+		btnAddGlagol = new JButton("Dodaj glagol");
+		btnAddGlagol.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+
+					AddGlagol.start();					
+
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		
+		
+				//Gumb za odstranjevanje ucenca
+				btnRemoveUcenec = new JButton("Odstrani Ucenca");
+				btnRemoveUcenec.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						try {
+
+							DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+							int selectedRow = table.getSelectedRow();
+							String cell = table.getModel().getValueAt(selectedRow, 0).toString();
+
+							String query = "DELETE FROM users WHERE id= " + cell;
+
+							pSTMT = conn.prepareStatement(query);
+							pSTMT.execute();
+							JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
+									JOptionPane.INFORMATION_MESSAGE);
+
+							model.removeRow(selectedRow);
+
+						} catch (Exception ex) {
+							JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+									JOptionPane.WARNING_MESSAGE);
+						}
+
+					}
+				});
+				toolBar.add(btnRemoveUcenec);
+		toolBar.add(btnAddGlagol);
+		
+		//Gumb za odstranjevanje glagola
+		btnRemoveGlagol = new JButton("Odstrani glagol");
+		btnRemoveGlagol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -119,11 +203,11 @@ public class Ucitelj extends SqliteConnect{
 					int selectedRow = table.getSelectedRow();
 					String cell = table.getModel().getValueAt(selectedRow, 0).toString();
 
-					String query = "DELETE FROM users WHERE id= " + cell;
+					String query = "DELETE FROM glagoli WHERE id= " + cell;
 
 					pSTMT = conn.prepareStatement(query);
 					pSTMT.execute();
-					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
+					JOptionPane.showMessageDialog(null, "Izbrisano", "Glagol je bil uspesno izbrisan",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					model.removeRow(selectedRow);
@@ -133,52 +217,67 @@ public class Ucitelj extends SqliteConnect{
 							JOptionPane.WARNING_MESSAGE);
 				}
 
+			
+
+
 			}
 		});
 		
-		JButton dodajGlagolBtn = new JButton("Dodaj glagol");
-		dodajGlagolBtn.addActionListener(new ActionListener() {
+
+		btnSeznamGlagolov = new JButton("Seznam Glagolov");
+		btnSeznamGlagolov.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+
 				try {
-					
-					AddGlagol.start();					
-					
+					String query = "SELECT * FROM glagoli";
+					pSTMT = conn.prepareStatement(query);
+
+					rs = pSTMT.executeQuery();
+
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+
+					pSTMT.close();
+					rs.close();
+
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 				}
+
+			
+				
+
 			}
 		});
-		toolBar.add(dodajGlagolBtn);
+		toolBar.add(btnSeznamGlagolov);
+		toolBar.add(btnRemoveGlagol);
 
-		toolBar.add(odstraniUcencaBtn);
-		toolBar.add(seznamUcencev);
+		btnIzhod = new JButton("Izhod");
+		btnIzhod.addActionListener(new ActionListener() {
 
-		JButton izhodBtn = new JButton("Izhod");
-		izhodBtn.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
+
 					int input = JOptionPane.showConfirmDialog(null, "Ali zalite zapreti program?", "Izhod", JOptionPane.INFORMATION_MESSAGE);
-					
+
 					if(input == 0) {						
 						System.exit(0);					
 					} 					
-					
-					
+
+
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(", JOptionPane.WARNING_MESSAGE);
 				}
-				
+
 			}
 		});
-		
-		
-		toolBar.add(izhodBtn);
-		
+		toolBar.add(btnIzhod);
+
+
+
 		JScrollPane scrollPane = new JScrollPane();
-		frmAaaa.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 		table = new JTable();
 		table.setCellSelectionEnabled(true);
