@@ -12,7 +12,6 @@ import DB.SqliteConnect;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 

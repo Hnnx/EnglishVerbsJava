@@ -4,7 +4,7 @@ import java.sql.*;
 import javax.swing.*;
 
 public class SqliteConnect {
-
+	
 	static String dbName = "vilka.db";
 	public static Connection conn = null;
 	public String query = null;
@@ -18,8 +18,8 @@ public class SqliteConnect {
 		try {
 
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
-//			JOptionPane.showMessageDialog(null, "Povezava z bazo "+ dbName + " vzpostavljena", "Povezava OK", JOptionPane.INFORMATION_MESSAGE);
+			conn = DriverManager.getConnection("jdbc:sqlite:"+dbName);
+			//JOptionPane.showMessageDialog(null, "Povezava z bazo "+ dbName + " vzpostavljena", "Povezava OK", JOptionPane.INFORMATION_MESSAGE);
 			return conn;
 
 		} catch (Exception e) {
