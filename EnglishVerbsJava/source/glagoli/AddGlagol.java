@@ -118,6 +118,8 @@ public class AddGlagol extends SqliteConnect {
 
 						JOptionPane.showMessageDialog(null, "Shranjeno", "Glagol dodan",
 								JOptionPane.INFORMATION_MESSAGE);
+						
+						Ucitelj.refreshGlagolList();
 
 						pSTMT.close();
 
