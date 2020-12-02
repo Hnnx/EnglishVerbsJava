@@ -17,11 +17,12 @@ public class SqliteConnect {
 	
 	/*
 	 
-	  SELECT users.username, glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part
+	 SELECT users.id, users.username, glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part
 FROM users LEFT OUTER JOIN helperTable
 	ON users.id = helperTable.ucenec
 LEFT OUTER JOIN glagoli
-	ON glagoli.id = helperTable.glagol;
+	ON glagoli.id = helperTable.glagol
+	WHERE users.id = 39;
 	  
 	 
 	 */
