@@ -66,6 +66,8 @@ public class UcenecWindow extends SqliteConnect {
 	private JPanel progressPanel;
 	private JTable table;
 	
+	//USER ID ZA IZPIS GLAGOLOV
+	String userID;
 	
 	//Posamezni ArrayListi z glagoli in oblikami
 	private static ArrayList<String> prevodArr = new ArrayList<String>();
@@ -306,7 +308,7 @@ public class UcenecWindow extends SqliteConnect {
 						"	ON users.id = helperTable.ucenec\n" + 
 						"LEFT OUTER JOIN glagoli\n" + 
 						"	ON glagoli.id = helperTable.glagol\n" + 
-						"	WHERE users.id = 38;";
+						"	WHERE users.id = "+userID+";";
 
 				try {
 
