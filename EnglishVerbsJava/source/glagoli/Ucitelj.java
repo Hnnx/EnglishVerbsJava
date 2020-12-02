@@ -30,7 +30,7 @@ public class Ucitelj extends SqliteConnect{
 	//Frame
 	private JFrame frame;
 	private static JTable table;
-
+	
 	//Gumbi
 	private JButton btnAddUcenec;
 	private JButton btnRemoveUcenec;
