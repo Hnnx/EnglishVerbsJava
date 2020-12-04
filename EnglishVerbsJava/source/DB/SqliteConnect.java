@@ -12,22 +12,6 @@ public class SqliteConnect {
 	public PreparedStatement pSTMT = null;
 	public Statement stmt = null;
 	
-	
-	//Replace DB with new one with third table
-	
-	/*
-	 
-	 SELECT users.id, users.username, glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part
-FROM users LEFT OUTER JOIN helperTable
-	ON users.id = helperTable.ucenec
-LEFT OUTER JOIN glagoli
-	ON glagoli.id = helperTable.glagol
-	WHERE users.id = 39;
-	  
-	 
-	 */
-	
-
 	public static Connection poveziBazo() {
 
 		try {
