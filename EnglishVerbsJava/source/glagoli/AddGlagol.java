@@ -22,14 +22,12 @@ public class AddGlagol extends SqliteConnect {
 
 	// GUMBI
 	JButton btnUredi;
+	JButton btnShrani;
 
 	// DB
 	static PreparedStatement pSTMT = null;
 	static ResultSet rs = null;
 	
-	//userID
-	String idEdit;
-
 	//ComboBoxi z glagoli 
 	private static JComboBox<String> combo1;
 	private static JComboBox<String> combo2;
@@ -78,16 +76,15 @@ public class AddGlagol extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 				
 
-				idEdit = cBoxUcenec.getSelectedItem().toString();
+				System.out.println(fetchID());
 				
 				try {
-					idEdit = "38";
 					String query = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
 							"FROM users LEFT OUTER JOIN helperTable\n" + 
 							"	ON users.id = helperTable.ucenec\n" + 
 							"LEFT OUTER JOIN glagoli\n" + 
 							"	ON glagoli.id = helperTable.glagol\n" + 
-							"	WHERE users.id = "+idEdit+";";
+							"	WHERE users.id = "+fetchID()+";";
 					
 					pSTMT = conn.prepareStatement(query);
 					rs = pSTMT.executeQuery();
@@ -97,10 +94,45 @@ public class AddGlagol extends SqliteConnect {
 							if(!(combo1.getItemCount() > 8)) {
 								combo1.addItem(rs.getString(1));
 							}
+							
+							if(!(combo2.getItemCount() > 8)) {
+								combo2.addItem(rs.getString(1));
+							}
+							
+							if(!(combo3.getItemCount() > 8)) {
+								combo3.addItem(rs.getString(1));
+							}
+							
+							if(!(combo4.getItemCount() > 8)) {
+								combo4.addItem(rs.getString(1));
+							}
+							
+							if(!(combo5.getItemCount() > 8)) {
+								combo5.addItem(rs.getString(1));
+							}
+							
+							if(!(combo6.getItemCount() > 8)) {
+								combo6.addItem(rs.getString(1));
+							}
+							
+							if(!(combo7.getItemCount() > 8)) {
+								combo7.addItem(rs.getString(1));
+							}
+							
+							if(!(combo8.getItemCount() > 8)) {
+								combo8.addItem(rs.getString(1));
+							}
+							
+							if(!(combo9.getItemCount() > 8)) {
+								combo9.addItem(rs.getString(1));
+							}
+							
+			
 					}
 
 				} catch (Exception ex) {
-					System.out.println("NAPAKA - DODAJ JOPTIONPANE " + ex);
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -140,6 +172,32 @@ public class AddGlagol extends SqliteConnect {
 
 		combo9 = new JComboBox<String>();
 		panel.add(combo9);
+		
+		btnShrani = new JButton("SHRANI");
+		btnShrani.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				//Make it dynamic :)
+				
+				try {
+					String query = "INSERT INTO helperTable(ucenec,glagol) VALUES"+
+									"(2,3);";
+					pSTMT = conn.prepareStatement(query);
+					
+				} catch (Exception ex) {
+					
+				}
+			}
+		});
+		btnShrani.setBounds(286, 23, 89, 30);
+		frame.getContentPane().add(btnShrani);
+	}
+	
+	private static String fetchID() {
+		
+		//return cBoxUcenec.getSelectedItem().toString();
+		return "38";
+		
 	}
 
 	// Funkcija za polnjenje drop downa z ucenci
