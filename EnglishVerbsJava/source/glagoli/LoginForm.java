@@ -26,14 +26,15 @@ public class LoginForm extends SqliteConnect {
 	private JPasswordField passwordField;
 	protected static int userID;
 
-
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginForm window = new LoginForm();
-					window.frame.setVisible(true);
 					
+					//LoginForm window = new LoginForm(); 
+					//window.frame.setVisible(true);
+					AddGlagol.start();
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,10 +80,10 @@ public class LoginForm extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
+
 					uporabniskoIme = userNameField.getText().toLowerCase();
-					String uporabniskoGeslo = String.valueOf( passwordField.getPassword() );
-					
+					String uporabniskoGeslo = String.valueOf(passwordField.getPassword());
+
 					// Query
 					String query = "SELECT username,password, id FROM users WHERE username=? AND password=?";
 
