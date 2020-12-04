@@ -24,6 +24,7 @@ public class LoginForm extends SqliteConnect {
 	private JFrame frame;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
+	protected static int userID;
 
 
 	public static void main(String[] args) {
@@ -83,7 +84,7 @@ public class LoginForm extends SqliteConnect {
 					String uporabniskoGeslo = String.valueOf( passwordField.getPassword() );
 					
 					// Query
-					String query = "SELECT username,password FROM users WHERE username=? AND password=?";
+					String query = "SELECT username,password, id FROM users WHERE username=? AND password=?";
 
 					// Prepare Statement
 					PreparedStatement pSTMT = conn.prepareStatement(query);
@@ -94,9 +95,10 @@ public class LoginForm extends SqliteConnect {
 					ResultSet rs = pSTMT.executeQuery();
 					int count = 0;
 					while (rs.next()) {
+						userID = rs.getInt("id");
 						count++;
 						uporabniskoIme = rs.getString(1);
-
+						System.out.println(rs.getString(2));
 					}
 
 					if (count == 1 && uporabniskoIme.toLowerCase().equals("test")) {

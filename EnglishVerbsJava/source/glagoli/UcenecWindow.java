@@ -66,7 +66,6 @@ public class UcenecWindow extends SqliteConnect {
 	private JPanel progressPanel;
 	private JTable table;
 	
-	
 	//Posamezni ArrayListi z glagoli in oblikami
 	private static ArrayList<String> prevodArr = new ArrayList<String>();
 	private static ArrayList<String> verbArr = new ArrayList<String>();
@@ -205,7 +204,12 @@ public class UcenecWindow extends SqliteConnect {
 
 		PreparedStatement pstmt = null;
 		ResultSet rst = null;
-		String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
+		String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+				"FROM users LEFT OUTER JOIN helperTable\n" + 
+				"	ON users.id = helperTable.ucenec\n" + 
+				"LEFT OUTER JOIN glagoli\n" + 
+				"	ON glagoli.id = helperTable.glagol\n" + 
+				"	WHERE users.id = "+LoginForm.userID+";";
 
 		try {
 
@@ -296,7 +300,12 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
+				String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+						"FROM users LEFT OUTER JOIN helperTable\n" + 
+						"	ON users.id = helperTable.ucenec\n" + 
+						"LEFT OUTER JOIN glagoli\n" + 
+						"	ON glagoli.id = helperTable.glagol\n" + 
+						"	WHERE users.id = "+LoginForm.userID+";";
 
 				try {
 
@@ -367,7 +376,12 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT pomen, glagol, tense, part FROM glagoli";
+				String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+						"FROM users LEFT OUTER JOIN helperTable\n" + 
+						"	ON users.id = helperTable.ucenec\n" + 
+						"LEFT OUTER JOIN glagoli\n" + 
+						"	ON glagoli.id = helperTable.glagol\n" + 
+						"	WHERE users.id = "+LoginForm.userID+";";
 
 				try {
 
