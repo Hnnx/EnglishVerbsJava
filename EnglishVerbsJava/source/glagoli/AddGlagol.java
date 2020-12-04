@@ -3,25 +3,46 @@ package glagoli;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import DB.SqliteConnect;
 
+import javax.swing.JComboBox;
 import javax.swing.JButton;
-import java.awt.SystemColor;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
+import javax.swing.JPanel;
+
+
+import java.awt.GridLayout;
 
 public class AddGlagol extends SqliteConnect {
 
+	// GUMBI
+	JButton btnUredi;
+
+	// DB
+	static PreparedStatement pSTMT = null;
+	static ResultSet rs = null;
+	
+	//userID
+	String idEdit;
+
+	//ComboBoxi z glagoli 
+	private static JComboBox<String> combo1;
+	private static JComboBox<String> combo2;
+	private static JComboBox<String> combo3;
+	private static JComboBox<String> combo4;
+	private static JComboBox<String> combo5;
+	private static JComboBox<String> combo6;
+	private static JComboBox<String> combo7;
+	private static JComboBox<String> combo8;
+	private static JComboBox<String> combo9;
+
 	private JFrame frame;
-	private JTextField prevodField;
-	private JTextField verbField;
-	private JTextField simpleField;
-	private JTextField participleField;
+	private static JComboBox<String> cBoxUcenec;
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -37,118 +58,105 @@ public class AddGlagol extends SqliteConnect {
 	}
 
 	public AddGlagol() {
+		conn = poveziBazo();
 		initialize();
-	}
-
-	private static boolean glagolIsValid(String glagol) {
-		return glagol.length() < 25 && glagol.length() >= 2 ? true : false;
+		napolniComboBox();
 	}
 
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
-		frame.setBounds(100, 100, 312, 221);
+		frame = new JFrame("Uredi Ucenca / Dodaj glagol");
+		frame.setBounds(100, 100, 1000, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		JLabel glagolLabel = new JLabel("Prevod");
-		glagolLabel.setBounds(10, 30, 46, 14);
-		frame.getContentPane().add(glagolLabel);
+		cBoxUcenec = new JComboBox<String>();
+		cBoxUcenec.setBounds(21, 23, 125, 30);
+		frame.getContentPane().add(cBoxUcenec);
 
-		JLabel prevodLabel = new JLabel("Verb");
-		prevodLabel.setBounds(10, 55, 46, 14);
-		frame.getContentPane().add(prevodLabel);
-
-		JLabel pastSimpleLabel = new JLabel("Past Simple");
-		pastSimpleLabel.setBounds(10, 82, 77, 14);
-		frame.getContentPane().add(pastSimpleLabel);
-
-		JLabel pastPariticpleLabel = new JLabel("Past Participle");
-		pastPariticpleLabel.setBounds(10, 107, 77, 14);
-		frame.getContentPane().add(pastPariticpleLabel);
-
-		prevodField = new JTextField();
-		prevodField.setBounds(88, 27, 134, 20);
-		frame.getContentPane().add(prevodField);
-		prevodField.setColumns(10);
-
-		verbField = new JTextField();
-		verbField.setColumns(10);
-		verbField.setBounds(88, 52, 134, 20);
-		frame.getContentPane().add(verbField);
-
-		simpleField = new JTextField();
-		simpleField.setColumns(10);
-		simpleField.setBounds(88, 79, 134, 20);
-		frame.getContentPane().add(simpleField);
-
-		participleField = new JTextField();
-		participleField.setColumns(10);
-		participleField.setBounds(88, 104, 134, 20);
-		frame.getContentPane().add(participleField);
-
-		JButton dodajGlagolBtn = new JButton("Dodaj");
-		dodajGlagolBtn.addActionListener(new ActionListener() {
+		btnUredi = new JButton("UREDI");
+		btnUredi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 
-				conn = poveziBazo();
-
-				String glagolStr = prevodField.getText();
-				String prevodStr = verbField.getText();
-				String simpleStr = simpleField.getText();
-				String participleStr = participleField.getText();
-
+				idEdit = cBoxUcenec.getSelectedItem().toString();
+				
 				try {
-
-					String query = "INSERT into glagoli (pomen, glagol, tense, part) VALUES (?,?,?,?)";
-
+					idEdit = "38";
+					String query = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+							"FROM users LEFT OUTER JOIN helperTable\n" + 
+							"	ON users.id = helperTable.ucenec\n" + 
+							"LEFT OUTER JOIN glagoli\n" + 
+							"	ON glagoli.id = helperTable.glagol\n" + 
+							"	WHERE users.id = "+idEdit+";";
+					
 					pSTMT = conn.prepareStatement(query);
+					rs = pSTMT.executeQuery();
+					
 
-					// VALIDATION
-					if (glagolIsValid(glagolStr) && !glagolStr.isBlank() && glagolIsValid(prevodStr)
-							&& !prevodStr.isBlank() && glagolIsValid(simpleStr) && !simpleStr.isBlank()
-							&& glagolIsValid(participleStr) && !participleStr.isBlank()) {
-
-						pSTMT.setString(1, glagolStr.toLowerCase());
-						pSTMT.setString(2, prevodStr.toLowerCase());
-						pSTMT.setString(3, simpleStr.toLowerCase());
-						pSTMT.setString(4, participleStr.toLowerCase());
-
-						pSTMT.execute();
-
-						JOptionPane.showMessageDialog(null, "Shranjeno", "Glagol dodan",
-								JOptionPane.INFORMATION_MESSAGE);
-						
-						Ucitelj.refreshGlagolList();
-
-						pSTMT.close();
-
-					} else {
-						JOptionPane.showMessageDialog(null, "Glagol mora vsebovati med 2 in 25 znakov", "Napaka",
-								JOptionPane.WARNING_MESSAGE);
+					while (rs.next()) {
+							if(!(combo1.getItemCount() > 8)) {
+								combo1.addItem(rs.getString(1));
+							}
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Glagol mora vsebovati med 2 in 25 znakov\nOpis Napake: " + ex,
-							"Napaka", JOptionPane.WARNING_MESSAGE);
-
+					System.out.println("NAPAKA - DODAJ JOPTIONPANE " + ex);
 				}
-
 			}
 		});
-		dodajGlagolBtn.setBackground(SystemColor.activeCaption);
-		dodajGlagolBtn.setBounds(144, 148, 89, 23);
-		frame.getContentPane().add(dodajGlagolBtn);
+		btnUredi.setBounds(171, 23, 89, 30);
+		frame.getContentPane().add(btnUredi);
 
-		JButton btnNewButton = new JButton("Nazaj");
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		// Vertikalni panel z glagoli
+		JPanel panel = new JPanel();
+		panel.setBounds(21, 77, 377, 573);
+		frame.getContentPane().add(panel);
+		panel.setLayout(new GridLayout(9, 0, 0, 10));
 
-				frame.dispose();
+		// 9 ComboBoxov za vnasanje glagolov
+		combo1 = new JComboBox<String>();
+		panel.add(combo1);
+
+		combo2 = new JComboBox<String>();
+		panel.add(combo2);
+
+		combo3 = new JComboBox<String>();
+		panel.add(combo3);
+
+		combo4 = new JComboBox<String>();
+		panel.add(combo4);
+
+		combo5 = new JComboBox<String>();
+		panel.add(combo5);
+
+		combo6 = new JComboBox<String>();
+		panel.add(combo6);
+
+		combo7 = new JComboBox<String>();
+		panel.add(combo7);
+
+		combo8 = new JComboBox<String>();
+		panel.add(combo8);
+
+		combo9 = new JComboBox<String>();
+		panel.add(combo9);
+	}
+
+	// Funkcija za polnjenje drop downa z ucenci
+	public void napolniComboBox() {
+		try {
+			String query = "SELECT id, username FROM users;";
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+
+			while (rs.next()) {
+				cBoxUcenec.addItem(rs.getString("username"));
 			}
-		});
-		btnNewButton.setBounds(31, 148, 89, 23);
-		frame.getContentPane().add(btnNewButton);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + e.getMessage(), "Napaka :(",
+					JOptionPane.WARNING_MESSAGE);
+		}
+
 	}
 }
