@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
@@ -27,6 +28,9 @@ public class AddGlagol extends SqliteConnect {
 	// DB
 	static PreparedStatement pSTMT = null;
 	static ResultSet rs = null;
+	
+	//HashMap
+	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
 	
 	//ComboBoxi z glagoli 
 	private static JComboBox<String> combo1;
@@ -58,7 +62,7 @@ public class AddGlagol extends SqliteConnect {
 	public AddGlagol() {
 		conn = poveziBazo();
 		initialize();
-		napolniComboBox();
+		fillComboBoxUcenci();
 	}
 
 	private void initialize() {
@@ -66,7 +70,7 @@ public class AddGlagol extends SqliteConnect {
 		frame.setBounds(100, 100, 1000, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
+		
 		cBoxUcenec = new JComboBox<String>();
 		cBoxUcenec.setBounds(21, 23, 125, 30);
 		frame.getContentPane().add(cBoxUcenec);
@@ -75,58 +79,46 @@ public class AddGlagol extends SqliteConnect {
 		btnUredi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-
-				System.out.println(fetchID());
-				
 				try {
+					String ime = cBoxUcenec.getSelectedItem().toString();
+					
+					int x = hmap.get(ime);
+					System.out.println("id: "+x);
+					
+					combo1.removeAllItems();
+					combo2.removeAllItems();
+					combo3.removeAllItems();
+					combo4.removeAllItems();
+					combo5.removeAllItems();
+					combo6.removeAllItems();
+					combo7.removeAllItems();
+					combo8.removeAllItems();
+					combo8.removeAllItems();
+					
+					
 					String query = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
 							"FROM users LEFT OUTER JOIN helperTable\n" + 
 							"	ON users.id = helperTable.ucenec\n" + 
 							"LEFT OUTER JOIN glagoli\n" + 
 							"	ON glagoli.id = helperTable.glagol\n" + 
-							"	WHERE users.id = "+fetchID()+";";
+							"	WHERE users.id = "+x+";";
 					
-					pSTMT = conn.prepareStatement(query);
+					
+					String allVerbs = "SELECT pomen FROM glagoli";
+					
+					pSTMT = conn.prepareStatement(allVerbs);
 					rs = pSTMT.executeQuery();
 					
-
 					while (rs.next()) {
-							if(!(combo1.getItemCount() > 8)) {
-								combo1.addItem(rs.getString(1));
-							}
-							
-							if(!(combo2.getItemCount() > 8)) {
-								combo2.addItem(rs.getString(1));
-							}
-							
-							if(!(combo3.getItemCount() > 8)) {
-								combo3.addItem(rs.getString(1));
-							}
-							
-							if(!(combo4.getItemCount() > 8)) {
-								combo4.addItem(rs.getString(1));
-							}
-							
-							if(!(combo5.getItemCount() > 8)) {
-								combo5.addItem(rs.getString(1));
-							}
-							
-							if(!(combo6.getItemCount() > 8)) {
-								combo6.addItem(rs.getString(1));
-							}
-							
-							if(!(combo7.getItemCount() > 8)) {
-								combo7.addItem(rs.getString(1));
-							}
-							
-							if(!(combo8.getItemCount() > 8)) {
-								combo8.addItem(rs.getString(1));
-							}
-							
-							if(!(combo9.getItemCount() > 8)) {
-								combo9.addItem(rs.getString(1));
-							}
-							
+							combo1.addItem(rs.getString(1));
+							combo2.addItem(rs.getString(1));
+							combo3.addItem(rs.getString(1));
+							combo4.addItem(rs.getString(1));
+							combo5.addItem(rs.getString(1));
+							combo6.addItem(rs.getString(1));
+							combo7.addItem(rs.getString(1));
+							combo8.addItem(rs.getString(1));
+							combo9.addItem(rs.getString(1));
 			
 					}
 
@@ -177,40 +169,25 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//Make it dynamic :)
-				
-				try {
-					String query = "INSERT INTO helperTable(ucenec,glagol) VALUES"+
-									"(2,3);";
-					pSTMT = conn.prepareStatement(query);
-					
-				} catch (Exception ex) {
-					
-				}
+			
 			}
 		});
 		btnShrani.setBounds(286, 23, 89, 30);
 		frame.getContentPane().add(btnShrani);
 	}
 	
-	private static String fetchID() {
-		
-		//return cBoxUcenec.getSelectedItem().toString();
-		return "38";
-		
-	}
-
 	// Funkcija za polnjenje drop downa z ucenci
-	public void napolniComboBox() {
+	public void fillComboBoxUcenci() {
 		try {
-			String query = "SELECT id, username FROM users;";
+			String query = "SELECT username, id FROM users;";
 			pSTMT = conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
 
 			while (rs.next()) {
 				cBoxUcenec.addItem(rs.getString("username"));
+				hmap.put(rs.getString(1), rs.getInt(2));
 			}
-
+			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Opis napake: \n " + e.getMessage(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
