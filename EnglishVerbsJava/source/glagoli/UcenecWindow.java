@@ -9,6 +9,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
 
@@ -115,7 +116,6 @@ public class UcenecWindow extends SqliteConnect {
 					fillArrayWithVerbs();
 					fetchFromDB();
 					
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -203,7 +203,7 @@ public class UcenecWindow extends SqliteConnect {
 
 		PreparedStatement pstmt = null;
 		ResultSet rst = null;
-		String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+		String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
 				"FROM users LEFT OUTER JOIN helperTable\n" + 
 				"	ON users.id = helperTable.ucenec\n" + 
 				"LEFT OUTER JOIN glagoli\n" + 
@@ -214,24 +214,24 @@ public class UcenecWindow extends SqliteConnect {
 
 			pstmt = conn.prepareStatement(myQuery);
 			rst = pstmt.executeQuery();
-			String pomen = null;
-			String glagol = null;
-			String tense = null;
-			String part = null;
+			String prevod = null;
+			String verb = null;
+			String pastSimple = null;
+			String pastParticiple = null;
 
 			while (rst.next()) {
 
-				pomen = rst.getString(1);
-				prevodArr.add(pomen);
+				prevod = rst.getString(1);
+				prevodArr.add(prevod);
 
-				glagol = rst.getString(2);
-				verbArr.add(glagol);
+				verb = rst.getString(2);
+				verbArr.add(verb);
 
-				tense = rst.getString(3);
-				pastSimpleArr.add(tense);
+				pastSimple = rst.getString(3);
+				pastSimpleArr.add(pastSimple);
 
-				part = rst.getString(4);
-				pastParticipleArr.add(part);
+				pastParticiple = rst.getString(4);
+				pastParticipleArr.add(pastParticiple);
 
 			}
 			
@@ -243,7 +243,9 @@ public class UcenecWindow extends SqliteConnect {
 			
 
 		} catch (Exception ex) {
-			System.out.println("error" + ex);
+			System.out.println("prva napaka");
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.WARNING_MESSAGE);
 
 		}
 	
@@ -299,7 +301,7 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" +
 						"FROM users LEFT OUTER JOIN helperTable\n" + 
 						"	ON users.id = helperTable.ucenec\n" + 
 						"LEFT OUTER JOIN glagoli\n" + 
@@ -362,7 +364,9 @@ public class UcenecWindow extends SqliteConnect {
 							
 
 				} catch (Exception ex) {
-					System.out.println("error" + ex);
+					
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 
 				}
 			}
@@ -375,7 +379,7 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" +
 						"FROM users LEFT OUTER JOIN helperTable\n" + 
 						"	ON users.id = helperTable.ucenec\n" + 
 						"LEFT OUTER JOIN glagoli\n" + 
@@ -412,7 +416,8 @@ public class UcenecWindow extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					System.out.println("error" + ex);
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 
 				}
 				
@@ -478,16 +483,16 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT pomen FROM glagoli";
+				String myQuery = "SELECT prevod FROM glagoli";
 
 				try {
 					pstmt = conn.prepareStatement(myQuery);
 					rst = pstmt.executeQuery();
-					String pomen = null;
+					String prevod = null;
 
 					while (rst.next()) {
-						pomen = rst.getString(1);
-						prevodArr.add(pomen);
+						prevod = rst.getString(1);
+						prevodArr.add(prevod);
 					}
 					
 					int cntr = 0;
@@ -498,7 +503,8 @@ public class UcenecWindow extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					System.out.println("error" + ex);
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 
 				}
 			}
@@ -518,17 +524,17 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT glagol FROM glagoli";
+				String myQuery = "SELECT verb FROM glagoli";
 
 				try {
 
 					pstmt = conn.prepareStatement(myQuery);
 					rst = pstmt.executeQuery();
-					String pomen = null;
+					String verb = null;
 
 					while (rst.next()) {
-						pomen = rst.getString(1);
-						verbArr.add(pomen);
+						verb = rst.getString(1);
+						verbArr.add(verb);
 					}
 					
 					int cntr = 0;
@@ -539,7 +545,8 @@ public class UcenecWindow extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					System.out.println("error" + ex);
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
 
 				}
 				

@@ -98,7 +98,6 @@ public class LoginForm extends SqliteConnect {
 						userID = rs.getInt("id");
 						count++;
 						uporabniskoIme = rs.getString(1);
-						System.out.println(rs.getString(2));
 					}
 
 					if (count == 1 && uporabniskoIme.toLowerCase().equals("test")) {
