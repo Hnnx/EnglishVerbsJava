@@ -20,8 +20,9 @@ import javax.swing.JPanel;
 
 
 import java.awt.GridLayout;
-import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class AddGlagol extends SqliteConnect {
 
@@ -34,7 +35,7 @@ public class AddGlagol extends SqliteConnect {
 	static ResultSet rs = null;
 	
 	//HashMap
-	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
+	private static	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
 	
 	//ComboBoxi z glagoli 
 	private static JComboBox<String> combo1;
@@ -101,21 +102,8 @@ public class AddGlagol extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
-					String ime = cBoxUcenec.getSelectedItem().toString();
-					
-					int x = hmap.get(ime);
-					System.out.println("id: "+x);
-					
 					//clear all before populating ComboBox
-					resetComboBox();
-					
-					String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
-							"FROM users LEFT OUTER JOIN helperTable\n" + 
-							"	ON users.id = helperTable.ucenec\n" + 
-							"LEFT OUTER JOIN glagoli\n" + 
-							"	ON glagoli.id = helperTable.glagol\n" + 
-							"	WHERE users.id = "+x+";";
-					
+					resetComboBox();				
 					
 					String allVerbs = "SELECT prevod FROM glagoli";
 					
@@ -143,6 +131,7 @@ public class AddGlagol extends SqliteConnect {
 		btnUredi.setBounds(171, 23, 89, 30);
 		frame.getContentPane().add(btnUredi);
 
+		
 		// Vertikalni panel z glagoli
 		JPanel panel = new JPanel();
 		panel.setBounds(21, 77, 377, 573);
@@ -182,28 +171,42 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
+				showTable();
 			
 			}
 		});
 		btnShrani.setBounds(286, 23, 89, 30);
 		frame.getContentPane().add(btnShrani);
 		
-		table = new JTable();
-		table.setBounds(481, 77, 474, 424);
-		frame.getContentPane().add(table);
-		
 		JLabel seznamLabel = new JLabel("Seznam Glagolov");
-		seznamLabel.setBounds(480, 52, 94, 14);
+		seznamLabel.setBounds(480, 52, 109, 14);
 		frame.getContentPane().add(seznamLabel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(480, 94, 477, 473);
+		frame.getContentPane().add(scrollPane);
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		
 	}
 	
 	private static void showTable() {
+		
 		try {
+			String ime = cBoxUcenec.getSelectedItem().toString();
+			int x = hmap.get(ime);
 			
-			String query = "SELECT * FROM glagoli";
+			String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
+					"FROM users LEFT OUTER JOIN helperTable\n" + 
+					"	ON users.id = helperTable.ucenec\n" + 
+					"LEFT OUTER JOIN glagoli\n" + 
+					"	ON glagoli.id = helperTable.glagol\n" + 
+					"	WHERE users.id = "+x+";";
 			
-			pSTMT = conn.prepareStatement(query);
+			String myQuery = "SELECT * FROM glagoli";
+			
+			pSTMT = conn.prepareStatement(myQuery);
 			rs = pSTMT.executeQuery();
 			
 			table.setModel(DbUtils.resultSetToTableModel(rs));
