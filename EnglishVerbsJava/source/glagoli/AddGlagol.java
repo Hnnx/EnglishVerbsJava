@@ -6,18 +6,22 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import DB.SqliteConnect;
+import net.proteanit.sql.DbUtils;
 
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
 
 import java.awt.GridLayout;
+import javax.swing.JTable;
+import javax.swing.JLabel;
 
 public class AddGlagol extends SqliteConnect {
 
@@ -45,6 +49,7 @@ public class AddGlagol extends SqliteConnect {
 
 	private JFrame frame;
 	private static JComboBox<String> cBoxUcenec;
+	private static JTable table;
 
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,6 +68,22 @@ public class AddGlagol extends SqliteConnect {
 		conn = poveziBazo();
 		initialize();
 		fillComboBoxUcenci();
+		showTable();
+	}
+	
+	//Funkcija za brisanje comboBoxov
+	private static void resetComboBox() {
+		
+		combo1.removeAllItems();
+		combo2.removeAllItems();
+		combo3.removeAllItems();
+		combo4.removeAllItems();
+		combo5.removeAllItems();
+		combo6.removeAllItems();
+		combo7.removeAllItems();
+		combo8.removeAllItems();
+		combo8.removeAllItems();
+		
 	}
 
 	private void initialize() {
@@ -85,18 +106,10 @@ public class AddGlagol extends SqliteConnect {
 					int x = hmap.get(ime);
 					System.out.println("id: "+x);
 					
-					combo1.removeAllItems();
-					combo2.removeAllItems();
-					combo3.removeAllItems();
-					combo4.removeAllItems();
-					combo5.removeAllItems();
-					combo6.removeAllItems();
-					combo7.removeAllItems();
-					combo8.removeAllItems();
-					combo8.removeAllItems();
+					//clear all before populating ComboBox
+					resetComboBox();
 					
-					
-					String query = "SELECT glagoli.pomen, glagoli.glagol, glagoli.tense, glagoli.part\n" + 
+					String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
 							"FROM users LEFT OUTER JOIN helperTable\n" + 
 							"	ON users.id = helperTable.ucenec\n" + 
 							"LEFT OUTER JOIN glagoli\n" + 
@@ -104,7 +117,7 @@ public class AddGlagol extends SqliteConnect {
 							"	WHERE users.id = "+x+";";
 					
 					
-					String allVerbs = "SELECT pomen FROM glagoli";
+					String allVerbs = "SELECT prevod FROM glagoli";
 					
 					pSTMT = conn.prepareStatement(allVerbs);
 					rs = pSTMT.executeQuery();
@@ -119,7 +132,6 @@ public class AddGlagol extends SqliteConnect {
 							combo7.addItem(rs.getString(1));
 							combo8.addItem(rs.getString(1));
 							combo9.addItem(rs.getString(1));
-			
 					}
 
 				} catch (Exception ex) {
@@ -136,6 +148,7 @@ public class AddGlagol extends SqliteConnect {
 		panel.setBounds(21, 77, 377, 573);
 		frame.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(9, 0, 0, 10));
+		
 
 		// 9 ComboBoxov za vnasanje glagolov
 		combo1 = new JComboBox<String>();
@@ -169,11 +182,44 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				
 			
 			}
 		});
 		btnShrani.setBounds(286, 23, 89, 30);
 		frame.getContentPane().add(btnShrani);
+		
+		table = new JTable();
+		table.setBounds(481, 77, 474, 424);
+		frame.getContentPane().add(table);
+		
+		JLabel seznamLabel = new JLabel("Seznam Glagolov");
+		seznamLabel.setBounds(480, 52, 94, 14);
+		frame.getContentPane().add(seznamLabel);
+	}
+	
+	private static void showTable() {
+		try {
+			
+			String query = "SELECT * FROM glagoli";
+			
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + e.getMessage(), "Napaka :(",
+			JOptionPane.WARNING_MESSAGE);
+		}
+		finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				System.out.println("Error: "+ e.getMessage());
+			}
+		}
 	}
 	
 	// Funkcija za polnjenje drop downa z ucenci

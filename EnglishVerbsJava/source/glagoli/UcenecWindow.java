@@ -116,7 +116,6 @@ public class UcenecWindow extends SqliteConnect {
 					fetchFromDB();
 					
 					
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
