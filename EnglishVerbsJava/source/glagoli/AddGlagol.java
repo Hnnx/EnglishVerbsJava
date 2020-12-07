@@ -26,6 +26,11 @@ import javax.swing.JTable;
 
 public class AddGlagol extends SqliteConnect {
 
+	/*
+	 * Preveri če je v helperTable vec kot 1 vnos UPDATE VALUES namesto INSERT
+	 * DELETE * FROM helperTable WHERE ucenec = ?
+	 */
+
 	// GUMBI
 	JButton btnUredi;
 	JButton btnShrani;
@@ -64,7 +69,7 @@ public class AddGlagol extends SqliteConnect {
 	private static JTable helperTable;
 	private static String idUporabnikaString;
 	private static int idUporabnika;
-	
+
 	// --> WindowBuilder BOILERPLATE
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
@@ -116,7 +121,7 @@ public class AddGlagol extends SqliteConnect {
 		cBoxUcenec.setFont(TrBold);
 		frame.getContentPane().add(cBoxUcenec);
 
-		// Gumb uredi najprej izbere uporabnika in izpise njegove glagole gumb SHRANI
+		// Gumb uredi najprej izbere uporabnika in izpise njegove glagole
 		// jih vnese v bazo
 		btnUredi = new JButton("UREDI");
 		btnUredi.addActionListener(new ActionListener() {
@@ -193,23 +198,34 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-
-					idUporabnikaString= cBoxUcenec.getSelectedItem().toString();
+					// --> PRIDOBITEV UCENEC ID-JA ZA VNOS IN BRISANJE
+					idUporabnikaString = cBoxUcenec.getSelectedItem().toString();
 					idUporabnika = hmap.get(idUporabnikaString);
-					
-					System.out.println(idUporabnika);
-					
-					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
 
+					// --> BRISANJE ENTRYJEV PRED VSAKIM VNOSOM
+					query = "DELETE FROM helperTable WHERE ucenec=?";
 					pSTMT = conn.prepareStatement(query);
-					
+					pSTMT.setInt(1, idUporabnika);
+					pSTMT.execute();
+
+					// ---> VNOS ENTRYJEV (NAKLJUCNI)
+					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
+					pSTMT = conn.prepareStatement(query);
+
 					for (int i = 0; i < 9; i++) {
 						pSTMT.setInt(1, idUporabnika);
 						pSTMT.setInt(2, getRDM());
+						pSTMT.execute();
 					}
 
+					// ---> REFRESH TABELE IN IZPIS GLAGOLOV
+					query = "SELECT glagoli.prevod FROM users"+
+							"LEFT OUTER JOIN helperTable\n" + 
+							"	ON users.id = helperTable.ucenec\n" + 
+							"LEFT OUTER JOIN glagoli\n" + 
+							"	ON glagoli.id = helperTable.glagol\n" + 
+							"	WHERE users.id = "+idUporabnika+";"; 
 
-					pSTMT.execute();
 					pSTMT.close();
 
 				} catch (Exception ex) {
@@ -277,8 +293,7 @@ public class AddGlagol extends SqliteConnect {
 			rs = pSTMT.executeQuery();
 
 			while (rs.next()) {
-				cBoxUcenec.addItem(
-						rs.getString("username"));
+				cBoxUcenec.addItem(rs.getString("username"));
 				hmap.put(rs.getString(1), rs.getInt(2));
 			}
 
