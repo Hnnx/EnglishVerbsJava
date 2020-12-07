@@ -14,8 +14,6 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -31,15 +29,12 @@ public class Ucitelj extends SqliteConnect {
 	private JFrame frame;
 	private static JTable table;
 
-//Gumbi
+	// Gumbi
 	private JButton btnAddUcenec;
 	private JButton btnRemoveUcenec;
 	private JButton btnSeznamUcenec;
 	private JButton btnAddGlagol;
 	private JButton btnIzhod;
-
-	static PreparedStatement pSTMT = null;
-	static ResultSet rs = null;
 
 //BoilerPlate
 	public static void start() {
@@ -62,7 +57,7 @@ public class Ucitelj extends SqliteConnect {
 
 //Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
 	protected static void refreshUcenecList() {
-		String query = "SELECT * FROM users";
+		query = "SELECT * FROM users";
 
 		try {
 			pSTMT = conn.prepareStatement(query);
@@ -74,7 +69,7 @@ public class Ucitelj extends SqliteConnect {
 	}
 
 	protected static void refreshGlagolList() {
-		String query = "SELECT * FROM glagoli";
+		query = "SELECT * FROM glagoli";
 
 		try {
 			pSTMT = conn.prepareStatement(query);
