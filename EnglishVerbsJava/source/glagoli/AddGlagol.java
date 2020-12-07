@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Color;
 
 public class AddGlagol extends SqliteConnect {
 
@@ -107,6 +108,11 @@ public class AddGlagol extends SqliteConnect {
 		cBoxList.add(combo7);
 		cBoxList.add(combo8);
 		cBoxList.add(combo9);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setForeground(Color.GREEN);
+		lblNewLabel.setBounds(612, 34, 130, 27);
+		frame.getContentPane().add(lblNewLabel);
 
 		fillComboBoxGlagoli();
 	}
@@ -138,6 +144,9 @@ public class AddGlagol extends SqliteConnect {
 		cBoxUcenec.setBounds(21, 23, 80, 30);
 		cBoxUcenec.setFont(TrBold);
 		frame.getContentPane().add(cBoxUcenec);
+		
+		
+		/*
 
 		// Gumb uredi najprej izbere uporabnika in izpise njegove glagole
 		// jih vnese v bazo
@@ -168,6 +177,8 @@ public class AddGlagol extends SqliteConnect {
 		});
 		btnUredi.setBounds(111, 23, 89, 30);
 		frame.getContentPane().add(btnUredi);
+		
+		*/
 
 		// Panel z Comboboxi ki vsebujejo izbor glagolov
 		panelZComboBoxi = new JPanel();
@@ -329,7 +340,7 @@ public class AddGlagol extends SqliteConnect {
 
 			}
 		});
-		btnRandom.setBounds(309, 23, 89, 30);
+		btnRandom.setBounds(111, 23, 89, 30);
 		frame.getContentPane().add(btnRandom);
 
 	}
