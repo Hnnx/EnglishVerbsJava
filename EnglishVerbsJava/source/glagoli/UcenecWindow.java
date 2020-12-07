@@ -275,7 +275,7 @@ public class UcenecWindow extends SqliteConnect {
 
 	private void initialize() {
 		frmUporabnik = new JFrame();
-		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme);
+		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme.substring(0,1).toUpperCase() + LoginForm.uporabniskoIme.substring(1) );
 		frmUporabnik.setBounds(100, 100, 969, 638);
 		frmUporabnik.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmUporabnik.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -283,7 +283,7 @@ public class UcenecWindow extends SqliteConnect {
 		JPanel uporabnikToolbar = new JPanel();
 		frmUporabnik.getContentPane().add(uporabnikToolbar, BorderLayout.NORTH);
 
-		JLabel uporabniskoIme = new JLabel(LoginForm.uporabniskoIme);
+		JLabel uporabniskoIme = new JLabel(LoginForm.uporabniskoIme.substring(0,1).toUpperCase() + LoginForm.uporabniskoIme.substring(1));
 		uporabnikToolbar.add(uporabniskoIme);
 		
 		progressBar = new JProgressBar(0,totalPossibleScore);

@@ -31,9 +31,10 @@ public class LoginForm extends SqliteConnect {
 			public void run() {
 				try {
 					
-					//LoginForm window = new LoginForm(); 
-					//window.frame.setVisible(true);
-					AddGlagol.start();
+					LoginForm window = new LoginForm(); 
+					window.frame.setVisible(true);
+					
+					//AddGlagol.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -99,17 +100,17 @@ public class LoginForm extends SqliteConnect {
 						count++;
 						uporabniskoIme = rs.getString(1);
 					}
-
+					
 					if (count == 1 && uporabniskoIme.toLowerCase().equals("test")) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme, "Prijava",
+								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme.substring(0,1).toUpperCase() + uporabniskoIme.substring(1), "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
 						Ucitelj.start();
 						frame.dispose();
 
 					} else if (count == 1) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme, "Prijava",
+								"Uporabnisko ime in geslo sta pravilna - pozdravljen " + uporabniskoIme.substring(0,1).toUpperCase() + uporabniskoIme.substring(1), "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
 						UcenecWindow.start();
 						frame.dispose();
