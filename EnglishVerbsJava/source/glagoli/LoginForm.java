@@ -1,8 +1,6 @@
 package glagoli;
 
 import java.awt.EventQueue;
-import java.sql.*;
-
 import javax.swing.JFrame;
 
 import DB.SqliteConnect;
@@ -21,7 +19,7 @@ import java.awt.SystemColor;
 public class LoginForm extends SqliteConnect {
 
 	// --> WindowBuilder Boiler Plate
-	private JFrame frame;
+	protected JFrame frame;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
 
@@ -36,8 +34,8 @@ public class LoginForm extends SqliteConnect {
 			public void run() {
 				try {
 
-					 LoginForm window = new LoginForm();					 
-					 window.frame.setVisible(true);
+					LoginForm window = new LoginForm();					 
+					window.frame.setVisible(true);
 					 
 					 
 					//AddGlagol.start();
@@ -51,7 +49,6 @@ public class LoginForm extends SqliteConnect {
 	// Constructor (Boilerplate)
 	public LoginForm() {
 		initialize();
-		conn = poveziBazo();
 	}
 
 	// Boilerplate
@@ -82,20 +79,21 @@ public class LoginForm extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
+					conn = poveziBazo();
 
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
 
 					// Query
-					String query = "SELECT username,password, id FROM users WHERE username=? AND password=?";
+					query = "SELECT username,password, id FROM users WHERE username=? AND password=?";
 
 					// Prepare Statement
-					PreparedStatement pSTMT = conn.prepareStatement(query);
+					pSTMT = conn.prepareStatement(query);
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
 					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
 
 					// Result Set
-					ResultSet rs = pSTMT.executeQuery();
+					rs = pSTMT.executeQuery();
 					int count = 0;
 					while (rs.next()) {
 						userID = rs.getInt("id");
@@ -132,7 +130,7 @@ public class LoginForm extends SqliteConnect {
 					pSTMT.close();
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n" + ex, "Napaka", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Opis napake: Prišlo je do napake pri prijavi - podrobnosti napake: " + ex, "Napaka", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}

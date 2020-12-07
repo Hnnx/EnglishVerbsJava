@@ -14,8 +14,6 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -28,20 +26,16 @@ import javax.swing.JScrollPane;
 public class Ucitelj extends SqliteConnect {
 
 	// Frame
-	private JFrame frame;
+	protected static JFrame frame;
 	private static JTable table;
 
-//Gumbi
+	// Gumbi
 	private JButton btnAddUcenec;
 	private JButton btnRemoveUcenec;
-	private JButton btnSeznamUcenec;
 	private JButton btnAddGlagol;
 	private JButton btnIzhod;
 
-	static PreparedStatement pSTMT = null;
-	static ResultSet rs = null;
-
-//BoilerPlate
+	// BoilerPlate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -58,11 +52,12 @@ public class Ucitelj extends SqliteConnect {
 	public Ucitelj() {
 		conn = poveziBazo();
 		initialize();
+		refreshUcenecList();
 	}
 
-//Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
+	// Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
 	protected static void refreshUcenecList() {
-		String query = "SELECT * FROM users";
+		query = "SELECT * FROM users";
 
 		try {
 			pSTMT = conn.prepareStatement(query);
@@ -73,20 +68,7 @@ public class Ucitelj extends SqliteConnect {
 		}
 	}
 
-	protected static void refreshGlagolList() {
-		String query = "SELECT * FROM glagoli";
-
-		try {
-			pSTMT = conn.prepareStatement(query);
-			rs = pSTMT.executeQuery();
-			table.setModel(DbUtils.resultSetToTableModel(rs));
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-					JOptionPane.WARNING_MESSAGE);
-		}
-	}
-
-//Boilerplate GUI
+	// Boilerplate GUI
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
@@ -99,7 +81,7 @@ public class Ucitelj extends SqliteConnect {
 		toolBar.setBackground(Color.WHITE);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-//Gumb za dodajanje ucenca (odpre novo okno)
+		// Gumb za dodajanje ucenca (odpre novo okno)
 
 		btnAddUcenec = new JButton("Dodaj Ucenca");
 		btnAddUcenec.addActionListener(new ActionListener() {
@@ -110,33 +92,8 @@ public class Ucitelj extends SqliteConnect {
 		});
 		toolBar.add(btnAddUcenec);
 
-//Gumb za izpis seznama ucencev
-		btnSeznamUcenec = new JButton("Seznam Ucencev");
-		btnSeznamUcenec.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					String query = "SELECT * FROM users";
-					pSTMT = conn.prepareStatement(query);
-
-					rs = pSTMT.executeQuery();
-
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-
-					pSTMT.close();
-					rs.close();
-
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
-				}
-
-			}
-		});
-		toolBar.add(btnSeznamUcenec);
-
-//Gumb za dodajanje glagolov (odpre novo okno)
-		btnAddGlagol = new JButton("Dodaj glagol");
+		// Gumb za dodajanje glagolov (odpre novo okno)
+		btnAddGlagol = new JButton("Urejanje Glagolov");
 		btnAddGlagol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -145,8 +102,9 @@ public class Ucitelj extends SqliteConnect {
 					AddGlagol.start();
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prišlo je do napake pri zagonu okna za urejanje glagolov" + ex.getMessage(),
+							"Napaka :(", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -173,8 +131,9 @@ public class Ucitelj extends SqliteConnect {
 					model.removeRow(selectedRow);
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri brisanju iz baze podatkov " + ex.getMessage(),
+							"Napaka :(", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -188,7 +147,7 @@ public class Ucitelj extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 				try {
 
-					int input = JOptionPane.showConfirmDialog(null, "Ali zalite zapreti program?", "Izhod",
+					int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					if (input == 0) {
@@ -196,7 +155,8 @@ public class Ucitelj extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
 

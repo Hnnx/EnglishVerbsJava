@@ -13,15 +13,24 @@ import DB.SqliteConnect;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
 import java.awt.event.ActionEvent;
 
 public class AddUcenec extends SqliteConnect{
 
+	// Framee
 	private JFrame frame;
+	
+	
+	// Podatki uporabnika
 	private JTextField uporabniskoTxt;
 	private JTextField pwTxt;
-
+	
+	//Gumbi
+	private static JButton btnBack;
+	private static JButton btnAdd;	
+	
+	
+	//--> WindowBuilder BOILERPLATE
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -76,19 +85,18 @@ public class AddUcenec extends SqliteConnect{
 		pwTxt.setColumns(10);
 		
 		
-		JButton addBtn = new JButton("DODAJ");
-		addBtn.addActionListener(new ActionListener() {
+		btnAdd = new JButton("DODAJ");
+		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				conn = poveziBazo();
 				
 				String uporabnisko = uporabniskoTxt.getText();
 				String password = pwTxt.getText();
 
 				try {
-					String query = "INSERT INTO users (username, password) VALUES (?,?)";
-
-					PreparedStatement pSTMT = conn.prepareStatement(query);
+					query = "INSERT INTO users (username, password) VALUES (?,?)";
+					pSTMT = conn.prepareStatement(query);
 					
 					//VALIDATION
 					if( ! isValidUsername(uporabnisko) && ! isValidEmail(password) ) {
@@ -120,18 +128,18 @@ public class AddUcenec extends SqliteConnect{
 
 			}
 		});
-		addBtn.setBounds(127, 69, 86, 23);
-		frame.getContentPane().add(addBtn);
+		btnAdd.setBounds(127, 69, 86, 23);
+		frame.getContentPane().add(btnAdd);
 		
-		JButton nazajBtn = new JButton("NAZAJ");
-		nazajBtn.addActionListener(new ActionListener() {
+		btnBack = new JButton("NAZAJ");
+		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				frame.dispose();
 				
 			}
 		});
-		nazajBtn.setBounds(20, 66, 81, 23);
-		frame.getContentPane().add(nazajBtn);
+		btnBack.setBounds(20, 66, 81, 23);
+		frame.getContentPane().add(btnBack);
 	}
 }

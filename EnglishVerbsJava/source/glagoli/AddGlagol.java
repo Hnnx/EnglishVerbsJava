@@ -23,6 +23,8 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 public class AddGlagol extends SqliteConnect {
 
@@ -33,8 +35,8 @@ public class AddGlagol extends SqliteConnect {
 
 	// GUMBI
 	JButton btnUredi;
+	JButton btnNakljucno;
 	JButton btnShrani;
-	JButton btnRandom;
 
 	// DB
 	static PreparedStatement pSTMT = null;
@@ -58,20 +60,19 @@ public class AddGlagol extends SqliteConnect {
 	private static JComboBox<String> combo8;
 	private static JComboBox<String> combo9;
 
-	// Font
 	private static Font TrBold = new Font("TimesRoman", Font.BOLD, 16);
 	private static Font TrPlain = new Font("TimesRoman", Font.PLAIN, 14);
 
 	// Frame
 	private JFrame frame;
 	private JPanel panelZComboBoxi;
-	private JLabel seznamLabel;
 
 	// Ostale staticne
 	private static JComboBox<String> cBoxUcenec;
 	private static JTable helperTable;
 	private static String idUporabnikaString;
 	private static int idUporabnika;
+	private static JLabel statusLabel;
 
 	// --> WindowBuilder BOILERPLATE
 	public static void start() {
@@ -107,6 +108,59 @@ public class AddGlagol extends SqliteConnect {
 		cBoxList.add(combo7);
 		cBoxList.add(combo8);
 		cBoxList.add(combo9);
+		
+		statusLabel = new JLabel("");
+		statusLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+		statusLabel.setForeground(new Color(0, 100, 0));
+		statusLabel.setBounds(480, 25, 419, 27);
+		frame.getContentPane().add(statusLabel);
+		
+		JButton btnVrniLogin = new JButton("PRIJAVA");
+		btnVrniLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+						frame.dispose();
+						Ucitelj.frame.dispose();
+						String[] a = {""};
+						LoginForm.main(a);
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				
+				
+				
+			}
+		});
+		btnVrniLogin.setBounds(480, 607, 127, 30);
+		frame.getContentPane().add(btnVrniLogin);
+		
+		JButton btnVrniUcitelj = new JButton("NAZAJ");
+		btnVrniUcitelj.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+
+				try {
+						frame.dispose();
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				
+				
+				
+			
+				
+				
+			}
+		});
+		btnVrniUcitelj.setBounds(628, 607, 127, 30);
+		frame.getContentPane().add(btnVrniUcitelj);
 
 		fillComboBoxGlagoli();
 	}
@@ -130,47 +184,20 @@ public class AddGlagol extends SqliteConnect {
 	private void initialize() {
 		// --> Boilerplate
 		frame = new JFrame("Uredi Ucenca / Dodaj glagol");
+		frame.getContentPane().setFont(new Font("Arial", Font.PLAIN, 15));
+		frame.getContentPane().setBackground(SystemColor.activeCaption);
 		frame.setBounds(100, 100, 1000, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		cBoxUcenec = new JComboBox<String>();
 		cBoxUcenec.setBounds(21, 23, 80, 30);
-		cBoxUcenec.setFont(TrBold);
+		cBoxUcenec.setFont(new Font("Arial", Font.BOLD, 16));
 		frame.getContentPane().add(cBoxUcenec);
-
-		// Gumb uredi najprej izbere uporabnika in izpise njegove glagole
-		// jih vnese v bazo
-		btnUredi = new JButton("UREDI");
-		btnUredi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				try {
-					// Clear all before populating ComboBox
-					resetComboBox();
-
-					query = "SELECT prevod, id FROM glagoli ORDER BY prevod;";
-
-					pSTMT = conn.prepareStatement(query);
-					rs = pSTMT.executeQuery();
-
-					while (rs.next()) {
-						for (int i = 0; i < cBoxList.size(); i++) {
-							cBoxList.get(i).addItem(rs.getString(1)+" "+ rs.getInt(2));							
-						}						
-					}
-
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
-				}
-			}
-		});
-		btnUredi.setBounds(111, 23, 89, 30);
-		frame.getContentPane().add(btnUredi);
-
+		
 		// Panel z Comboboxi ki vsebujejo izbor glagolov
 		panelZComboBoxi = new JPanel();
+		panelZComboBoxi.setBackground(SystemColor.inactiveCaption);
 		panelZComboBoxi.setBounds(21, 77, 390, 573);
 		frame.getContentPane().add(panelZComboBoxi);
 		panelZComboBoxi.setLayout(new GridLayout(9, 0, 0, 10));
@@ -206,8 +233,10 @@ public class AddGlagol extends SqliteConnect {
 
 		// --> Gumb shrani sprejme vrednosti pridobeljene iz 9ih ComboBoxov in jih vnese
 		// v DB
-		btnShrani = new JButton("RANDOM");
-		btnShrani.addActionListener(new ActionListener() {
+		btnNakljucno = new JButton("Nakljucno");
+		btnNakljucno.setToolTipText("Samodejno doloci nakljucne glagole");
+		btnNakljucno.setFont(new Font("Arial", Font.PLAIN, 15));
+		btnNakljucno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// --> PRIDOBITEV UCENEC ID-JA ZA VNOS IN BRISANJE
@@ -233,6 +262,7 @@ public class AddGlagol extends SqliteConnect {
 					pSTMT.close();
 
 					refreshTable();
+					statusLabel.setText("Ucencu "+idUporabnikaString+" ste samodejno dolocili naslednje glagole");
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -244,22 +274,20 @@ public class AddGlagol extends SqliteConnect {
 			}
 		});
 
-		btnShrani.setBounds(210, 23, 89, 30);
-		frame.getContentPane().add(btnShrani);
-
-		seznamLabel = new JLabel("Seznam Glagolov");
-		seznamLabel.setBounds(480, 31, 122, 30);
-		frame.getContentPane().add(seznamLabel);
+		btnNakljucno.setBounds(267, 24, 144, 30);
+		frame.getContentPane().add(btnNakljucno);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(480, 77, 477, 573);
+		scrollPane.setBounds(480, 77, 477, 519);
 		frame.getContentPane().add(scrollPane);
 		helperTable = new JTable();
 		helperTable.setFont(TrPlain);
 		scrollPane.setViewportView(helperTable);
 
-		btnRandom = new JButton("Shrani");
-		btnRandom.addActionListener(new ActionListener() {
+		btnShrani = new JButton("Shrani");
+		btnShrani.setToolTipText("Rocno doloci glagole");
+		btnShrani.setFont(new Font("Arial", Font.PLAIN, 15));
+		btnShrani.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -318,6 +346,8 @@ public class AddGlagol extends SqliteConnect {
 
 					refreshTable();
 					pSTMT.close();
+					
+					statusLabel.setText("Ucencu "+idUporabnikaString+" ste rocno dolocili naslednje glagole");
 
 				} catch (Exception e2) {
 
@@ -329,8 +359,8 @@ public class AddGlagol extends SqliteConnect {
 
 			}
 		});
-		btnRandom.setBounds(309, 23, 89, 30);
-		frame.getContentPane().add(btnRandom);
+		btnShrani.setBounds(111, 23, 122, 30);
+		frame.getContentPane().add(btnShrani);
 
 	}
 

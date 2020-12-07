@@ -7,9 +7,9 @@ public class SqliteConnect {
 	
 	static String dbName = "vilka.db";
 	public static Connection conn = null;
-	public String query = null;
-	public ResultSet rs = null;
-	public PreparedStatement pSTMT = null;
+	public static String query = "";
+	public static ResultSet rs = null;
+	public static PreparedStatement pSTMT = null;
 	public Statement stmt = null;
 	
 	public static Connection poveziBazo() {
@@ -21,7 +21,7 @@ public class SqliteConnect {
 			return conn;
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Opis napake: \n" + e, "Napaka :(", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Opis napake: Prislo je do napake pri povezovanju z bazo podatkov" + e, "Napaka :(", JOptionPane.WARNING_MESSAGE);
 			return null;
 		}
 
