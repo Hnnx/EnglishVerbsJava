@@ -202,8 +202,8 @@ public class UcenecWindow extends SqliteConnect {
 	private static void fetchFromDB() {
 
 		PreparedStatement pstmt = null;
-		ResultSet rst = null;
-		String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
+		ResultSet rs = null;
+		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
 				"FROM users LEFT OUTER JOIN helperTable\n" + 
 				"	ON users.id = helperTable.ucenec\n" + 
 				"LEFT OUTER JOIN glagoli\n" + 
@@ -212,25 +212,25 @@ public class UcenecWindow extends SqliteConnect {
 
 		try {
 
-			pstmt = conn.prepareStatement(myQuery);
-			rst = pstmt.executeQuery();
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
 			String prevod = null;
 			String verb = null;
 			String pastSimple = null;
 			String pastParticiple = null;
 
-			while (rst.next()) {
+			while (rs.next()) {
 
-				prevod = rst.getString(1);
+				prevod = rs.getString(1);
 				prevodArr.add(prevod);
 
-				verb = rst.getString(2);
+				verb = rs.getString(2);
 				verbArr.add(verb);
 
-				pastSimple = rst.getString(3);
+				pastSimple = rs.getString(3);
 				pastSimpleArr.add(pastSimple);
 
-				pastParticiple = rst.getString(4);
+				pastParticiple = rs.getString(4);
 				pastParticipleArr.add(pastParticiple);
 
 			}
@@ -300,7 +300,7 @@ public class UcenecWindow extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				PreparedStatement pstmt = null;
-				ResultSet rst = null;
+				ResultSet rs = null;
 				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" +
 						"FROM users LEFT OUTER JOIN helperTable\n" + 
 						"	ON users.id = helperTable.ucenec\n" + 
@@ -311,24 +311,24 @@ public class UcenecWindow extends SqliteConnect {
 				try {
 
 					pstmt = conn.prepareStatement(myQuery);
-					rst = pstmt.executeQuery();
+					rs = pstmt.executeQuery();
 					String pomen = null;
 					String glagol = null;
 					String tense = null;
 					String part = null;
 
-					while (rst.next()) {
+					while (rs.next()) {
 
-						pomen = rst.getString(1);
+						pomen = rs.getString(1);
 						prevodArr.add(pomen);
 
-						glagol = rst.getString(2);
+						glagol = rs.getString(2);
 						verbArr.add(glagol);
 
-						tense = rst.getString(3);
+						tense = rs.getString(3);
 						pastSimpleArr.add(tense);
 
-						part = rst.getString(4);
+						part = rs.getString(4);
 						pastParticipleArr.add(part);
 
 					}

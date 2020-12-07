@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
@@ -43,6 +43,9 @@ public class AddGlagol extends SqliteConnect {
 
 	// HashMap
 	private static HashMap<String, Integer> hmap = new HashMap<String, Integer>();
+
+	// Array z cBoxi
+	private static ArrayList<JComboBox<String>> cBoxList;
 
 	// ComboBoxi z glagoli
 	private static JComboBox<String> combo1;
@@ -90,7 +93,23 @@ public class AddGlagol extends SqliteConnect {
 		initialize();
 		conn = poveziBazo();
 		fillComboBoxUcenci();
+		fillComboBoxGlagoli();
 		showTable();
+
+		// Nafilaj cBoxList za nadaljno uporabi pri loopih
+
+		cBoxList = new ArrayList<JComboBox<String>>();
+
+		cBoxList.add(combo1);
+		cBoxList.add(combo2);
+		cBoxList.add(combo3);
+		cBoxList.add(combo4);
+		cBoxList.add(combo5);
+		cBoxList.add(combo6);
+		cBoxList.add(combo7);
+		cBoxList.add(combo8);
+		cBoxList.add(combo9);
+
 	}
 
 	// Funkcija za brisanje/resetiranje comboBoxov - brez tega se glagoli stackajo
@@ -131,21 +150,21 @@ public class AddGlagol extends SqliteConnect {
 					// Clear all before populating ComboBox
 					resetComboBox();
 
-					query = "SELECT prevod FROM glagoli";
+					query = "SELECT id, prevod FROM glagoli ORDER BY prevod;";
 
 					pSTMT = conn.prepareStatement(query);
 					rs = pSTMT.executeQuery();
 
 					while (rs.next()) {
-						combo1.addItem(" " + rs.getString(1));
-						combo2.addItem(" " + rs.getString(1));
-						combo3.addItem(" " + rs.getString(1));
-						combo4.addItem(" " + rs.getString(1));
-						combo5.addItem(" " + rs.getString(1));
-						combo6.addItem(" " + rs.getString(1));
-						combo7.addItem(" " + rs.getString(1));
-						combo8.addItem(" " + rs.getString(1));
-						combo9.addItem(" " + rs.getString(1));
+						combo1.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo2.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo3.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo4.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo5.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo6.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo7.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo8.addItem(rs.getInt(1) + " " + rs.getString(2));
+						combo9.addItem(rs.getInt(1) + " " + rs.getString(2));
 					}
 
 				} catch (Exception ex) {
@@ -207,6 +226,7 @@ public class AddGlagol extends SqliteConnect {
 					pSTMT = conn.prepareStatement(query);
 					pSTMT.setInt(1, idUporabnika);
 					pSTMT.execute();
+					pSTMT.close();
 
 					// ---> VNOS ENTRYJEV (NAKLJUCNI)
 					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
@@ -217,14 +237,17 @@ public class AddGlagol extends SqliteConnect {
 						pSTMT.setInt(2, getRDM());
 						pSTMT.execute();
 					}
+					pSTMT.close();
 
 					// ---> REFRESH TABELE IN IZPIS GLAGOLOV
-					query = "SELECT glagoli.prevod FROM users"+
-							"LEFT OUTER JOIN helperTable\n" + 
-							"	ON users.id = helperTable.ucenec\n" + 
-							"LEFT OUTER JOIN glagoli\n" + 
-							"	ON glagoli.id = helperTable.glagol\n" + 
-							"	WHERE users.id = "+idUporabnika+";"; 
+					query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+							+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+							+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
+							+ "	WHERE users.id = " + idUporabnika + ";";
+
+					pSTMT = conn.prepareStatement(query);
+					rs = pSTMT.executeQuery();
+					helperTable.setModel(DbUtils.resultSetToTableModel(rs));
 
 					pSTMT.close();
 
@@ -256,10 +279,105 @@ public class AddGlagol extends SqliteConnect {
 		btnRandom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				try {
+					// --> Za pridobit id ucenca, ki mu zelimo shraniti glagole
+					idUporabnikaString = cBoxUcenec.getSelectedItem().toString();
+					idUporabnika = hmap.get(idUporabnikaString);
+
+					// --> Preverjanje, ce ucenec ze ima dolocene glagole
+					String query = "SELECT ucenec FROM helperTable WHERE ucenec=?";
+
+					pSTMT = conn.prepareStatement(query);
+					pSTMT.setInt(1, idUporabnika);
+
+					rs = pSTMT.executeQuery();
+
+					int count = 0;
+					while (rs.next()) {
+						count++;
+						System.out.println("num of entries: " + count);
+					}
+
+					rs.close();
+					pSTMT.close();
+
+					// ---> Delete before I figure out why UPDATE doesn't work :(
+					if (count > 0) {
+						query = "DELETE FROM helperTable WHERE ucenec =?";
+						pSTMT = conn.prepareStatement(query);
+						pSTMT.setInt(1, idUporabnika);
+						pSTMT.execute();
+						pSTMT.close();
+					}
+
+					// --> Klasicen insert query
+					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
+					pSTMT = conn.prepareStatement(query);
+
+					/*
+					 * Komedija: Pridobit moremo glagol id iz ComboBoxa in ga shranimo v idGlagol
+					 * Najprej Parsamo z Integer Wrapper Classom, potem izberemo iz ArrayLista,
+					 * nafilanega z JComboBoxi z ArrayList metodo .get(i) ko dobimo OBJECT JComboBox
+					 * uporabimo getSelectedItem metodo, ki jo je potrebno spremeniti v String - iz
+					 * tega Stringa izluscimo STEVILKE z metodo .replaceAll()
+					 * 
+					 */
+
+					for (int i = 0; i < cBoxList.size(); i++) {
+
+						int idGlagol = Integer
+								.parseInt(cBoxList.get(i).getSelectedItem().toString().replaceAll("[^0-9]", ""));
+
+						pSTMT.setInt(1, idUporabnika);
+						pSTMT.setInt(2, idGlagol);
+						pSTMT.execute();
+
+					}
+
+					pSTMT.close();
+
+				} catch (Exception e2) {
+
+					e2.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + e2.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
+
+				}
+
 			}
 		});
 		btnRandom.setBounds(309, 23, 89, 30);
 		frame.getContentPane().add(btnRandom);
+
+	}
+
+	private static void fillComboBoxGlagoli() {
+
+		try {
+			// Clear all before populating ComboBox
+			resetComboBox();
+
+			query = "SELECT id, prevod FROM glagoli ORDER BY prevod;";
+
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+
+			while (rs.next()) {
+				combo1.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo2.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo3.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo4.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo5.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo6.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo7.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo8.addItem(rs.getInt(1) + " " + rs.getString(2));
+				combo9.addItem(rs.getInt(1) + " " + rs.getString(2));
+			}
+
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.WARNING_MESSAGE);
+		}
 
 	}
 
@@ -276,12 +394,6 @@ public class AddGlagol extends SqliteConnect {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Opis napake: \n " + e.getMessage(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
-		} finally {
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				System.out.println("Error: " + e.getMessage());
-			}
 		}
 	}
 
@@ -305,7 +417,6 @@ public class AddGlagol extends SqliteConnect {
 	}
 
 	private static int getRDM() {
-		int rdm = (int) (Math.random() * 64 + 1);
-		return rdm;
+		return (int) (Math.random() * 64 + 1);
 	}
 }
