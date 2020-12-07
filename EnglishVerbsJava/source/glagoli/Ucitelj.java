@@ -26,7 +26,7 @@ import javax.swing.JScrollPane;
 public class Ucitelj extends SqliteConnect {
 
 	// Frame
-	private JFrame frame;
+	protected static JFrame frame;
 	private static JTable table;
 
 	// Gumbi
@@ -35,7 +35,7 @@ public class Ucitelj extends SqliteConnect {
 	private JButton btnAddGlagol;
 	private JButton btnIzhod;
 
-//BoilerPlate
+	// BoilerPlate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,7 +55,7 @@ public class Ucitelj extends SqliteConnect {
 		refreshUcenecList();
 	}
 
-//Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
+	// Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
 	protected static void refreshUcenecList() {
 		query = "SELECT * FROM users";
 
@@ -68,7 +68,7 @@ public class Ucitelj extends SqliteConnect {
 		}
 	}
 
-//Boilerplate GUI
+	// Boilerplate GUI
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
@@ -76,13 +76,12 @@ public class Ucitelj extends SqliteConnect {
 		frame.setBounds(100, 100, 683, 372);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		
 
 		JToolBar toolBar = new JToolBar();
 		toolBar.setBackground(Color.WHITE);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-//Gumb za dodajanje ucenca (odpre novo okno)
+		// Gumb za dodajanje ucenca (odpre novo okno)
 
 		btnAddUcenec = new JButton("Dodaj Ucenca");
 		btnAddUcenec.addActionListener(new ActionListener() {
@@ -93,7 +92,7 @@ public class Ucitelj extends SqliteConnect {
 		});
 		toolBar.add(btnAddUcenec);
 
-		//Gumb za dodajanje glagolov (odpre novo okno)
+		// Gumb za dodajanje glagolov (odpre novo okno)
 		btnAddGlagol = new JButton("Urejanje Glagolov");
 		btnAddGlagol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,8 +102,9 @@ public class Ucitelj extends SqliteConnect {
 					AddGlagol.start();
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: Prišlo je do napake pri zagonu okna za urejanje glagolov" + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prišlo je do napake pri zagonu okna za urejanje glagolov" + ex.getMessage(),
+							"Napaka :(", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -131,8 +131,9 @@ public class Ucitelj extends SqliteConnect {
 					model.removeRow(selectedRow);
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: Prislo je do napake pri brisanju iz baze podatkov " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri brisanju iz baze podatkov " + ex.getMessage(),
+							"Napaka :(", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -146,7 +147,7 @@ public class Ucitelj extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 				try {
 
-					int input = JOptionPane.showConfirmDialog(null, "Ali zalite zapreti program?", "Izhod",
+					int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					if (input == 0) {
@@ -154,7 +155,8 @@ public class Ucitelj extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null,
+							"Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
 
