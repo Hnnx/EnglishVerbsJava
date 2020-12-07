@@ -36,10 +36,11 @@ public class LoginForm extends SqliteConnect {
 			public void run() {
 				try {
 
-					LoginForm window = new LoginForm();
-					window.frame.setVisible(true);
-
-					// AddGlagol.start();
+					 //LoginForm window = new LoginForm();					 
+					 //window.frame.setVisible(true);
+					 
+					 
+					AddGlagol.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
