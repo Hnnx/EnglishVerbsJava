@@ -362,10 +362,9 @@ public class UcenecWindow extends SqliteConnect {
 					combined.addAll(pastParticipleArr);
 					
 							
-
 				} catch (Exception ex) {
 					
-					JOptionPane.showMessageDialog(null, "Opis napake: Uporabnik se nima dolocenih glagolov\nProsim, dodajte glagole." , "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole." , "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
