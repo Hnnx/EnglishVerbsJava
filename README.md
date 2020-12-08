@@ -5,7 +5,7 @@ Aplikacija za učenje glagolov.
 
 # Izled
 ## Login
-https://user-images.githubusercontent.com/9198025/101492657-51b18280-3965-11eb-9a2e-dbf17645315e.PNG
+![login](https://user-images.githubusercontent.com/9198025/101492657-51b18280-3965-11eb-9a2e-dbf17645315e.PNG)
 
 
 ## Okno za urejanje ucenca
