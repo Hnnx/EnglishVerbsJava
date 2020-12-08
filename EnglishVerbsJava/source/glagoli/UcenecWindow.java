@@ -63,152 +63,166 @@ public class UcenecWindow extends SqliteConnect {
 	private static JTextField glagolR9;
 	private static JTextField tenseR9;
 	private static JTextField partR9;
-	
+
 	private JPanel progressPanel;
 	private JTable table;
-	
-	//Posamezni ArrayListi z glagoli in oblikami
+
+	// Posamezni ArrayListi z glagoli in oblikami
 	private static ArrayList<String> prevodArr = new ArrayList<String>();
 	private static ArrayList<String> verbArr = new ArrayList<String>();
 	private static ArrayList<String> pastSimpleArr = new ArrayList<String>();
 	private static ArrayList<String> pastParticipleArr = new ArrayList<String>();
-	
-	//ArrayList ki zdruzi VSE TextJield-e za preverjanje
-	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
-	
-	//ArrayList ki zdruzi VSE glagole iz DB
-	static ArrayList<String> combined = new ArrayList<String>();
-	
 
-	//Barve
+	// ArrayList ki zdruzi VSE TextJield-e za preverjanje
+	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
+
+	// ArrayList ki zdruzi VSE glagole iz DB
+	static ArrayList<String> combined = new ArrayList<String>();
+
+	// Barve
 	static Color incorrect = new Color(255, 102, 102);
 	static Color correct = new Color(102, 255, 102);
-	
-	//Gumbi TOP
-	private JButton gumbPrevod;
-	private JButton gumbSimpleTense;
-	private JButton pastSimpleGumb;
-	private JButton pastParticipleGumb;
-	
-	//GUMBI BOTTOM
+
+	// Gumbi TOP
+	protected static JButton gumbPrevod;
+	protected static JButton gumbVerb;
+	protected static JButton gumbPastSimple;
+	protected static JButton gumbPastParticiple;
+
+	// GUMBI BOTTOM
 	private JButton btnPonastavi;
 	private JButton btnIzpisiVse;
 	private JButton btnPreveri;
-	private JButton btnIzhod; 
-	
-	//User Score
-	static int userScore = 0;
-	static int totalPossibleScore = 36;
-	static private JProgressBar progressBar;
-	static private JLabel tockeTotal;
-	
-		
-	//Boilerplate 
+	private JButton btnIzhod;
+
+	// User Score
+	private static int userScore = 0;
+	private static int totalPossibleScore = 36;
+	private static JProgressBar progressBar;
+	private static JLabel tockeTotal;
+
+	// Boilerplate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					UcenecWindow window = new UcenecWindow();
 					window.frmUporabnik.setVisible(true);
-					
-					//Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za delo in upravljanje z njimi
-					conn = poveziBazo();
-					fillArrayWithVerbs();
-					fetchFromDB();
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-	
+
 	public UcenecWindow() {
 		initialize();
+		
+		// Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za
+		// delo in upravljanje z njimi
+		conn = poveziBazo();
+		fillArrayWithVerbs();
+		fetchFromDB();
+		
+		// ---> Funkcija prebere INFO BOX iz AddGlagol classa in aktivira gumbe glede na pridobljene podatke 0 = izpolni ucenec 1 = izpolnjen column
+		
+		if(AddGlagol.infoBox[0] == 1) activateColumn(gumbPrevod);
+		if(AddGlagol.infoBox[1] == 1) activateColumn(gumbVerb);
+		if(AddGlagol.infoBox[2] == 1) activateColumn(gumbPastSimple);
+		if(AddGlagol.infoBox[3] == 1) activateColumn(gumbPastParticiple);
+		
+		
+		
 	}
-	
-	
-	//Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo check(opisana kasneje)
-	//Ce je TextField prazen, oznaci kot napacen odgovor in jo zaklene
+
+	// Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo
+	// check(opisana kasneje)
+	// Ce je TextField prazen, oznaci kot napacen odgovor in jo zaklene
 	private static void checkEmpty(JTextField jTextField, int n) {
-		
+
 		JTextField pomenVar = jTextField;
-		
-		
-		if(!fieldArray.get(n).getText().isBlank()) {
+
+		if (!fieldArray.get(n).getText().isBlank()) {
 			checkInputVSexpected(pomenVar.getText(), combined.get(n), pomenVar);
-			
+
 			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expected: "+ combined.get(n));
+			System.out.println("Expected: " + combined.get(n));
 			System.out.println();
-		}
-		else {
+		} else {
 			pomenVar.setEditable(false);
 			pomenVar.setBackground(Color.orange);
 			pomenVar.setForeground(Color.black);
 			pomenVar.setText("neizpolnjeno");
 		}
 	}
-	
-	//Funkcija ki polni ArrayList od vseh polji z glagoli v vseh oblikah
-	//Spisana za lazje delanje z loopi, preverjanje, resetiranje itd
-		private static void fillArrayWithVerbs() {
-			
-			fieldArray.add(pomenR1);
-			fieldArray.add(pomenR2);
-			fieldArray.add(pomenR3);
-			fieldArray.add(pomenR4);
-			fieldArray.add(pomenR5);
-			fieldArray.add(pomenR6);
-			fieldArray.add(pomenR7);
-			fieldArray.add(pomenR8);
-			fieldArray.add(pomenR9);
-			
-			fieldArray.add(glagolR1);
-			fieldArray.add(glagolR2);
-			fieldArray.add(glagolR3);
-			fieldArray.add(glagolR4);
-			fieldArray.add(glagolR5);
-			fieldArray.add(glagolR6);
-			fieldArray.add(glagolR7);
-			fieldArray.add(glagolR8);
-			fieldArray.add(glagolR9);
-			
-			fieldArray.add(tenseR1);
-			fieldArray.add(tenseR2);
-			fieldArray.add(tenseR3);
-			fieldArray.add(tenseR4);
-			fieldArray.add(tenseR5);
-			fieldArray.add(tenseR6);
-			fieldArray.add(tenseR7);
-			fieldArray.add(tenseR8);
-			fieldArray.add(tenseR9);
-			
-			fieldArray.add(partR1);
-			fieldArray.add(partR2);
-			fieldArray.add(partR3);
-			fieldArray.add(partR4);
-			fieldArray.add(partR5);
-			fieldArray.add(partR6);
-			fieldArray.add(partR7);
-			fieldArray.add(partR8);
-			fieldArray.add(partR9);
+
+	public static void activateColumn(JButton columnName) {
+		try {
+			columnName.doClick();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka :(",
+					JOptionPane.WARNING_MESSAGE);
 
 		}
 
-	
+	}
 
-	//Funkcija prebere vnose iz DB in jih vnese v Array za nadaljno delo
+	// Funkcija ki polni ArrayList od vseh polji z glagoli v vseh oblikah
+	// Spisana za lazje delanje z loopi, preverjanje, resetiranje itd
+	private static void fillArrayWithVerbs() {
+
+		fieldArray.add(pomenR1);
+		fieldArray.add(pomenR2);
+		fieldArray.add(pomenR3);
+		fieldArray.add(pomenR4);
+		fieldArray.add(pomenR5);
+		fieldArray.add(pomenR6);
+		fieldArray.add(pomenR7);
+		fieldArray.add(pomenR8);
+		fieldArray.add(pomenR9);
+
+		fieldArray.add(glagolR1);
+		fieldArray.add(glagolR2);
+		fieldArray.add(glagolR3);
+		fieldArray.add(glagolR4);
+		fieldArray.add(glagolR5);
+		fieldArray.add(glagolR6);
+		fieldArray.add(glagolR7);
+		fieldArray.add(glagolR8);
+		fieldArray.add(glagolR9);
+
+		fieldArray.add(tenseR1);
+		fieldArray.add(tenseR2);
+		fieldArray.add(tenseR3);
+		fieldArray.add(tenseR4);
+		fieldArray.add(tenseR5);
+		fieldArray.add(tenseR6);
+		fieldArray.add(tenseR7);
+		fieldArray.add(tenseR8);
+		fieldArray.add(tenseR9);
+
+		fieldArray.add(partR1);
+		fieldArray.add(partR2);
+		fieldArray.add(partR3);
+		fieldArray.add(partR4);
+		fieldArray.add(partR5);
+		fieldArray.add(partR6);
+		fieldArray.add(partR7);
+		fieldArray.add(partR8);
+		fieldArray.add(partR9);
+
+	}
+
+	// Funkcija prebere vnose iz DB in jih vnese v Array za nadaljno delo
 	private static void fetchFromDB() {
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" + 
-				"FROM users LEFT OUTER JOIN helperTable\n" + 
-				"	ON users.id = helperTable.ucenec\n" + 
-				"LEFT OUTER JOIN glagoli\n" + 
-				"	ON glagoli.id = helperTable.glagol\n" + 
-				"	WHERE users.id = "+LoginForm.userID+";";
+		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+				+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+				+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n" + "	WHERE users.id = "
+				+ LoginForm.userID + ";";
 
 		try {
 
@@ -234,13 +248,12 @@ public class UcenecWindow extends SqliteConnect {
 				pastParticipleArr.add(pastParticiple);
 
 			}
-			
+
 			combined = new ArrayList<String>();
 			combined.addAll(prevodArr);
 			combined.addAll(verbArr);
 			combined.addAll(pastSimpleArr);
 			combined.addAll(pastParticipleArr);
-			
 
 		} catch (Exception ex) {
 			System.out.println("prva napaka");
@@ -248,16 +261,14 @@ public class UcenecWindow extends SqliteConnect {
 					JOptionPane.WARNING_MESSAGE);
 
 		}
-	
-		
+
 	}
 
-	//Funkcija za preverjanje vnosa 
+	// Funkcija za preverjanje vnosa
 	private static void checkInputVSexpected(String input, String expected, JTextField cell) {
-		
-		
-		if(cell.isEditable()) {
-			
+
+		if (cell.isEditable()) {
+
 			if (!input.equalsIgnoreCase(expected)) {
 				cell.setEnabled(false);
 				cell.setBackground(incorrect);
@@ -275,7 +286,8 @@ public class UcenecWindow extends SqliteConnect {
 
 	private void initialize() {
 		frmUporabnik = new JFrame();
-		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme.substring(0,1).toUpperCase() + LoginForm.uporabniskoIme.substring(1) );
+		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme.substring(0, 1).toUpperCase()
+				+ LoginForm.uporabniskoIme.substring(1));
 		frmUporabnik.setBounds(100, 100, 969, 638);
 		frmUporabnik.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmUporabnik.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -283,13 +295,14 @@ public class UcenecWindow extends SqliteConnect {
 		JPanel uporabnikToolbar = new JPanel();
 		frmUporabnik.getContentPane().add(uporabnikToolbar, BorderLayout.NORTH);
 
-		JLabel uporabniskoIme = new JLabel(LoginForm.uporabniskoIme.substring(0,1).toUpperCase() + LoginForm.uporabniskoIme.substring(1));
+		JLabel uporabniskoIme = new JLabel(
+				LoginForm.uporabniskoIme.substring(0, 1).toUpperCase() + LoginForm.uporabniskoIme.substring(1));
 		uporabnikToolbar.add(uporabniskoIme);
-		
-		progressBar = new JProgressBar(0,totalPossibleScore);
+
+		progressBar = new JProgressBar(0, totalPossibleScore);
 		uporabnikToolbar.add(progressBar);
-		
-		tockeTotal = new JLabel( userScore + " / " + totalPossibleScore);
+
+		tockeTotal = new JLabel(userScore + " / " + totalPossibleScore);
 		uporabnikToolbar.add(tockeTotal);
 
 		JPanel bottomPanelZaGumb = new JPanel();
@@ -301,12 +314,10 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
-				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" +
-						"FROM users LEFT OUTER JOIN helperTable\n" + 
-						"	ON users.id = helperTable.ucenec\n" + 
-						"LEFT OUTER JOIN glagoli\n" + 
-						"	ON glagoli.id = helperTable.glagol\n" + 
-						"	WHERE users.id = "+LoginForm.userID+";";
+				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+						+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
+						+ "	WHERE users.id = " + LoginForm.userID + ";";
 
 				try {
 
@@ -337,34 +348,34 @@ public class UcenecWindow extends SqliteConnect {
 						fieldArray.get(j).setText(prevodArr.get(cntr));
 						cntr++;
 					}
-					
+
 					cntr = 0;
 					for (int j = 9; j < 18; j++) {
 						fieldArray.get(j).setText(verbArr.get(cntr));
 						cntr++;
 					}
-					
+
 					cntr = 0;
-					for (int j = 18; j < 27; j++) {	
+					for (int j = 18; j < 27; j++) {
 						fieldArray.get(j).setText(pastSimpleArr.get(cntr));
 						cntr++;
 					}
-					
-					for (int j = 27; j < 36; j++) {	
+
+					for (int j = 27; j < 36; j++) {
 						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
 					}
-					
+
 					List<String> combined = new ArrayList<String>();
 					combined.addAll(prevodArr);
 					combined.addAll(verbArr);
 					combined.addAll(pastSimpleArr);
 					combined.addAll(pastParticipleArr);
-					
-							
+
 				} catch (Exception ex) {
-					
-					JOptionPane.showMessageDialog(null, "Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole." , "Napaka :(",
+
+					JOptionPane.showMessageDialog(null,
+							"Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -378,12 +389,10 @@ public class UcenecWindow extends SqliteConnect {
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
-				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n" +
-						"FROM users LEFT OUTER JOIN helperTable\n" + 
-						"	ON users.id = helperTable.ucenec\n" + 
-						"LEFT OUTER JOIN glagoli\n" + 
-						"	ON glagoli.id = helperTable.glagol\n" + 
-						"	WHERE users.id = "+LoginForm.userID+";";
+				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+						+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
+						+ "	WHERE users.id = " + LoginForm.userID + ";";
 
 				try {
 
@@ -409,8 +418,8 @@ public class UcenecWindow extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					
-					for (int i = 0; i < fieldArray.size() ; i++) {
+
+					for (int i = 0; i < fieldArray.size(); i++) {
 						checkEmpty(fieldArray.get(i), i);
 					}
 
@@ -419,11 +428,10 @@ public class UcenecWindow extends SqliteConnect {
 							JOptionPane.WARNING_MESSAGE);
 
 				}
-				
+
 			}
 		});
 		bottomPanelZaGumb.add(btnPreveri);
-		
 
 		btnIzhod = new JButton("Izhod");
 		btnIzhod.addActionListener(new ActionListener() {
@@ -432,32 +440,32 @@ public class UcenecWindow extends SqliteConnect {
 				System.exit(0);
 			}
 		});
-		
+
 		btnPonastavi = new JButton("Ponastavi");
 		btnPonastavi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//TOCKE + BAR
+
+				// TOCKE + BAR
 				userScore = 0;
 				totalPossibleScore = 36;
-				tockeTotal.setText(userScore + " / "+ totalPossibleScore);
+				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 				progressBar.setValue(0);
-				
-				//RESET GUMBOV
+
+				// RESET GUMBOV
 				gumbPrevod.setEnabled(true);
-				gumbSimpleTense.setEnabled(true);
-				pastParticipleGumb.setEnabled(true);
-				pastSimpleGumb.setEnabled(true);
+				gumbVerb.setEnabled(true);
+				gumbPastParticiple.setEnabled(true);
+				gumbPastSimple.setEnabled(true);
 
 				for (int i = 0; i < 36; i++) {
-					
+
 					fieldArray.get(i).setText("");
 					fieldArray.get(i).setEditable(true);
 					fieldArray.get(i).setEnabled(true);
 					fieldArray.get(i).setBackground(null);
 					fieldArray.get(i).setForeground(null);
 				}
-				
+
 			}
 		});
 		bottomPanelZaGumb.add(btnPonastavi);
@@ -466,15 +474,13 @@ public class UcenecWindow extends SqliteConnect {
 		JPanel mainPanel = new JPanel();
 		frmUporabnik.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		mainPanel.setLayout(new GridLayout(0, 4, 20, 30));
-		
-		
-		
+
 		// POSAMEZNI GUMBI
 		// PREVOD
 		gumbPrevod = new JButton("Prevod");
 		gumbPrevod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				totalPossibleScore -= 9;
 				progressBar.setMaximum(totalPossibleScore);
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
@@ -493,7 +499,7 @@ public class UcenecWindow extends SqliteConnect {
 						prevod = rst.getString(1);
 						prevodArr.add(prevod);
 					}
-					
+
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
 						fieldArray.get(j).setText(prevodArr.get(cntr));
@@ -509,17 +515,16 @@ public class UcenecWindow extends SqliteConnect {
 			}
 		});
 		mainPanel.add(gumbPrevod);
-		
-		
-		// VERB SIMPLE TENSE 
-		gumbSimpleTense = new JButton("Verb (infinitive)");
-		gumbSimpleTense.addActionListener(new ActionListener() {
+
+		// VERB SIMPLE TENSE
+		gumbVerb = new JButton("Verb (infinitive)");
+		gumbVerb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				totalPossibleScore -= 9;
 				progressBar.setMaximum(totalPossibleScore);
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
-				gumbSimpleTense.setEnabled(false);
+				gumbVerb.setEnabled(false);
 
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
@@ -535,7 +540,7 @@ public class UcenecWindow extends SqliteConnect {
 						verb = rst.getString(1);
 						verbArr.add(verb);
 					}
-					
+
 					int cntr = 0;
 					for (int j = 9; j < 18; j++) {
 						fieldArray.get(j).setText(verbArr.get(cntr));
@@ -548,21 +553,21 @@ public class UcenecWindow extends SqliteConnect {
 							JOptionPane.WARNING_MESSAGE);
 
 				}
-				
+
 			}
 		});
-		mainPanel.add(gumbSimpleTense);
-		
+		mainPanel.add(gumbVerb);
+
 		// PAST SIMPLE GUMB
-		pastSimpleGumb = new JButton("Past simple form");
-		pastSimpleGumb.addActionListener(new ActionListener() {
+		gumbPastSimple = new JButton("Past simple form");
+		gumbPastSimple.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				totalPossibleScore -= 9;
 				progressBar.setMaximum(totalPossibleScore);
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
-				pastSimpleGumb.setEnabled(false);
-				
+				gumbPastSimple.setEnabled(false);
+
 				int cntr = 0;
 				for (int j = 18; j < 27; j++) {
 					fieldArray.get(j).setText(pastSimpleArr.get(cntr));
@@ -571,17 +576,17 @@ public class UcenecWindow extends SqliteConnect {
 				}
 			}
 		});
-		mainPanel.add(pastSimpleGumb);
-		
+		mainPanel.add(gumbPastSimple);
+
 		// PAST PARTICIPLE GUMB
-		pastParticipleGumb = new JButton("Past participle");
-		pastParticipleGumb.addActionListener(new ActionListener() {
+		gumbPastParticiple = new JButton("Past participle");
+		gumbPastParticiple.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				totalPossibleScore -= 9;
 				progressBar.setMaximum(totalPossibleScore);
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
-				pastParticipleGumb.setEnabled(false);
+				gumbPastParticiple.setEnabled(false);
 
 				int cntr = 0;
 				for (int j = 27; j < 36; j++) {
@@ -589,10 +594,10 @@ public class UcenecWindow extends SqliteConnect {
 					cntr++;
 					fieldArray.get(j).setEditable(false);
 				}
-			
+
 			}
 		});
-		mainPanel.add(pastParticipleGumb);
+		mainPanel.add(gumbPastParticiple);
 
 		pomenR1 = new JTextField();
 		mainPanel.add(pomenR1);
