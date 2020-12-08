@@ -25,6 +25,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Color;
 import java.awt.SystemColor;
+import javax.swing.JCheckBox;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 
 public class AddGlagol extends SqliteConnect {
 
@@ -34,9 +38,9 @@ public class AddGlagol extends SqliteConnect {
 	 */
 
 	// GUMBI
-	JButton btnUredi;
-	JButton btnNakljucno;
-	JButton btnShrani;
+	static JButton btnUredi;
+	private static	JButton btnNakljucno;
+	private static JButton btnShrani;
 
 	// DB
 	static PreparedStatement pSTMT = null;
@@ -66,6 +70,15 @@ public class AddGlagol extends SqliteConnect {
 	// Frame
 	private JFrame frame;
 	private JPanel panelZComboBoxi;
+	
+	// Checkboxi
+	private static JPanel panelZcheckBoxi;
+	private static JCheckBox checkBoxPrevod;
+	private static JCheckBox checkBoxVerb;
+	private static JCheckBox checkBoxPastSimple;
+	private static JCheckBox checkBoxPastParticiple;
+	protected static int[] infoBox;
+	
 
 	// Ostale staticne
 	private static JComboBox<String> cBoxUcenec;
@@ -73,6 +86,7 @@ public class AddGlagol extends SqliteConnect {
 	private static String idUporabnikaString;
 	private static int idUporabnika;
 	private static JLabel statusLabel;
+	private JPanel statusPanel;
 
 	// --> WindowBuilder BOILERPLATE
 	public static void start() {
@@ -109,11 +123,17 @@ public class AddGlagol extends SqliteConnect {
 		cBoxList.add(combo8);
 		cBoxList.add(combo9);
 		
+		statusPanel = new JPanel();
+		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		statusPanel.setBounds(480, 25, 419, 27);
+		frame.getContentPane().add(statusPanel);
+		statusPanel.setLayout(null);
+		
 		statusLabel = new JLabel("");
+		statusLabel.setBounds(0, 0, 419, 27);
+		statusPanel.add(statusLabel);
 		statusLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 		statusLabel.setForeground(new Color(0, 100, 0));
-		statusLabel.setBounds(480, 25, 419, 27);
-		frame.getContentPane().add(statusLabel);
 		
 		JButton btnVrniLogin = new JButton("PRIJAVA");
 		btnVrniLogin.addActionListener(new ActionListener() {
@@ -161,13 +181,44 @@ public class AddGlagol extends SqliteConnect {
 		});
 		btnVrniUcitelj.setBounds(628, 607, 127, 30);
 		frame.getContentPane().add(btnVrniUcitelj);
+		
+		panelZcheckBoxi = new JPanel();
+		panelZcheckBoxi.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelZcheckBoxi.setBounds(21, 64, 390, 46);
+		frame.getContentPane().add(panelZcheckBoxi);
+		panelZcheckBoxi.setLayout(new GridLayout(0, 4, 0, 0));
+		
+		checkBoxPrevod = new JCheckBox("Prevod");
+		checkBoxPrevod.setToolTipText("polje, ki zelis da je ze izpolnjeno");
+		checkBoxPrevod.setSelected(true);
+		checkBoxPrevod.setHorizontalAlignment(SwingConstants.CENTER);
+		checkBoxPrevod.setFont(new Font("Arial", Font.PLAIN, 15));
+		panelZcheckBoxi.add(checkBoxPrevod);
+		
+		checkBoxVerb = new JCheckBox("Verb");
+		checkBoxVerb.setToolTipText("polje, ki zelis da je ze izpolnjeno");
+		checkBoxVerb.setHorizontalAlignment(SwingConstants.CENTER);
+		checkBoxVerb.setFont(new Font("Arial", Font.PLAIN, 15));
+		panelZcheckBoxi.add(checkBoxVerb);
+		
+		checkBoxPastSimple = new JCheckBox("Simple");
+		checkBoxPastSimple.setToolTipText("polje, ki zelis da je ze izpolnjeno");
+		checkBoxPastSimple.setHorizontalAlignment(SwingConstants.CENTER);
+		checkBoxPastSimple.setFont(new Font("Arial", Font.PLAIN, 15));
+		panelZcheckBoxi.add(checkBoxPastSimple);
+		
+		checkBoxPastParticiple = new JCheckBox("Participle");
+		checkBoxPastParticiple.setToolTipText("polje, ki zelis da je ze izpolnjeno");
+		checkBoxPastParticiple.setHorizontalAlignment(SwingConstants.CENTER);
+		checkBoxPastParticiple.setFont(new Font("Arial", Font.PLAIN, 15));
+		panelZcheckBoxi.add(checkBoxPastParticiple);
 
 		fillComboBoxGlagoli();
 	}
 
 	// Funkcija za brisanje/resetiranje comboBoxov - brez tega se glagoli stackajo
 	// ob vsakem kliku na gumb (iz baze napolni rw+ )
-	private static void resetComboBox() {
+	private static void resetComboBox() {	
 
 		combo1.removeAllItems();
 		combo2.removeAllItems();
@@ -197,8 +248,9 @@ public class AddGlagol extends SqliteConnect {
 		
 		// Panel z Comboboxi ki vsebujejo izbor glagolov
 		panelZComboBoxi = new JPanel();
+		panelZComboBoxi.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panelZComboBoxi.setBackground(SystemColor.inactiveCaption);
-		panelZComboBoxi.setBounds(21, 77, 390, 573);
+		panelZComboBoxi.setBounds(21, 121, 390, 529);
 		frame.getContentPane().add(panelZComboBoxi);
 		panelZComboBoxi.setLayout(new GridLayout(9, 0, 0, 10));
 
@@ -343,11 +395,29 @@ public class AddGlagol extends SqliteConnect {
 						pSTMT.execute();
 
 					}
-
+					
 					refreshTable();
 					pSTMT.close();
 					
+					
+					
+					infoBox = new int[4];
+					
+					if(checkBoxPrevod.isSelected())
+						infoBox[0] = 1;
+					
+					if(checkBoxVerb.isSelected())
+						infoBox[1] = 1;
+					
+					if(checkBoxPastSimple.isSelected()) 
+						infoBox[2] = 1;
+					
+					if(checkBoxPastParticiple.isSelected()) 
+						infoBox[3] = 1;
+					
+					
 					statusLabel.setText("Ucencu "+idUporabnikaString+" ste rocno dolocili naslednje glagole");
+					
 
 				} catch (Exception e2) {
 
@@ -363,6 +433,7 @@ public class AddGlagol extends SqliteConnect {
 		frame.getContentPane().add(btnShrani);
 
 	}
+	
 
 	private static void fillComboBoxGlagoli() {
 
@@ -446,7 +517,7 @@ public class AddGlagol extends SqliteConnect {
 
 	}
 
-	private static int getRDM() {
+	protected static int getRDM() {
 		return (int) (Math.random() * 64 + 1);
 	}
 }

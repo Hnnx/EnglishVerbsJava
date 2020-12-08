@@ -38,6 +38,7 @@ public class Ucitelj extends SqliteConnect {
 	// BoilerPlate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
