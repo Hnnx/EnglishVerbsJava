@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
 import java.awt.GridLayout;
 
 import DB.SqliteConnect;
@@ -122,16 +123,7 @@ public class UcenecWindow extends SqliteConnect {
 		// delo in upravljanje z njimi
 		conn = poveziBazo();
 		fillArrayWithVerbs();
-		fetchFromDB();
-		
-		// ---> Funkcija prebere INFO BOX iz AddGlagol classa in aktivira gumbe glede na pridobljene podatke 0 = izpolni ucenec 1 = izpolnjen column
-		
-		if(AddGlagol.infoBox[0] == 1) activateColumn(gumbPrevod);
-		if(AddGlagol.infoBox[1] == 1) activateColumn(gumbVerb);
-		if(AddGlagol.infoBox[2] == 1) activateColumn(gumbPastSimple);
-		if(AddGlagol.infoBox[3] == 1) activateColumn(gumbPastParticiple);
-		
-		
+		fetchFromDB();		
 		
 	}
 

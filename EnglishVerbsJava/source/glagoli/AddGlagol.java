@@ -125,7 +125,7 @@ public class AddGlagol extends SqliteConnect {
 		
 		statusPanel = new JPanel();
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		statusPanel.setBounds(480, 25, 419, 27);
+		statusPanel.setBounds(480, 25, 477, 27);
 		frame.getContentPane().add(statusPanel);
 		statusPanel.setLayout(null);
 		
@@ -396,28 +396,12 @@ public class AddGlagol extends SqliteConnect {
 
 					}
 					
+					aktivirajPrevod();
+					
 					refreshTable();
 					pSTMT.close();
 					
-					
-					
-					infoBox = new int[4];
-					
-					if(checkBoxPrevod.isSelected())
-						infoBox[0] = 1;
-					
-					if(checkBoxVerb.isSelected())
-						infoBox[1] = 1;
-					
-					if(checkBoxPastSimple.isSelected()) 
-						infoBox[2] = 1;
-					
-					if(checkBoxPastParticiple.isSelected()) 
-						infoBox[3] = 1;
-					
-					
 					statusLabel.setText("Ucencu "+idUporabnikaString+" ste rocno dolocili naslednje glagole");
-					
 
 				} catch (Exception e2) {
 
@@ -432,6 +416,25 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.setBounds(111, 23, 122, 30);
 		frame.getContentPane().add(btnShrani);
 
+	}
+	
+	private  void aktivirajPrevod() {
+		
+		try {
+			query = "UPDATE infoBox SET sequence = ? WHERE ucenec = ?";
+			
+			pSTMT = conn.prepareStatement(query);
+			
+			pSTMT.setString(1, "1,0,0,1");			
+			pSTMT.setInt(2, idUporabnika);
+			
+			pSTMT.executeUpdate();
+			
+			pSTMT.close();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 
