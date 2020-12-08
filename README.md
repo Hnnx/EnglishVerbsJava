@@ -9,10 +9,10 @@ Aplikacija za učenje glagolov.
 
 
 ## Okno za urejanje ucenca
-https://user-images.githubusercontent.com/9198025/101492662-52e2af80-3965-11eb-8662-93bfd652eca0.PNG
+![addGlagol](https://user-images.githubusercontent.com/9198025/101492662-52e2af80-3965-11eb-8662-93bfd652eca0.PNG)
 
 ## Okno za ucenca
-https://user-images.githubusercontent.com/9198025/101492660-524a1900-3965-11eb-9a24-aa841169067d.PNG
+![ucenecWindow](https://user-images.githubusercontent.com/9198025/101492660-524a1900-3965-11eb-9a24-aa841169067d.PNG)
 
 
 
