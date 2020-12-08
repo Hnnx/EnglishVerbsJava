@@ -32,10 +32,6 @@ import javax.swing.border.EtchedBorder;
 
 public class AddGlagol extends SqliteConnect {
 
-	/*
-	 * Preveri če je v helperTable vec kot 1 vnos UPDATE VALUES namesto INSERT
-	 * DELETE * FROM helperTable WHERE ucenec = ?
-	 */
 
 	// GUMBI
 	static JButton btnUredi;
@@ -77,7 +73,7 @@ public class AddGlagol extends SqliteConnect {
 	private static JCheckBox checkBoxVerb;
 	private static JCheckBox checkBoxPastSimple;
 	private static JCheckBox checkBoxPastParticiple;
-	protected static int[] infoBox;
+	
 	
 
 	// Ostale staticne
@@ -321,7 +317,7 @@ public class AddGlagol extends SqliteConnect {
 					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 
-				}
+				}				
 
 			}
 		});
@@ -396,12 +392,15 @@ public class AddGlagol extends SqliteConnect {
 
 					}
 					
-					aktivirajPrevod();
 					
 					refreshTable();
 					pSTMT.close();
 					
 					statusLabel.setText("Ucencu "+idUporabnikaString+" ste rocno dolocili naslednje glagole");
+					
+					// TODO: Dodajaj tu
+					setInfoNums();
+					
 
 				} catch (Exception e2) {
 
@@ -418,19 +417,30 @@ public class AddGlagol extends SqliteConnect {
 
 	}
 	
-	private  void aktivirajPrevod() {
+	// --> funkcija AddUcenec.setSeq nastavi default sequence 0,0,0,0 - UPDATE modificira sequence
+	private  void setInfoNums() {
 		
 		try {
+			//Ustvari array z 4 stevilkami
+			
+			if(checkBoxPrevod.isSelected()) LoginForm.infoBox[0] = 1;
+			if(checkBoxVerb.isSelected()) LoginForm.infoBox[1] = 1;
+			if(checkBoxPastSimple.isSelected()) LoginForm.infoBox[2] = 1;
+			if(checkBoxPastParticiple.isSelected()) LoginForm.infoBox[3] = 1;
+			
+			
+			
 			query = "UPDATE infoBox SET sequence = ? WHERE ucenec = ?";
 			
 			pSTMT = conn.prepareStatement(query);
 			
-			pSTMT.setString(1, "1,0,0,1");			
+			pSTMT.setString(1, ""+LoginForm.infoBox[0]+LoginForm.infoBox[1]+LoginForm.infoBox[2]+LoginForm.infoBox[3]);			
 			pSTMT.setInt(2, idUporabnika);
 			
 			pSTMT.executeUpdate();
 			
 			pSTMT.close();
+			
 			
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -118,13 +118,27 @@ public class UcenecWindow extends SqliteConnect {
 
 	public UcenecWindow() {
 		initialize();
-		
+
 		// Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za
 		// delo in upravljanje z njimi
 		conn = poveziBazo();
 		fillArrayWithVerbs();
-		fetchFromDB();		
-		
+		fetchFromDB();
+
+		String prvoPolje = String.valueOf(dobiSeq().substring(0, 1));
+		String drugoPolje = String.valueOf(dobiSeq().substring(1, 2));
+		String tretjePolje = String.valueOf(dobiSeq().substring(2, 3));
+		String cetrtoPolje = String.valueOf(dobiSeq().substring(3));
+
+		if (Integer.parseInt(prvoPolje) == 1)
+			activateColumn(gumbPrevod);
+		if (Integer.parseInt(drugoPolje) == 1)
+			activateColumn(gumbVerb);
+		if (Integer.parseInt(tretjePolje) == 1)
+			activateColumn(gumbPastSimple);
+		if (Integer.parseInt(cetrtoPolje) == 1)
+			activateColumn(gumbPastParticiple);
+
 	}
 
 	// Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo
@@ -146,6 +160,28 @@ public class UcenecWindow extends SqliteConnect {
 			pomenVar.setForeground(Color.black);
 			pomenVar.setText("neizpolnjeno");
 		}
+	}
+
+	private static String dobiSeq() {
+		String seq = "";
+		try {
+
+			query = "SELECT sequence FROM infoBox WHERE ucenec = ?";
+			pSTMT = conn.prepareStatement(query);
+			pSTMT.setInt(1, LoginForm.userID);
+
+			rs = pSTMT.executeQuery();
+
+			while (rs.next()) {
+				seq = rs.getString(1);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return seq;
+
 	}
 
 	public static void activateColumn(JButton columnName) {

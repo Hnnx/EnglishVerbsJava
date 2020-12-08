@@ -22,6 +22,9 @@ public class LoginForm extends SqliteConnect {
 	protected JFrame frame;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
+	
+	// --> INFO BOX
+	protected static int[] infoBox;
 
 	// --> podatki uporabnika userID se izpisuje v drugih oknih
 	protected static int userID;
@@ -48,6 +51,8 @@ public class LoginForm extends SqliteConnect {
 	// Constructor (Boilerplate)
 	public LoginForm() {
 		initialize();
+		
+		infoBox = new int[4];
 	}
 
 	// Boilerplate
