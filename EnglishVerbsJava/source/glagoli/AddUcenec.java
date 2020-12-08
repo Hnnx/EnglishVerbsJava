@@ -23,7 +23,6 @@ public class AddUcenec extends SqliteConnect {
 	// Podatki uporabnika
 	private JTextField uporabniskoTxt;
 	private JTextField pwTxt;
-	private static int idUporabnika;
 
 	// Gumbi
 	private static JButton btnBack;
@@ -82,7 +81,7 @@ public class AddUcenec extends SqliteConnect {
 			pSTMT = conn.prepareStatement(query);
 
 			pSTMT.setInt(1, vnos);
-			pSTMT.setString(2, "0,0,0,0");
+			pSTMT.setString(2, "1000");
 
 			pSTMT.execute();
 			pSTMT.close();
@@ -155,6 +154,7 @@ public class AddUcenec extends SqliteConnect {
 
 					}
 					
+					// --> Funkcija setSequence vsem novim uporabnikom doloci default sequence (0,0,0,0) - kasneje uporabljeno za infoBox
 					int v = getLastId();
 					setSeq(v);
 
