@@ -12,8 +12,6 @@ import net.proteanit.sql.DbUtils;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
@@ -32,16 +30,17 @@ import javax.swing.border.EtchedBorder;
 
 public class AddGlagol extends SqliteConnect {
 
-
 	// GUMBI
-	static JButton btnUredi;
-	private static	JButton btnNakljucno;
+	private static JButton btnNakljucno;
 	private static JButton btnShrani;
 
+	// --->
+//*	SHRANI sprejme vrednosti iz combo boxov ter jih vnese v DB 
+//* NAKLJUCNO izbere 9 nakljucnih glagolov iz seznama in jih SHRANI v DB - ce se pojavijo duplikati lahko veckrat premešamo
+
 	// DB
-	static PreparedStatement pSTMT = null;
-	static ResultSet rs = null;
 	static private String query;
+	
 
 	// HashMap
 	private static HashMap<String, Integer> hmap = new HashMap<String, Integer>();
@@ -63,18 +62,17 @@ public class AddGlagol extends SqliteConnect {
 	private static Font TrBold = new Font("TimesRoman", Font.BOLD, 16);
 	private static Font TrPlain = new Font("TimesRoman", Font.PLAIN, 14);
 
-	// Frame
+	// Frame + Panel
 	private JFrame frame;
 	private JPanel panelZComboBoxi;
-	
+	private JPanel statusPanel;
+
 	// Checkboxi
 	private static JPanel panelZcheckBoxi;
 	private static JCheckBox checkBoxPrevod;
 	private static JCheckBox checkBoxVerb;
 	private static JCheckBox checkBoxPastSimple;
 	private static JCheckBox checkBoxPastParticiple;
-	
-	
 
 	// Ostale staticne
 	private static JComboBox<String> cBoxUcenec;
@@ -82,7 +80,6 @@ public class AddGlagol extends SqliteConnect {
 	private static String idUporabnikaString;
 	private static int idUporabnika;
 	private static JLabel statusLabel;
-	private JPanel statusPanel;
 
 	// --> WindowBuilder BOILERPLATE
 	public static void start() {
@@ -118,91 +115,83 @@ public class AddGlagol extends SqliteConnect {
 		cBoxList.add(combo7);
 		cBoxList.add(combo8);
 		cBoxList.add(combo9);
-		
+
 		statusPanel = new JPanel();
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		statusPanel.setBounds(480, 25, 477, 27);
 		frame.getContentPane().add(statusPanel);
 		statusPanel.setLayout(null);
-		
+
 		statusLabel = new JLabel("");
 		statusLabel.setBounds(0, 0, 419, 27);
 		statusPanel.add(statusLabel);
 		statusLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 		statusLabel.setForeground(new Color(0, 100, 0));
-		
+
 		JButton btnVrniLogin = new JButton("PRIJAVA");
 		btnVrniLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
-						frame.dispose();
-						Ucitelj.frame.dispose();
-						String[] a = {""};
-						LoginForm.main(a);
-					
+					frame.dispose();
+					Ucitelj.frame.dispose();
+					String[] a = { "" };
+					LoginForm.main(a);
+
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null,
 							"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
-				
-				
-				
+
 			}
 		});
 		btnVrniLogin.setBounds(480, 607, 127, 30);
 		frame.getContentPane().add(btnVrniLogin);
-		
+
 		JButton btnVrniUcitelj = new JButton("NAZAJ");
 		btnVrniUcitelj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 
 				try {
-						frame.dispose();
-					
+					frame.dispose();
+
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(null,
 							"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
-				
-				
-				
-			
-				
-				
+
 			}
 		});
 		btnVrniUcitelj.setBounds(628, 607, 127, 30);
 		frame.getContentPane().add(btnVrniUcitelj);
-		
+
 		panelZcheckBoxi = new JPanel();
 		panelZcheckBoxi.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panelZcheckBoxi.setBounds(21, 64, 390, 46);
 		frame.getContentPane().add(panelZcheckBoxi);
 		panelZcheckBoxi.setLayout(new GridLayout(0, 4, 0, 0));
-		
+
 		checkBoxPrevod = new JCheckBox("Prevod");
 		checkBoxPrevod.setToolTipText("polje, ki zelis da je ze izpolnjeno");
 		checkBoxPrevod.setSelected(true);
 		checkBoxPrevod.setHorizontalAlignment(SwingConstants.CENTER);
 		checkBoxPrevod.setFont(new Font("Arial", Font.PLAIN, 15));
 		panelZcheckBoxi.add(checkBoxPrevod);
-		
+
 		checkBoxVerb = new JCheckBox("Verb");
 		checkBoxVerb.setToolTipText("polje, ki zelis da je ze izpolnjeno");
 		checkBoxVerb.setHorizontalAlignment(SwingConstants.CENTER);
 		checkBoxVerb.setFont(new Font("Arial", Font.PLAIN, 15));
 		panelZcheckBoxi.add(checkBoxVerb);
-		
+
 		checkBoxPastSimple = new JCheckBox("Simple");
 		checkBoxPastSimple.setToolTipText("polje, ki zelis da je ze izpolnjeno");
 		checkBoxPastSimple.setHorizontalAlignment(SwingConstants.CENTER);
 		checkBoxPastSimple.setFont(new Font("Arial", Font.PLAIN, 15));
 		panelZcheckBoxi.add(checkBoxPastSimple);
-		
+
 		checkBoxPastParticiple = new JCheckBox("Participle");
 		checkBoxPastParticiple.setToolTipText("polje, ki zelis da je ze izpolnjeno");
 		checkBoxPastParticiple.setHorizontalAlignment(SwingConstants.CENTER);
@@ -214,7 +203,7 @@ public class AddGlagol extends SqliteConnect {
 
 	// Funkcija za brisanje/resetiranje comboBoxov - brez tega se glagoli stackajo
 	// ob vsakem kliku na gumb (iz baze napolni rw+ )
-	private static void resetComboBox() {	
+	private static void resetComboBox() {
 
 		combo1.removeAllItems();
 		combo2.removeAllItems();
@@ -241,7 +230,7 @@ public class AddGlagol extends SqliteConnect {
 		cBoxUcenec.setBounds(21, 23, 80, 30);
 		cBoxUcenec.setFont(new Font("Arial", Font.BOLD, 16));
 		frame.getContentPane().add(cBoxUcenec);
-		
+
 		// Panel z Comboboxi ki vsebujejo izbor glagolov
 		panelZComboBoxi = new JPanel();
 		panelZComboBoxi.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -310,14 +299,14 @@ public class AddGlagol extends SqliteConnect {
 					pSTMT.close();
 
 					refreshTable();
-					statusLabel.setText("Ucencu "+idUporabnikaString+" ste samodejno dolocili naslednje glagole");
+					statusLabel.setText("Ucencu " + idUporabnikaString + " ste samodejno dolocili naslednje glagole");
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 
-				}				
+				}
 
 			}
 		});
@@ -391,16 +380,13 @@ public class AddGlagol extends SqliteConnect {
 						pSTMT.execute();
 
 					}
-					
-					
+
 					refreshTable();
 					pSTMT.close();
-					
-					statusLabel.setText("Ucencu "+idUporabnikaString+" ste rocno dolocili naslednje glagole");
-					
-					// TODO: Dodajaj tu
+
+					statusLabel.setText("Ucencu " + idUporabnikaString + " ste rocno dolocili naslednje glagole");
+
 					setInfoNums();
-					
 
 				} catch (Exception e2) {
 
@@ -416,37 +402,39 @@ public class AddGlagol extends SqliteConnect {
 		frame.getContentPane().add(btnShrani);
 
 	}
-	
-	// --> funkcija AddUcenec.setSeq nastavi default sequence 0,0,0,0 - UPDATE modificira sequence
-	private  void setInfoNums() {
-		
+
+	// --> funkcija AddUcenec.setSeq nastavi default sequence 0,0,0,0 - UPDATE
+	// modificira sequence
+	private void setInfoNums() {
+
 		try {
-			//Ustvari array z 4 stevilkami
-			
-			if(checkBoxPrevod.isSelected()) LoginForm.infoBox[0] = 1;
-			if(checkBoxVerb.isSelected()) LoginForm.infoBox[1] = 1;
-			if(checkBoxPastSimple.isSelected()) LoginForm.infoBox[2] = 1;
-			if(checkBoxPastParticiple.isSelected()) LoginForm.infoBox[3] = 1;
-			
-			
-			
+			// Ustvari array z 4 stevilkami
+
+			if (checkBoxPrevod.isSelected())
+				LoginForm.infoBox[0] = 1;
+			if (checkBoxVerb.isSelected())
+				LoginForm.infoBox[1] = 1;
+			if (checkBoxPastSimple.isSelected())
+				LoginForm.infoBox[2] = 1;
+			if (checkBoxPastParticiple.isSelected())
+				LoginForm.infoBox[3] = 1;
+
 			query = "UPDATE infoBox SET sequence = ? WHERE ucenec = ?";
-			
+
 			pSTMT = conn.prepareStatement(query);
-			
-			pSTMT.setString(1, ""+LoginForm.infoBox[0]+LoginForm.infoBox[1]+LoginForm.infoBox[2]+LoginForm.infoBox[3]);			
+
+			pSTMT.setString(1,
+					"" + LoginForm.infoBox[0] + LoginForm.infoBox[1] + LoginForm.infoBox[2] + LoginForm.infoBox[3]);
 			pSTMT.setInt(2, idUporabnika);
-			
+
 			pSTMT.executeUpdate();
-			
+
 			pSTMT.close();
-			
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	
 
 	private static void fillComboBoxGlagoli() {
 
@@ -461,8 +449,8 @@ public class AddGlagol extends SqliteConnect {
 
 			while (rs.next()) {
 				for (int i = 0; i < cBoxList.size(); i++) {
-					cBoxList.get(i).addItem(rs.getString(1)+" "+ rs.getInt(2));							
-				}						
+					cBoxList.get(i).addItem(rs.getString(1) + " " + rs.getInt(2));
+				}
 			}
 
 		} catch (Exception ex) {

@@ -30,6 +30,8 @@ public class LoginForm extends SqliteConnect {
 	protected static int userID;
 	static String uporabniskoIme = null;
 	String uporabniskoGeslo;
+	
+	//Revamp login system with hash
 
 	// --> Boilerplate
 	public static void main(String[] args) {
