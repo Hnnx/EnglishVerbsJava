@@ -12,8 +12,6 @@ import net.proteanit.sql.DbUtils;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
