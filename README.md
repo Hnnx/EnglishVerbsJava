@@ -4,16 +4,24 @@ Aplikacija za učenje glagolov.
 
 
 # Izled
-## Login
-![login](https://user-images.githubusercontent.com/9198025/101492657-51b18280-3965-11eb-9a2e-dbf17645315e.PNG)
+## Prijava
+![Login](https://user-images.githubusercontent.com/9198025/101957344-90636900-3c01-11eb-878c-0c1c318d1967.PNG)
 
 
 ## Okno za urejanje ucenca
-![AddGlagolWindow](https://user-images.githubusercontent.com/9198025/101551454-4dab5200-39b1-11eb-923c-115fe27467e0.PNG)
+![shrani1](https://user-images.githubusercontent.com/9198025/101957354-91949600-3c01-11eb-9b99-ebea9a3df69f.PNG)
+
+
+![saamodejno](https://user-images.githubusercontent.com/9198025/101957356-91949600-3c01-11eb-9f41-750a7fb30ec8.PNG)
+
+##Okno za dodajanje ucencev, prikazovanje uporabnikov
+![UWPW](https://user-images.githubusercontent.com/9198025/101957349-90fbff80-3c01-11eb-92bd-2b9c360f78aa.PNG)
+
 
 ## Okno za ucenca
-![ucenecWindow](https://user-images.githubusercontent.com/9198025/101492660-524a1900-3965-11eb-9a24-aa841169067d.PNG)
+![tocke1](https://user-images.githubusercontent.com/9198025/101957358-922d2c80-3c01-11eb-8fb2-18b507fd528a.PNG)
 
+![check1](https://user-images.githubusercontent.com/9198025/101957341-8fcad280-3c01-11eb-8348-23f5aad1f42c.PNG)
 
 
 # Končni izdelek mora vsebovati:
