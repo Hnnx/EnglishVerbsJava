@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +24,7 @@ import DB.SqliteConnect;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
+import java.awt.Font;
 
 public class Ucitelj extends SqliteConnect {
 
@@ -33,7 +36,7 @@ public class Ucitelj extends SqliteConnect {
 	private JButton btnAddUcenec;
 	private JButton btnRemoveUcenec;
 	private JButton btnAddGlagol;
-	private JButton btnIzhod;
+	static JButton btnIzhod;
 
 	// BoilerPlate
 	public static void start() {
@@ -75,26 +78,39 @@ public class Ucitelj extends SqliteConnect {
 		frame.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 683, 372);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			  public void windowClosing(WindowEvent we) {
+			    btnIzhod.doClick();			  
+				  
+			  }
+			});
+		
+		
 
 		JToolBar toolBar = new JToolBar();
-		toolBar.setBackground(Color.WHITE);
+		toolBar.setBackground(SystemColor.inactiveCaption);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
 		// Gumb za dodajanje ucenca (odpre novo okno)
 
-		btnAddUcenec = new JButton("Dodaj Ucenca");
+		btnAddUcenec = new JButton("Dodaj Uporabnika");
+		btnAddUcenec.setBackground(new Color(244, 164, 96));
+		btnAddUcenec.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddUcenec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				AddUcenec.start();
+				AddUporabnik.start();
 			}
 		});
 		toolBar.add(btnAddUcenec);
 
 		// Gumb za dodajanje glagolov (odpre novo okno)
 		btnAddGlagol = new JButton("Urejanje Glagolov");
+		btnAddGlagol.setBackground(new Color(244, 164, 96));
+		btnAddGlagol.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddGlagol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -112,6 +128,8 @@ public class Ucitelj extends SqliteConnect {
 
 		// Gumb za odstranjevanje ucenca
 		btnRemoveUcenec = new JButton("Odstrani Ucenca");
+		btnRemoveUcenec.setBackground(new Color(244, 164, 96));
+		btnRemoveUcenec.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnRemoveUcenec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -143,6 +161,8 @@ public class Ucitelj extends SqliteConnect {
 		toolBar.add(btnAddGlagol);
 
 		btnIzhod = new JButton("Izhod");
+		btnIzhod.setBackground(new Color(244, 164, 96));
+		btnIzhod.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzhod.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
