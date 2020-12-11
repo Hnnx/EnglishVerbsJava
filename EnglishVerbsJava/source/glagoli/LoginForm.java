@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
@@ -35,8 +34,10 @@ public class LoginForm extends SqliteConnect {
 
 	// --> podatki uporabnika userID se izpisuje v drugih oknih
 	protected static int userID;
-	static String uporabniskoIme = null;
-	String uporabniskoGeslo;
+	protected static String uporabniskoIme;
+	protected static String uporabniskoGeslo;
+	protected static String sequence;
+	protected static int role;
 
 	// --> LABEL, TEXT ITD
 	private JTextField userNameField;
@@ -160,6 +161,10 @@ public class LoginForm extends SqliteConnect {
 		gbc_btnPrijava.gridx = 0;
 		gbc_btnPrijava.gridy = 5;
 		panel.add(btnPrijava, gbc_btnPrijava);
+		
+		
+		
+		// --> LOGIN
 		btnPrijava.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -169,24 +174,36 @@ public class LoginForm extends SqliteConnect {
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
 
-					// Query
-					query = "SELECT username,password, id FROM users WHERE username=? AND password=?";
+					// Poizvedba / Query
+					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
+					
+					//STARA VERZIJA (DEBUGGING)
+					//query = "SELECT username, id, password FROM users WHERE username=? AND password=?";
+					
 
 					// Prepare Statement
 					pSTMT = conn.prepareStatement(query);
+					
+					//Zamenja vprasaje v query-ju . da v lowerCase za lazjo kontrolo uporabnikov
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
 					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
 
 					// Result Set
 					rs = pSTMT.executeQuery();
 					int count = 0;
+					
+					
 					while (rs.next()) {
 						userID = rs.getInt("id");
-						count++;
 						uporabniskoIme = rs.getString(1);
+						sequence = rs.getString("sequence");
+						role = rs.getInt("role");
+						count++;
 					}
-
-					if (count == 1 && uporabniskoIme.toLowerCase().equals("a")) {
+					
+					
+					
+					if (count == 1 && role == 2) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
 										+ uporabniskoIme.substring(0, 1).toUpperCase() + uporabniskoIme.substring(1),
@@ -194,7 +211,13 @@ public class LoginForm extends SqliteConnect {
 						Ucitelj.start();
 						frame.dispose();
 
-					} else if (count == 1) {
+					//Ce je v izpisu samo 1 entry (count == 1), potem je username/pw pravilen
+					} else if(count == 1 && role == 1) {
+						System.out.println("ADMIN");
+						System.exit(0);
+						
+					}
+					else if (count == 1) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
 										+ uporabniskoIme.substring(0, 1).toUpperCase() + uporabniskoIme.substring(1),
@@ -202,10 +225,14 @@ public class LoginForm extends SqliteConnect {
 						Ucenec.start();
 						frame.dispose();
 					}
-
+					
+					
+					//Ce je vec kot en entry je prislo do duplikacije
 					else if (count > 1) {
 						JOptionPane.showMessageDialog(null, "Dvojno uporabnisko ime - preveri z uciteljem", "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
+						
+					//	Pogoj WHERE user=? AND PASSWORD = ?  ni vrnil rezultatov - geslo/user je napacen
 					} else {
 						JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo nista pravilna", "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);

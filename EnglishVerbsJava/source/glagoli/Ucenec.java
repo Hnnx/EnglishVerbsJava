@@ -131,10 +131,10 @@ public class Ucenec extends SqliteConnect {
 		fillArrayWithVerbs();
 		fetchFromDB();
 
-		String prvoPolje = String.valueOf(dobiSeq().substring(0, 1));
-		String drugoPolje = String.valueOf(dobiSeq().substring(1, 2));
-		String tretjePolje = String.valueOf(dobiSeq().substring(2, 3));
-		String cetrtoPolje = String.valueOf(dobiSeq().substring(3));
+		String prvoPolje = String.valueOf(LoginForm.sequence.substring(0, 1));
+		String drugoPolje = String.valueOf(LoginForm.sequence.substring(1, 2));
+		String tretjePolje = String.valueOf(LoginForm.sequence.substring(2, 3));
+		String cetrtoPolje = String.valueOf(LoginForm.sequence.substring(3));
 
 		if (Integer.parseInt(prvoPolje) == 1)
 			activateColumn(gumbPrevod);
@@ -145,19 +145,12 @@ public class Ucenec extends SqliteConnect {
 		if (Integer.parseInt(cetrtoPolje) == 1)
 			activateColumn(gumbPastParticiple);
 
-		gumbPrevod.setUI(new MetalButtonUI() {
-
-			protected Color getDisabledTextColor() {
-				return Color.black;
-			}
-
-		});
-
 		gumbPrevod.setEnabled(false);
 		gumbVerb.setEnabled(false);
 		gumbPastSimple.setEnabled(false);
 		gumbPastParticiple.setEnabled(false);
 
+		// --> Menjava default foreground color barve pri gumbih
 		defaultDisabled(gumbPrevod);
 		defaultDisabled(gumbVerb);
 		defaultDisabled(gumbPastSimple);
@@ -167,15 +160,11 @@ public class Ucenec extends SqliteConnect {
 
 	// --> Spremeni default disabled color v crno
 	private static void defaultDisabled(JButton selectedBTN) {
-
 		selectedBTN.setUI(new MetalButtonUI() {
-
 			protected Color getDisabledTextColor() {
 				return Color.black;
 			}
-
 		});
-
 	}
 
 	// Funkcija preveri, ali je polje (TextField) prazno - če NI, kliče funkcijo
@@ -195,7 +184,7 @@ public class Ucenec extends SqliteConnect {
 			pomenVar.setEditable(false);
 			pomenVar.setBackground(Color.orange);
 			pomenVar.setForeground(Color.black);
-			pomenVar.setText("neizpolnjeno");
+			pomenVar.setText("/");
 		}
 	}
 
@@ -960,9 +949,11 @@ public class Ucenec extends SqliteConnect {
 		mainPanel.add(partR9);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.inactiveCaption);
 		frmUporabnik.getContentPane().add(panel, BorderLayout.WEST);
 
 		progressPanel = new JPanel();
+		progressPanel.setBackground(SystemColor.inactiveCaption);
 		frmUporabnik.getContentPane().add(progressPanel, BorderLayout.EAST);
 
 		table = new JTable();
