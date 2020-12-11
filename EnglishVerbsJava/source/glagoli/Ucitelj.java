@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 
 public class Ucitelj extends SqliteConnect {
 
@@ -37,6 +40,7 @@ public class Ucitelj extends SqliteConnect {
 	private JButton btnRemoveUcenec;
 	private JButton btnAddGlagol;
 	static JButton btnIzhod;
+	protected static JCheckBox cBoxGesla;
 
 	// BoilerPlate
 	public static void start() {
@@ -56,12 +60,33 @@ public class Ucitelj extends SqliteConnect {
 	public Ucitelj() {
 		conn = poveziBazo();
 		initialize();
-		refreshUcenecList();
+		refreshHidden();
+		
+		cBoxGesla.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				
+				int state = e.getStateChange();
+				
+				if(state == 1) {
+					refreshPassword();
+				}
+				else {
+					refreshHidden();
+				}
+				
+			}
+		});
+		
+
+		
 	}
 
 	// Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
-	protected static void refreshUcenecList() {
-		query = "SELECT * FROM users";
+	protected static void refreshPassword() {
+		query = "SELECT users2.id as 'zaporedna stevilka', users2.username AS uporabnik, roles.role AS pravice, users2.password as geslo FROM users2\r\n" + 
+				"JOIN roles ON users2.role = roles.id";
 
 		try {
 			pSTMT = conn.prepareStatement(query);
@@ -71,6 +96,19 @@ public class Ucitelj extends SqliteConnect {
 
 		}
 	}
+	
+	protected static void refreshHidden() {
+		query = "SELECT users2.id as 'zaporedna stevilka', users2.username AS uporabnik, roles.role AS pravice FROM users2\r\n" + 
+				"JOIN roles ON users2.role = roles.id";
+
+		try {
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		} catch (Exception ex) {
+
+		}
+	}	
 
 	// Boilerplate GUI
 	private void initialize() {
@@ -140,7 +178,7 @@ public class Ucitelj extends SqliteConnect {
 					int selectedRow = table.getSelectedRow();
 					String cell = table.getModel().getValueAt(selectedRow, 0).toString();
 
-					String query = "DELETE FROM users WHERE id= " + cell;
+					String query = "DELETE FROM users2 WHERE id= " + cell;
 
 					pSTMT = conn.prepareStatement(query);
 					pSTMT.execute();
@@ -184,11 +222,15 @@ public class Ucitelj extends SqliteConnect {
 			}
 		});
 		toolBar.add(btnIzhod);
+		
+		cBoxGesla = new JCheckBox("Prikazi Gesla");
+		toolBar.add(cBoxGesla);
 
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 		table = new JTable();
+		table.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		table.setCellSelectionEnabled(true);
 		table.setColumnSelectionAllowed(true);
 		scrollPane.setViewportView(table);
