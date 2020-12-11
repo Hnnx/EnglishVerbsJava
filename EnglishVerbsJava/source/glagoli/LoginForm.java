@@ -29,9 +29,6 @@ public class LoginForm extends SqliteConnect {
 	// --> WindowBuilder Boiler Plate
 	protected JFrame frame;
 
-	// --> SEQUENCE BOX
-	protected static int[] sequenceBox;
-
 	// --> podatki uporabnika userID se izpisuje v drugih oknih
 	protected static int userID;
 	protected static String uporabniskoIme;
@@ -54,10 +51,10 @@ public class LoginForm extends SqliteConnect {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					LoginForm window = new LoginForm();
-//					window.frame.setVisible(true);
+					LoginForm window = new LoginForm();
+					window.frame.setVisible(true);
 					
-					AddGlagol.start();
+//					AddGlagol.start();
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -69,10 +66,6 @@ public class LoginForm extends SqliteConnect {
 	// --> WindowBuilder Boiler Plate
 	public LoginForm() {
 		initialize();
-
-		// zalaufaj sequenceBox z 4 mestno stevilko, ki lahko modificira izled in
-		// funkcije Ucenec
-		sequenceBox = new int[4];
 	}
 
 	private void initialize() {

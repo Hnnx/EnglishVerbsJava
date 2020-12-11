@@ -287,7 +287,7 @@ public class Ucenec extends SqliteConnect {
 			combined.addAll(pastParticipleArr);
 
 		} catch (Exception ex) {
-			System.out.println("prva napaka");
+			//TODO: FIX ERROR MSG			
 			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
 
@@ -558,16 +558,6 @@ public class Ucenec extends SqliteConnect {
 					}
 					pSTMT.close();
 					
-					frmUporabnik.dispose();
-					
-					Ucenec.start();
-					initialize();
-					fetchFromDB();
-					fillArrayWithVerbs();
-					
-					
-
-
 				
 				} catch (Exception ex) {
 					ex.printStackTrace();

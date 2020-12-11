@@ -36,7 +36,7 @@ import java.awt.Insets;
 public class AddGlagol extends SqliteConnect {
 
 	// GUMBI
-	private static JButton btnNakljucno;
+	protected static JButton btnNakljucno;
 	private static JButton btnShrani;
 
 	// DB
@@ -448,25 +448,34 @@ public class AddGlagol extends SqliteConnect {
 // --> funkcija AddUcenec.setSeq nastavi default sequence 0,0,0,0 - UPDATE
 // modificira sequence
 	private void setInfoNums() {
-
 		try {
-			// Ustvari array z 4 stevilkami
+			
+			String newSeq = "";
+			int[] seqArray = new int[4];
+			
+			if(checkBoxPrevod.isSelected()) {
+				seqArray[0] = 1;
+			}
+			if(checkBoxVerb.isSelected()) {
+				seqArray[1] = 1;
+			}
+			if(checkBoxPastSimple.isSelected()) {
+				seqArray[2] = 1;
+			}
+			if(checkBoxPastParticiple.isSelected()) {
+				seqArray[3] = 1;
+			}
+			
+			for (int i : seqArray) {
+				newSeq += String.valueOf(i);
+			}
+			
 
-			if (checkBoxPrevod.isSelected())
-				LoginForm.sequenceBox[0] = 1;
-			if (checkBoxVerb.isSelected())
-				LoginForm.sequenceBox[1] = 1;
-			if (checkBoxPastSimple.isSelected())
-				LoginForm.sequenceBox[2] = 1;
-			if (checkBoxPastParticiple.isSelected())
-				LoginForm.sequenceBox[3] = 1;
-
-			query = "UPDATE infoBox SET sequence = ? WHERE ucenec = ?";
+			query = "UPDATE users2 SET sequence = ? WHERE id = ?";
 
 			pSTMT = conn.prepareStatement(query);
 
-			pSTMT.setString(1, "" + LoginForm.sequenceBox[0] + LoginForm.sequenceBox[1] + LoginForm.sequenceBox[2]
-					+ LoginForm.sequenceBox[3]);
+			pSTMT.setString(1, newSeq);
 			pSTMT.setInt(2, idUporabnika);
 
 			pSTMT.executeUpdate();
