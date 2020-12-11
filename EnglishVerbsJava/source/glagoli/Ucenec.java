@@ -107,6 +107,7 @@ public class Ucenec extends SqliteConnect {
 	private static int totalPossibleScore = 36;
 	private static JProgressBar progressBar;
 	private static JLabel tockeTotal;
+	private JButton btnNG;
 
 	// Boilerplate
 	public static void start() {
@@ -188,28 +189,6 @@ public class Ucenec extends SqliteConnect {
 		}
 	}
 
-	private static String dobiSeq() {
-		String seq = "";
-		try {
-
-			query = "SELECT sequence FROM infoBox WHERE ucenec = ?";
-			pSTMT = conn.prepareStatement(query);
-			pSTMT.setInt(1, LoginForm.userID);
-
-			rs = pSTMT.executeQuery();
-
-			while (rs.next()) {
-				seq = rs.getString(1);
-			}
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		return seq;
-
-	}
-
 	public static void activateColumn(JButton columnName) {
 		try {
 			columnName.doClick();
@@ -217,9 +196,7 @@ public class Ucenec extends SqliteConnect {
 			JOptionPane.showMessageDialog(null,
 					"Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
-
 		}
-
 	}
 
 	// Funkcija ki polni ArrayList od vseh polji z glagoli v vseh oblikah
@@ -274,8 +251,8 @@ public class Ucenec extends SqliteConnect {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
-				+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
-				+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n" + "	WHERE users.id = "
+				+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
+				+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n" + "	WHERE users2.id = "
 				+ LoginForm.userID + ";";
 
 		try {
@@ -310,7 +287,7 @@ public class Ucenec extends SqliteConnect {
 			combined.addAll(pastParticipleArr);
 
 		} catch (Exception ex) {
-			System.out.println("prva napaka");
+			//TODO: FIX ERROR MSG			
 			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
 
@@ -383,9 +360,9 @@ public class Ucenec extends SqliteConnect {
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
-						+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users.id = " + LoginForm.userID + ";";
+						+ "	WHERE users2.id = " + LoginForm.userID + ";";
 
 				try {
 
@@ -460,9 +437,9 @@ public class Ucenec extends SqliteConnect {
 				PreparedStatement pstmt = null;
 				ResultSet rst = null;
 				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
-						+ "FROM users LEFT OUTER JOIN helperTable\n" + "	ON users.id = helperTable.ucenec\n"
+						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users.id = " + LoginForm.userID + ";";
+						+ "	WHERE users2.id = " + LoginForm.userID + ";";
 
 				try {
 
@@ -557,6 +534,47 @@ public class Ucenec extends SqliteConnect {
 			}
 		});
 		bottomPanelZaGumb.add(btnPonastavi);
+
+		btnNG = new JButton("New Game");
+		btnNG.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					// --> BRISANJE ENTRYJEV PRED VSAKIM VNOSOM
+					query = "DELETE FROM helperTable WHERE ucenec=?";
+					pSTMT = conn.prepareStatement(query);
+					pSTMT.setInt(1, LoginForm.userID);
+					pSTMT.execute();
+					pSTMT.close();
+
+					// ---> VNOS ENTRYJEV (NAKLJUCNI)
+					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
+					pSTMT = conn.prepareStatement(query);
+
+					for (int i = 0; i < 9; i++) {
+						pSTMT.setInt(1, LoginForm.userID);
+						pSTMT.setInt(2, getRDM());
+						pSTMT.execute();
+					}
+					pSTMT.close();
+					
+				
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+							JOptionPane.WARNING_MESSAGE);
+
+				}
+
+			}
+
+			private int getRDM() {
+				return (int) (Math.random() * 64 + 1);
+			}
+		});
+		btnNG.setBackground(new Color(244, 164, 96));
+		btnNG.setFont(new Font("Arial Black", Font.PLAIN, 13));
+		bottomPanelZaGumb.add(btnNG);
 		bottomPanelZaGumb.add(btnIzhod);
 
 		JPanel mainPanel = new JPanel();

@@ -152,7 +152,6 @@ public class AddUporabnik extends SqliteConnect {
 				String password = txtGeslo.getText();
 
 				try {
-					// DOBI checkBox value
 					int role = 3;
 					if (cBoxUcitelj.isSelected()) {
 						role = 2;
@@ -172,7 +171,7 @@ public class AddUporabnik extends SqliteConnect {
 						pSTMT.setString(1, uporabnisko.toLowerCase());
 						pSTMT.setString(2, password.toLowerCase());
 						pSTMT.setString(3, "1000");
-						pSTMT.setInt(4, 2);
+						pSTMT.setInt(4, role);
 
 						pSTMT.execute();
 						pSTMT.close();
@@ -184,16 +183,13 @@ public class AddUporabnik extends SqliteConnect {
 							Ucitelj.refreshHidden();
 						}
 						
-						
-						
-						
-						JOptionPane.showMessageDialog(null, "Shranjeno", "Uporabnik dodan",
-								JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showConfirmDialog(null, "Uporabnik "+ uporabnisko +" dodan", "Uspeh",
+								JOptionPane.DEFAULT_OPTION);
 
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Opis napake: \nPrišlo je do napake pri vnosu novega uporabnika" + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
 
