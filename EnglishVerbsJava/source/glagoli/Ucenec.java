@@ -87,8 +87,8 @@ public class Ucenec extends SqliteConnect {
 	static ArrayList<String> combined = new ArrayList<String>();
 
 	// Barve
-	static Color incorrect = new Color(255, 102, 102);
-	static Color correct = new Color(102, 255, 102);
+	static Color incorrect = new Color(255, 99, 99);
+	static Color correct = new Color(163, 222, 146);
 
 	// Gumbi TOP
 	protected static JButton gumbPrevod;
@@ -107,7 +107,6 @@ public class Ucenec extends SqliteConnect {
 	private static int totalPossibleScore = 36;
 	private static JProgressBar progressBar;
 	private static JLabel tockeTotal;
-	private JButton btnNG;
 
 	// Boilerplate
 	public static void start() {
@@ -183,7 +182,7 @@ public class Ucenec extends SqliteConnect {
 			System.out.println();
 		} else {
 			pomenVar.setEditable(false);
-			pomenVar.setBackground(Color.orange);
+			pomenVar.setBackground(new Color(244, 164, 96));
 			pomenVar.setForeground(Color.black);
 			pomenVar.setText("/");
 		}
@@ -340,7 +339,7 @@ public class Ucenec extends SqliteConnect {
 		uporabnikToolbar.add(uporabniskoIme);
 
 		progressBar = new JProgressBar(0, totalPossibleScore);
-		progressBar.setForeground(new Color(173, 255, 47));
+		progressBar.setForeground(new Color(163, 222, 146));
 		uporabnikToolbar.add(progressBar);
 
 		tockeTotal = new JLabel(userScore + " / " + totalPossibleScore);
@@ -534,47 +533,6 @@ public class Ucenec extends SqliteConnect {
 			}
 		});
 		bottomPanelZaGumb.add(btnPonastavi);
-
-		btnNG = new JButton("New Game");
-		btnNG.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					
-					// --> BRISANJE ENTRYJEV PRED VSAKIM VNOSOM
-					query = "DELETE FROM helperTable WHERE ucenec=?";
-					pSTMT = conn.prepareStatement(query);
-					pSTMT.setInt(1, LoginForm.userID);
-					pSTMT.execute();
-					pSTMT.close();
-
-					// ---> VNOS ENTRYJEV (NAKLJUCNI)
-					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
-					pSTMT = conn.prepareStatement(query);
-
-					for (int i = 0; i < 9; i++) {
-						pSTMT.setInt(1, LoginForm.userID);
-						pSTMT.setInt(2, getRDM());
-						pSTMT.execute();
-					}
-					pSTMT.close();
-					
-				
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
-
-				}
-
-			}
-
-			private int getRDM() {
-				return (int) (Math.random() * 64 + 1);
-			}
-		});
-		btnNG.setBackground(new Color(244, 164, 96));
-		btnNG.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		bottomPanelZaGumb.add(btnNG);
 		bottomPanelZaGumb.add(btnIzhod);
 
 		JPanel mainPanel = new JPanel();

@@ -86,7 +86,7 @@ public class Ucitelj extends SqliteConnect {
 	// Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
 	protected static void refreshPassword() {
 		query = "SELECT users2.id as 'zaporedna stevilka', users2.username AS uporabnik, roles.role AS pravice, users2.password as geslo FROM users2\r\n" + 
-				"JOIN roles ON users2.role = roles.id";
+				"JOIN roles ON users2.role = roles.id ORDER BY roles.role DESC";
 
 		try {
 			pSTMT = conn.prepareStatement(query);
@@ -99,7 +99,7 @@ public class Ucitelj extends SqliteConnect {
 	
 	protected static void refreshHidden() {
 		query = "SELECT users2.id as 'zaporedna stevilka', users2.username AS uporabnik, roles.role AS pravice FROM users2\r\n" + 
-				"JOIN roles ON users2.role = roles.id";
+				"JOIN roles ON users2.role = roles.id ORDER BY roles.role DESC";
 
 		try {
 			pSTMT = conn.prepareStatement(query);

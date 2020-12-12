@@ -167,6 +167,8 @@ public class LoginForm extends SqliteConnect {
 
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
+					
+					//TODO: HASHING PW
 
 					// Poizvedba / Query
 					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
