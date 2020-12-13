@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.security.MessageDigest;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -172,6 +173,34 @@ public class LoginForm extends SqliteConnect {
 
 					// Poizvedba / Query
 					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
+					
+	
+					MessageDigest md = new MessageDigest("MD5") {
+						
+						@Override
+						protected void engineUpdate(byte[] input, int offset, int len) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						protected void engineUpdate(byte input) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						protected void engineReset() {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						protected byte[] engineDigest() {
+							// TODO Auto-generated method stub
+							return null;
+						}
+					};
 					
 					//STARA VERZIJA (DEBUGGING)
 					//query = "SELECT username, id, password FROM users WHERE username=? AND password=?";
