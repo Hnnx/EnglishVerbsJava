@@ -22,6 +22,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JCheckBox;
 import java.awt.Color;
+import javax.swing.JPasswordField;
 
 public class AddUporabnik extends SqliteConnect {
 
@@ -56,7 +57,7 @@ public class AddUporabnik extends SqliteConnect {
 
 	private static boolean isValidEmail(String mail) {
 
-		return mail.length() >= 4 && mail.length() <= 20 ? true : false;
+		return mail.length() >= 4 && mail.length() <= 40 ? true : false;
 
 	}
 
@@ -79,7 +80,7 @@ public class AddUporabnik extends SqliteConnect {
 		GridBagLayout gbl_userNamePwPanel = new GridBagLayout();
 		gbl_userNamePwPanel.columnWidths = new int[] { 329, 0 };
 		gbl_userNamePwPanel.rowHeights = new int[] { 59, 30, 0, 59, 30, 30, 0, 0, 30, 0 };
-		gbl_userNamePwPanel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_userNamePwPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_userNamePwPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		userNamePwPanel.setLayout(gbl_userNamePwPanel);
 
@@ -149,7 +150,10 @@ public class AddUporabnik extends SqliteConnect {
 				conn = poveziBazo();
 
 				String uporabnisko = txtUporabnik.getText();
-				String password = txtGeslo.getText();
+				String password = LoginForm.getMD(txtGeslo.getText());
+				
+				
+				
 
 				try {
 					int role = 3;
@@ -189,7 +193,7 @@ public class AddUporabnik extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \nPrišlo je do napake pri vnosu novega uporabnika" + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Opis napake: \nPrišlo je do napake pri vnosu novega uporabnika\n" + ex.getMessage(), "Napaka :(",
 							JOptionPane.WARNING_MESSAGE);
 				}
 
