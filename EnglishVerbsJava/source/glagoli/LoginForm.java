@@ -14,7 +14,9 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -36,6 +38,10 @@ public class LoginForm extends SqliteConnect {
 	protected static String uporabniskoGeslo;
 	protected static String sequence;
 	protected static int role;
+	
+	
+	// --> SECURITY
+	
 
 	// --> LABEL, TEXT ITD
 	private JTextField userNameField;
@@ -75,7 +81,7 @@ public class LoginForm extends SqliteConnect {
 		frame.setBounds(100, 100, 346, 407);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
+		
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				try {
@@ -138,6 +144,7 @@ public class LoginForm extends SqliteConnect {
 		lblGeslo.setFont(new Font("Arial Black", Font.PLAIN, 18));
 
 		passwordField = new JPasswordField();
+		passwordField.setToolTipText("Bodite pozorni na velike in male črke");
 		passwordField.setFont(new Font("Arial Black", Font.PLAIN, 18));
 		passwordField.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
@@ -155,8 +162,8 @@ public class LoginForm extends SqliteConnect {
 		gbc_btnPrijava.fill = GridBagConstraints.BOTH;
 		gbc_btnPrijava.gridx = 0;
 		gbc_btnPrijava.gridy = 5;
-		panel.add(btnPrijava, gbc_btnPrijava);
-		
+		panel.add(btnPrijava, gbc_btnPrijava);	
+
 		
 		
 		// --> LOGIN
@@ -169,49 +176,17 @@ public class LoginForm extends SqliteConnect {
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
 					
-					//TODO: HASHING PW
+					
 
 					// Poizvedba / Query
 					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
-					
-	
-					MessageDigest md = new MessageDigest("MD5") {
-						
-						@Override
-						protected void engineUpdate(byte[] input, int offset, int len) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						protected void engineUpdate(byte input) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						protected void engineReset() {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						protected byte[] engineDigest() {
-							// TODO Auto-generated method stub
-							return null;
-						}
-					};
-					
-					//STARA VERZIJA (DEBUGGING)
-					//query = "SELECT username, id, password FROM users WHERE username=? AND password=?";
-					
 
 					// Prepare Statement
 					pSTMT = conn.prepareStatement(query);
 					
 					//Zamenja vprasaje v query-ju . da v lowerCase za lazjo kontrolo uporabnikov
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
-					pSTMT.setString(2, uporabniskoGeslo.toLowerCase());
+					pSTMT.setString(2, getMD(uporabniskoGeslo));
 
 					// Result Set
 					rs = pSTMT.executeQuery();
@@ -275,4 +250,31 @@ public class LoginForm extends SqliteConnect {
 			}
 		});
 	}
+	
+	
+	protected static String  getMD(String gesloVnos) {
+		try {
+			
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] mDigest = md.digest(gesloVnos.getBytes());
+			
+			BigInteger num = new  BigInteger(1,mDigest);
+			
+			String gesloHashed = num.toString(16);
+			
+			while( gesloHashed.length() < 32 ) {
+				gesloHashed =  "0" + gesloHashed;
+			}
+			
+			return gesloHashed;
+			
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+	}
+	
+	
+	
 }
