@@ -258,9 +258,7 @@ public class AddGlagol extends SqliteConnect {
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
-				//TODO: VRNI METODO
-				//Ucitelj.btnIzhod.doClick();
-				System.exit(0);
+				Ucitelj.btnIzhod.doClick();
 
 			}
 		});
@@ -341,6 +339,9 @@ public class AddGlagol extends SqliteConnect {
 
 					refreshTable();
 					statusLabel.setText("Ucencu " + idUporabnikaString + " ste samodejno dolocili naslednje glagole");
+					
+					// ---> NASTAVI KATERE COLUMNE IZPISE 
+					setInfoNums();
 
 				} catch (Exception ex) {
 					ex.printStackTrace();

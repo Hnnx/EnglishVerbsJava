@@ -130,20 +130,9 @@ public class Ucenec extends SqliteConnect {
 		conn = poveziBazo();
 		fillArrayWithVerbs();
 		fetchFromDB();
+		
+		getColumns();
 
-		String prvoPolje = String.valueOf(LoginForm.sequence.substring(0, 1));
-		String drugoPolje = String.valueOf(LoginForm.sequence.substring(1, 2));
-		String tretjePolje = String.valueOf(LoginForm.sequence.substring(2, 3));
-		String cetrtoPolje = String.valueOf(LoginForm.sequence.substring(3));
-
-		if (Integer.parseInt(prvoPolje) == 1)
-			activateColumn(gumbPrevod);
-		if (Integer.parseInt(drugoPolje) == 1)
-			activateColumn(gumbVerb);
-		if (Integer.parseInt(tretjePolje) == 1)
-			activateColumn(gumbPastSimple);
-		if (Integer.parseInt(cetrtoPolje) == 1)
-			activateColumn(gumbPastParticiple);
 
 		gumbPrevod.setEnabled(false);
 		gumbVerb.setEnabled(false);
@@ -156,6 +145,25 @@ public class Ucenec extends SqliteConnect {
 		defaultDisabled(gumbPastSimple);
 		defaultDisabled(gumbPastParticiple);
 
+	}
+	
+	
+	private static void getColumns() {
+		
+		String prvoPolje = String.valueOf(LoginForm.sequence.substring(0, 1));
+		String drugoPolje = String.valueOf(LoginForm.sequence.substring(1, 2));
+		String tretjePolje = String.valueOf(LoginForm.sequence.substring(2, 3));
+		String cetrtoPolje = String.valueOf(LoginForm.sequence.substring(3));
+		
+		if (Integer.parseInt(prvoPolje) == 1)
+			activateColumn(gumbPrevod);
+		if (Integer.parseInt(drugoPolje) == 1)
+			activateColumn(gumbVerb);
+		if (Integer.parseInt(tretjePolje) == 1)
+			activateColumn(gumbPastSimple);
+		if (Integer.parseInt(cetrtoPolje) == 1)
+			activateColumn(gumbPastParticiple);
+		
 	}
 
 	// --> Spremeni default disabled color v crno
@@ -508,18 +516,12 @@ public class Ucenec extends SqliteConnect {
 		btnPonastavi.setBackground(new Color(244, 164, 96));
 		btnPonastavi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				// TOCKE + BAR
 				userScore = 0;
 				totalPossibleScore = 36;
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 				progressBar.setValue(0);
-
-				// RESET GUMBOV
-				gumbPrevod.setEnabled(true);
-				gumbVerb.setEnabled(true);
-				gumbPastParticiple.setEnabled(true);
-				gumbPastSimple.setEnabled(true);
 
 				for (int i = 0; i < 36; i++) {
 
