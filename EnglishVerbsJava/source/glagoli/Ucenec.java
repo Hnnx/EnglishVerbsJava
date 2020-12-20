@@ -132,12 +132,9 @@ public class Ucenec extends SqliteConnect {
 		fetchFromDB();
 		
 		getColumns();
+		disableButtons();
 
 
-		gumbPrevod.setEnabled(false);
-		gumbVerb.setEnabled(false);
-		gumbPastSimple.setEnabled(false);
-		gumbPastParticiple.setEnabled(false);
 
 		// --> Menjava default foreground color barve pri gumbih
 		defaultDisabled(gumbPrevod);
@@ -148,12 +145,26 @@ public class Ucenec extends SqliteConnect {
 	}
 	
 	
+	private static void disableButtons() {
+		gumbPrevod.setEnabled(false);
+		gumbVerb.setEnabled(false);
+		gumbPastSimple.setEnabled(false);
+		gumbPastParticiple.setEnabled(false);
+		
+	}
+	
+	
 	private static void getColumns() {
 		
 		String prvoPolje = String.valueOf(LoginForm.sequence.substring(0, 1));
 		String drugoPolje = String.valueOf(LoginForm.sequence.substring(1, 2));
 		String tretjePolje = String.valueOf(LoginForm.sequence.substring(2, 3));
 		String cetrtoPolje = String.valueOf(LoginForm.sequence.substring(3));
+		
+		gumbPrevod.setEnabled(true);
+		gumbVerb.setEnabled(true);
+		gumbPastSimple.setEnabled(true);
+		gumbPastParticiple.setEnabled(true);
 		
 		if (Integer.parseInt(prvoPolje) == 1)
 			activateColumn(gumbPrevod);
@@ -163,6 +174,9 @@ public class Ucenec extends SqliteConnect {
 			activateColumn(gumbPastSimple);
 		if (Integer.parseInt(cetrtoPolje) == 1)
 			activateColumn(gumbPastParticiple);
+		
+		
+		disableButtons();
 		
 	}
 
@@ -517,6 +531,7 @@ public class Ucenec extends SqliteConnect {
 		btnPonastavi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				
 				// TOCKE + BAR
 				userScore = 0;
 				totalPossibleScore = 36;
@@ -531,6 +546,8 @@ public class Ucenec extends SqliteConnect {
 					fieldArray.get(i).setBackground(Color.white);
 					fieldArray.get(i).setForeground(Color.black);
 				}
+				
+				getColumns();
 
 			}
 		});
