@@ -258,9 +258,7 @@ public class AddGlagol extends SqliteConnect {
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
-				//TODO: VRNI METODO
-				//Ucitelj.btnIzhod.doClick();
-				System.exit(0);
+				Ucitelj.btnIzhod.doClick();
 
 			}
 		});
@@ -341,6 +339,9 @@ public class AddGlagol extends SqliteConnect {
 
 					refreshTable();
 					statusLabel.setText("Ucencu " + idUporabnikaString + " ste samodejno dolocili naslednje glagole");
+					
+					// ---> NASTAVI KATERE COLUMNE IZPISE 
+					setColumns();
 
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -428,7 +429,8 @@ public class AddGlagol extends SqliteConnect {
 
 					statusLabel.setText("Ucencu " + idUporabnikaString + " ste rocno dolocili naslednje glagole");
 
-					setInfoNums();
+					// ---> NASTAVI KATERE COLUMNE IZPISE 
+					setColumns();
 
 				} catch (Exception e2) {
 
@@ -447,7 +449,7 @@ public class AddGlagol extends SqliteConnect {
 
 // --> funkcija AddUcenec.setSeq nastavi default sequence 0,0,0,0 - UPDATE
 // modificira sequence
-	private void setInfoNums() {
+	private void setColumns() {
 		try {
 			
 			String newSeq = "";

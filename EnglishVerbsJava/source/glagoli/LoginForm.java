@@ -177,7 +177,6 @@ public class LoginForm extends SqliteConnect {
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
 					
 					
-
 					// Poizvedba / Query
 					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
 

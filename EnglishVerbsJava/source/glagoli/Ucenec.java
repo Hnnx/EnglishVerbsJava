@@ -33,7 +33,7 @@ import javax.swing.SwingConstants;
 
 public class Ucenec extends SqliteConnect {
 
-	private JFrame frmUporabnik;
+	private static JFrame frame;
 	private static JTextField pomenR1;
 	private static JTextField glagolR1;
 	private static JTextField tenseR1;
@@ -97,10 +97,10 @@ public class Ucenec extends SqliteConnect {
 	protected static JButton gumbPastParticiple;
 
 	// GUMBI BOTTOM
-	private JButton btnPonastavi;
+	private static JButton btnPonastavi;
 	private JButton btnIzpisiVse;
 	private JButton btnPreveri;
-	private JButton btnIzhod;
+	private static JButton btnIzhod;
 
 	// User Score
 	private static int userScore = 0;
@@ -114,7 +114,7 @@ public class Ucenec extends SqliteConnect {
 			public void run() {
 				try {
 					Ucenec window = new Ucenec();
-					window.frmUporabnik.setVisible(true);
+					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,6 +123,7 @@ public class Ucenec extends SqliteConnect {
 	}
 
 	public Ucenec() {
+		
 		initialize();
 
 		// Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za
@@ -130,11 +131,82 @@ public class Ucenec extends SqliteConnect {
 		conn = poveziBazo();
 		fillArrayWithVerbs();
 		fetchFromDB();
+		unsetUser();
+
+		getColumns();
+		disableButtons();
+
+		// --> Menjava default foreground color barve pri gumbih
+		defaultDisabled(gumbPrevod);
+		defaultDisabled(gumbVerb);
+		defaultDisabled(gumbPastSimple);
+		defaultDisabled(gumbPastParticiple);
+
+	}
+
+	private static void disableButtons() {
+		gumbPrevod.setEnabled(false);
+		gumbVerb.setEnabled(false);
+		gumbPastSimple.setEnabled(false);
+		gumbPastParticiple.setEnabled(false);
+
+	}
+
+	private static void unsetUser() {
+
+		try {
+
+			query = "SELECT * FROM helperTable WHERE ucenec = ?";
+
+			pSTMT = conn.prepareStatement(query);
+			pSTMT.setInt(1, LoginForm.userID);
+
+			rs = pSTMT.executeQuery();
+
+			int count = 0;
+			while (rs.next())
+				count++;
+
+			if (count == 0) {
+
+				int input = JOptionPane.showConfirmDialog(null,
+						"Opis napake:\nUporabnik se nima dolocenih glagolov\nZelite dodati glagole zdaj?", "Napaka",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+				if (input == 0) {
+					try {
+						frame.dispose();
+						LoginForm window = new LoginForm();
+						window.frame.setVisible(true);
+
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null,
+								"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(),
+								"Napaka :(", JOptionPane.WARNING_MESSAGE);
+					}
+
+				} else {
+					System.exit(0);
+				}
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	private static void getColumns() {
 
 		String prvoPolje = String.valueOf(LoginForm.sequence.substring(0, 1));
 		String drugoPolje = String.valueOf(LoginForm.sequence.substring(1, 2));
 		String tretjePolje = String.valueOf(LoginForm.sequence.substring(2, 3));
 		String cetrtoPolje = String.valueOf(LoginForm.sequence.substring(3));
+
+		gumbPrevod.setEnabled(true);
+		gumbVerb.setEnabled(true);
+		gumbPastSimple.setEnabled(true);
+		gumbPastParticiple.setEnabled(true);
 
 		if (Integer.parseInt(prvoPolje) == 1)
 			activateColumn(gumbPrevod);
@@ -145,16 +217,7 @@ public class Ucenec extends SqliteConnect {
 		if (Integer.parseInt(cetrtoPolje) == 1)
 			activateColumn(gumbPastParticiple);
 
-		gumbPrevod.setEnabled(false);
-		gumbVerb.setEnabled(false);
-		gumbPastSimple.setEnabled(false);
-		gumbPastParticiple.setEnabled(false);
-
-		// --> Menjava default foreground color barve pri gumbih
-		defaultDisabled(gumbPrevod);
-		defaultDisabled(gumbVerb);
-		defaultDisabled(gumbPastSimple);
-		defaultDisabled(gumbPastParticiple);
+		disableButtons();
 
 	}
 
@@ -286,7 +349,7 @@ public class Ucenec extends SqliteConnect {
 			combined.addAll(pastParticipleArr);
 
 		} catch (Exception ex) {
-			//TODO: FIX ERROR MSG			
+			// TODO: FIX ERROR MSG
 			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
 
@@ -315,14 +378,14 @@ public class Ucenec extends SqliteConnect {
 	}
 
 	private void initialize() {
-		frmUporabnik = new JFrame();
-		frmUporabnik.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme.substring(0, 1).toUpperCase()
+		frame = new JFrame();
+		frame.setTitle("Ucenje Glagolov UPORABNIK: " + LoginForm.uporabniskoIme.substring(0, 1).toUpperCase()
 				+ LoginForm.uporabniskoIme.substring(1));
-		frmUporabnik.setBounds(100, 100, 969, 638);
-		frmUporabnik.getContentPane().setLayout(new BorderLayout(0, 0));
-		frmUporabnik.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setBounds(100, 100, 969, 638);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		frmUporabnik.addWindowListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				btnIzhod.doClick();
 
@@ -331,7 +394,7 @@ public class Ucenec extends SqliteConnect {
 
 		JPanel uporabnikToolbar = new JPanel();
 		uporabnikToolbar.setBackground(SystemColor.inactiveCaption);
-		frmUporabnik.getContentPane().add(uporabnikToolbar, BorderLayout.NORTH);
+		frame.getContentPane().add(uporabnikToolbar, BorderLayout.NORTH);
 
 		JLabel uporabniskoIme = new JLabel(
 				LoginForm.uporabniskoIme.substring(0, 1).toUpperCase() + LoginForm.uporabniskoIme.substring(1));
@@ -348,7 +411,7 @@ public class Ucenec extends SqliteConnect {
 
 		JPanel bottomPanelZaGumb = new JPanel();
 		bottomPanelZaGumb.setBackground(SystemColor.inactiveCaption);
-		frmUporabnik.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
+		frame.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
 
 		btnIzpisiVse = new JButton("Izpisi Vse");
 		btnIzpisiVse.setFont(new Font("Arial Black", Font.PLAIN, 13));
@@ -515,12 +578,6 @@ public class Ucenec extends SqliteConnect {
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 				progressBar.setValue(0);
 
-				// RESET GUMBOV
-				gumbPrevod.setEnabled(true);
-				gumbVerb.setEnabled(true);
-				gumbPastParticiple.setEnabled(true);
-				gumbPastSimple.setEnabled(true);
-
 				for (int i = 0; i < 36; i++) {
 
 					fieldArray.get(i).setText("");
@@ -530,6 +587,8 @@ public class Ucenec extends SqliteConnect {
 					fieldArray.get(i).setForeground(Color.black);
 				}
 
+				getColumns();
+
 			}
 		});
 		bottomPanelZaGumb.add(btnPonastavi);
@@ -537,7 +596,7 @@ public class Ucenec extends SqliteConnect {
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBackground(SystemColor.inactiveCaption);
-		frmUporabnik.getContentPane().add(mainPanel, BorderLayout.CENTER);
+		frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		mainPanel.setLayout(new GridLayout(0, 4, 20, 30));
 
 		// POSAMEZNI GUMBI
@@ -926,11 +985,11 @@ public class Ucenec extends SqliteConnect {
 
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.inactiveCaption);
-		frmUporabnik.getContentPane().add(panel, BorderLayout.WEST);
+		frame.getContentPane().add(panel, BorderLayout.WEST);
 
 		progressPanel = new JPanel();
 		progressPanel.setBackground(SystemColor.inactiveCaption);
-		frmUporabnik.getContentPane().add(progressPanel, BorderLayout.EAST);
+		frame.getContentPane().add(progressPanel, BorderLayout.EAST);
 
 		table = new JTable();
 		progressPanel.add(table);
