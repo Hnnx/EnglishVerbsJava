@@ -172,6 +172,7 @@ public class LoginForm extends SqliteConnect {
 
 				try {
 					conn = poveziBazo();
+					
 
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
