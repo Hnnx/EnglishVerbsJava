@@ -38,10 +38,8 @@ public class LoginForm extends SqliteConnect {
 	protected static String uporabniskoGeslo;
 	protected static String sequence;
 	protected static int role;
-	
-	
+
 	// --> SECURITY
-	
 
 	// --> LABEL, TEXT ITD
 	private JTextField userNameField;
@@ -60,7 +58,7 @@ public class LoginForm extends SqliteConnect {
 				try {
 					LoginForm window = new LoginForm();
 					window.frame.setVisible(true);
-					
+
 //					AddGlagol.start();
 
 				} catch (Exception e) {
@@ -81,7 +79,7 @@ public class LoginForm extends SqliteConnect {
 		frame.setBounds(100, 100, 346, 407);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				try {
@@ -162,36 +160,33 @@ public class LoginForm extends SqliteConnect {
 		gbc_btnPrijava.fill = GridBagConstraints.BOTH;
 		gbc_btnPrijava.gridx = 0;
 		gbc_btnPrijava.gridy = 5;
-		panel.add(btnPrijava, gbc_btnPrijava);	
+		panel.add(btnPrijava, gbc_btnPrijava);
 
-		
-		
 		// --> LOGIN
 		btnPrijava.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
 					conn = poveziBazo();
+					kreirajVseTabele();
 
 					uporabniskoIme = userNameField.getText().toLowerCase();
 					uporabniskoGeslo = String.valueOf(passwordField.getPassword());
-					
-					
+
 					// Poizvedba / Query
 					query = "SELECT username, id, password, sequence, role FROM users2 WHERE username=? AND password=?";
 
 					// Prepare Statement
 					pSTMT = conn.prepareStatement(query);
-					
-					//Zamenja vprasaje v query-ju . da v lowerCase za lazjo kontrolo uporabnikov
+
+					// Zamenja vprasaje v query-ju . da v lowerCase za lazjo kontrolo uporabnikov
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
 					pSTMT.setString(2, getMD(uporabniskoGeslo));
 
 					// Result Set
 					rs = pSTMT.executeQuery();
 					int count = 0;
-					
-					
+
 					while (rs.next()) {
 						userID = rs.getInt("id");
 						uporabniskoIme = rs.getString(1);
@@ -199,9 +194,7 @@ public class LoginForm extends SqliteConnect {
 						role = rs.getInt("role");
 						count++;
 					}
-					
-					
-					
+
 					if (count == 1 && role == 2) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
@@ -210,28 +203,33 @@ public class LoginForm extends SqliteConnect {
 						Ucitelj.start();
 						frame.dispose();
 
-					//Ce je v izpisu samo 1 entry (count == 1), potem je username/pw pravilen
-					} else if(count == 1 && role == 1) {
+						// Ce je v izpisu samo 1 entry (count == 1), potem je username/pw pravilen
+					} else if (count == 1 && role == 1) {
 						System.out.println("ADMIN");
 						System.exit(0);
-						
-					}
-					else if (count == 1) {
+
+					} else if (count == 1) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
 										+ uporabniskoIme.substring(0, 1).toUpperCase() + uporabniskoIme.substring(1),
 								"Prijava", JOptionPane.INFORMATION_MESSAGE);
-						Ucenec.start();
-						frame.dispose();
+
+						// DODAN ŠE EN VALIDATION - ČE UPORABNIK NIMA GLAGOLOV NE ODPRE OKNA
+
+						if(imaDoloceneGlagole()) {
+							Ucenec.start();
+							frame.dispose();
+							
+						}
 					}
-					
-					
-					//Ce je vec kot en entry je prislo do duplikacije
+
+					// Ce je vec kot en entry je prislo do duplikacije
 					else if (count > 1) {
 						JOptionPane.showMessageDialog(null, "Dvojno uporabnisko ime - preveri z uciteljem", "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
-						
-					//	Pogoj WHERE user=? AND PASSWORD = ?  ni vrnil rezultatov - geslo/user je napacen
+
+						// Pogoj WHERE user=? AND PASSWORD = ? ni vrnil rezultatov - geslo/user je
+						// napacen
 					} else {
 						JOptionPane.showMessageDialog(null, "Uporabnisko ime in geslo nista pravilna", "Prijava",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -249,31 +247,59 @@ public class LoginForm extends SqliteConnect {
 			}
 		});
 	}
-	
-	
-	protected static String  getMD(String gesloVnos) {
+
+	private static boolean imaDoloceneGlagole() {
+		boolean openWindow = false;
+
 		try {
-			
+			query = "SELECT * FROM helperTable WHERE ucenec = ?";
+
+			pSTMT = conn.prepareStatement(query);
+			pSTMT.setInt(1, userID);
+
+			rs = pSTMT.executeQuery();
+
+			int count = 0;
+			while (rs.next())
+				count++;
+
+			// Ce je count 0, uporabnik nima glagolov - vrni v Login
+			if (count == 0) {
+				openWindow = false;
+				
+				JOptionPane.showMessageDialog(null, "Opis napake:\nUporabnik še nima določenih glagolov");
+
+			}
+			else {
+				openWindow = true;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return openWindow;
+	}
+
+	protected static String getMD(String gesloVnos) {
+		try {
+
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte[] mDigest = md.digest(gesloVnos.getBytes());
-			
-			BigInteger num = new  BigInteger(1,mDigest);
-			
+
+			BigInteger num = new BigInteger(1, mDigest);
+
 			String gesloHashed = num.toString(16);
-			
-			while( gesloHashed.length() < 32 ) {
-				gesloHashed =  "0" + gesloHashed;
+
+			while (gesloHashed.length() < 32) {
+				gesloHashed = "0" + gesloHashed;
 			}
-			
+
 			return gesloHashed;
-			
+
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
-		
-		
+
 	}
-	
-	
-	
+
 }
