@@ -34,8 +34,8 @@ public class SqliteConnect {
 			kreirajTabeloUsers2();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Opis napake: Prislo je do napake pri povezovanju z bazo podatkov" + e, "Napaka :(", JOptionPane.WARNING_MESSAGE);
+			
 		}
 		
 	}
