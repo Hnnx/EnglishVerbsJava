@@ -29,11 +29,12 @@ import java.awt.Color;
 
 public class LoginForm extends SqliteConnect {
 
-	// --> WindowBuilder Boiler Plate
+	
+	// --> Okno
 	protected JFrame frame;
 
 	// --> podatki uporabnika userID se izpisuje v drugih oknih
-	protected static int userID;
+	protected static int uporabnikID;
 	protected static String uporabniskoIme;
 	protected static String uporabniskoGeslo;
 	protected static String sequence;
@@ -42,14 +43,14 @@ public class LoginForm extends SqliteConnect {
 	// --> LABEL, TEXT ITD
 	private JTextField userNameField;
 	private JPasswordField passwordField;
-	JLabel lblUporabnik;
-	JLabel lblGeslo;
+	private JLabel lblUporabnik;
+	private JLabel lblGeslo;
 
 	// --> GUMBI
-	JButton btnPrijava;
+	private JButton btnPrijava;
 	private JPanel panel;
 
-	// --> Boilerplate
+	// --> Boilerplate/Zagon okna
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -66,7 +67,6 @@ public class LoginForm extends SqliteConnect {
 		});
 	}
 
-	// --> WindowBuilder Boiler Plate
 	public LoginForm() {
 		initialize();
 	}
@@ -76,14 +76,18 @@ public class LoginForm extends SqliteConnect {
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 346, 407);
 		frame.getContentPane().setLayout(null);
+		
+		
+		// --> Override gumba X za izhod - DO_NOTHING in odpri JOptionPane
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
+		
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				try {
 
 					int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
 							JOptionPane.INFORMATION_MESSAGE);
+			
 
 					if (input == 0)
 						System.exit(0);
@@ -92,11 +96,15 @@ public class LoginForm extends SqliteConnect {
 					JOptionPane.showMessageDialog(null,
 							"Prišlo je do napake pri izhodu iz programa.", "Napaka",
 							JOptionPane.WARNING_MESSAGE);
+					
+					// Dodan system exit, ce pride do exceptiona se program zapre
+					System.exit(0);
 				}
 
 			}
 		});
 
+		
 		panel = new JPanel();
 		panel.setBackground(SystemColor.inactiveCaption);
 		panel.setBounds(23, 4, 279, 353);
@@ -160,6 +168,7 @@ public class LoginForm extends SqliteConnect {
 		gbc_btnPrijava.gridy = 5;
 		panel.add(btnPrijava, gbc_btnPrijava);
 
+		
 		// --> LOGIN
 		btnPrijava.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,22 +186,25 @@ public class LoginForm extends SqliteConnect {
 					// Prepare Statement
 					pSTMT = conn.prepareStatement(query);
 
-					// Zamenja vprasaje v query-ju . da v lowerCase za lazjo kontrolo uporabnikov
+					// Zamenja vprasaje v query-ju, username.toLowerCase za primerjavo tako da ni case sensitive
 					pSTMT.setString(1, uporabniskoIme.toLowerCase());
 					pSTMT.setString(2, getMD(uporabniskoGeslo));
 
-					// Result Set
+					// Shrani vrednosti iz poizvedbe v resultSet
 					rs = pSTMT.executeQuery();
 					int count = 0;
 
 					while (rs.next()) {
-						userID = rs.getInt("id");
+						uporabnikID = rs.getInt("id");
 						uporabniskoIme = rs.getString(1);
 						sequence = rs.getString("sequence");
 						role = rs.getInt("role");
 						count++;
 					}
 
+					// Ce se ime/password ujemata v bazi ( username AND pw) imamo samo 1 izpis (count == 1)
+					// role je samo dodaten check za dolocit, katero okno se odpre
+					
 					if (count == 1 && role == 2) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
@@ -201,18 +213,18 @@ public class LoginForm extends SqliteConnect {
 						Ucitelj.start();
 						frame.dispose();
 
-						// Ce je v izpisu samo 1 entry (count == 1), potem je username/pw pravilen
 					} else if (count == 1 && role == 1) {
-						System.out.println("ADMIN");
-						System.exit(0);
+						
+						//TODO: Dodaj okno za admina
 
-					} else if (count == 1) {
+					
+					} else if (count == 1 && role == 3) {
 						JOptionPane.showMessageDialog(null,
 								"Uporabnisko ime in geslo sta pravilna - pozdravljen "
 										+ uporabniskoIme.substring(0, 1).toUpperCase() + uporabniskoIme.substring(1),
 								"Prijava", JOptionPane.INFORMATION_MESSAGE);
 
-						// DODAN ŠE EN VALIDATION - ČE UPORABNIK NIMA GLAGOLOV NE ODPRE OKNA
+						// DODAN ŠE EN VALIDATION - ČE UPORABNIK NIMA DOLOCENIH GLAGOLOV NE ODPRE OKNA
 
 						if(imaDoloceneGlagole()) {
 							Ucenec.start();
@@ -235,17 +247,18 @@ public class LoginForm extends SqliteConnect {
 
 					rs.close();
 					pSTMT.close();
+				
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prišlo je do napake pri prijavi - podrobnosti napake: " + ex, "Napaka",
+							"Prišlo je do napake pri prijavi - opis napake:\n" + ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 				}
-
 			}
 		});
 	}
 
+	// --> Metoda preveri, ali ima uporabnik ze vnose v helperTable - helperTable se napolni, ko uporabniku prvic dolocimo glagole
 	private static boolean imaDoloceneGlagole() {
 		boolean openWindow = false;
 
@@ -253,7 +266,7 @@ public class LoginForm extends SqliteConnect {
 			query = "SELECT * FROM helperTable WHERE ucenec = ?";
 
 			pSTMT = conn.prepareStatement(query);
-			pSTMT.setInt(1, userID);
+			pSTMT.setInt(1, uporabnikID);
 
 			rs = pSTMT.executeQuery();
 
@@ -272,15 +285,22 @@ public class LoginForm extends SqliteConnect {
 				openWindow = true;
 			}
 
-		} catch (Exception e) {
-			// TODO: handle exception
+
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri preverjanju glagolov - opis napake:\n" + ex.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+			openWindow = false;
 		}
 		return openWindow;
 	}
 
+	// --> Metoda vrne String hashan z MD5 algoritmom
+	
 	protected static String getMD(String gesloVnos) {
 		try {
 
+			//md object s parametrom MD5, mDigest bitni array ki shrani vneseni String v bit array
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte[] mDigest = md.digest(gesloVnos.getBytes());
 

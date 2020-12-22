@@ -159,7 +159,7 @@ public class Ucenec extends SqliteConnect {
 			query = "SELECT * FROM helperTable WHERE ucenec = ?";
 
 			pSTMT = conn.prepareStatement(query);
-			pSTMT.setInt(1, LoginForm.userID);
+			pSTMT.setInt(1, LoginForm.uporabnikID);
 
 			rs = pSTMT.executeQuery();
 
@@ -315,7 +315,7 @@ public class Ucenec extends SqliteConnect {
 		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 				+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 				+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n" + "	WHERE users2.id = "
-				+ LoginForm.userID + ";";
+				+ LoginForm.uporabnikID + ";";
 
 		try {
 
@@ -424,7 +424,7 @@ public class Ucenec extends SqliteConnect {
 				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users2.id = " + LoginForm.userID + ";";
+						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
 
 				try {
 
@@ -501,7 +501,7 @@ public class Ucenec extends SqliteConnect {
 				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users2.id = " + LoginForm.userID + ";";
+						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
 
 				try {
 

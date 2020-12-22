@@ -31,59 +31,41 @@ import javax.swing.JCheckBox;
 
 public class Ucitelj extends SqliteConnect {
 
-	// Frame
-	protected static JFrame frame;
+	// --> Okno
+	private JFrame frame;
 	private static JTable table;
 
-	// Gumbi
+	// --> Gumbi
 	private JButton btnAddUcenec;
 	private JButton btnRemoveUcenec;
 	private JButton btnAddGlagol;
 	static JButton btnIzhod;
 	protected static JCheckBox cBoxGesla;
 
-	// BoilerPlate
+	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
-			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri zagonu okna Ucitelj", "Napaka",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 	}
 
 	public Ucitelj() {
-		conn = poveziBazo();
 		initialize();
+		conn = poveziBazo();
 		refreshHidden();
-		
-		cBoxGesla.addItemListener(new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				
-				int state = e.getStateChange();
-				
-				if(state == 1) {
-					refreshPassword();
-				}
-				else {
-					refreshHidden();
-				}
-				
-			}
-		});
-		
-
 		
 	}
 
-	// Helper funkcija ki osvezi DB in prikaze aktualne podatke po kliku na gume
+	// Metoda osvezi DB in prikaze aktualne podatke po kliku na gumbe
 	protected static void refreshPassword() {
 		query = "SELECT users2.id as 'zaporedna stevilka', users2.username AS uporabnik, roles.role AS pravice, users2.password as geslo FROM users2\r\n" + 
 				"JOIN roles ON users2.role = roles.id ORDER BY roles.role DESC";
@@ -93,7 +75,9 @@ public class Ucitelj extends SqliteConnect {
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
 		} catch (Exception ex) {
-
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri izpisu tabele - opis napake:\n" + ex.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -106,26 +90,42 @@ public class Ucitelj extends SqliteConnect {
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
 		} catch (Exception ex) {
-
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri izpisu tabele - opis napake:\n" + ex.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
 		}
 	}	
 
-	// Boilerplate GUI
+	
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("UPORABNIK: " + LoginForm.uporabniskoIme);
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 683, 372);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		// --> Override gumba X za izhod - DO_NOTHING in odpri JOptionPane
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		frame.addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent we) {
-			    btnIzhod.doClick();			  
-				  
-			  }
+					try {
+						int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
+								JOptionPane.INFORMATION_MESSAGE);
+						if (input == 0)
+							System.exit(0);
+						
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null,
+								"Prišlo je do napake pri izhodu iz programa.\nOpis napake: "+ ex.toString(), "Napaka",
+								JOptionPane.WARNING_MESSAGE);
+						
+						// Dodan system exit, ce pride do exceptiona se program zapre
+						System.exit(0);
+					}
+
+				}
 			});
-		
 		
 
 		JToolBar toolBar = new JToolBar();
@@ -133,14 +133,18 @@ public class Ucitelj extends SqliteConnect {
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 
 		// Gumb za dodajanje ucenca (odpre novo okno)
-
 		btnAddUcenec = new JButton("Dodaj Uporabnika");
 		btnAddUcenec.setBackground(new Color(244, 164, 96));
 		btnAddUcenec.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddUcenec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				AddUporabnik.start();
+				try {
+					AddUporabnik.start();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri zagonu okna za urejanje glagolov\nOpis napake: " + ex.toString(),
+							"Napaka", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		toolBar.add(btnAddUcenec);
@@ -151,15 +155,13 @@ public class Ucitelj extends SqliteConnect {
 		btnAddGlagol.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddGlagol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				try {
-
 					AddGlagol.start();
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prišlo je do napake pri zagonu okna za urejanje glagolov" + ex.getMessage(),
-							"Napaka :(", JOptionPane.WARNING_MESSAGE);
+							"Prišlo je do napake pri zagonu okna za urejanje glagolov\nOpis napake: " + ex.toString(),
+							"Napaka", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -182,15 +184,15 @@ public class Ucitelj extends SqliteConnect {
 
 					pSTMT = conn.prepareStatement(query);
 					pSTMT.execute();
-					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno izbrisan",
+					JOptionPane.showMessageDialog(null, "Izbrisano", "Uporabnik je bil uspesno odstranjen",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					model.removeRow(selectedRow);
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prislo je do napake pri brisanju iz baze podatkov " + ex.getMessage(),
-							"Napaka :(", JOptionPane.WARNING_MESSAGE);
+							"Prislo je do napake pri odstranjevanju iz baze podatkov\nOpis napake: " + ex.toString(),
+							"Napaka", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -215,17 +217,32 @@ public class Ucitelj extends SqliteConnect {
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
+							"Prišlo je do napake pri izhodu iz programa.\nOpis napake: "+ ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
+					
+					// Dodan system exit, ce pride do exceptiona se program zapre
+					System.exit(0);
 				}
 
 			}
 		});
 		toolBar.add(btnIzhod);
 		
+		// -- > Checkbox ki prikaze/Skrije gesla
 		cBoxGesla = new JCheckBox("Prikazi Gesla");
+		
+		// Dodan listener ki osvezi podatke, ko kliknemo na Pokazi Gesla gumb
+		cBoxGesla.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int state = e.getStateChange();
+				if(state == 1)refreshPassword();
+				else refreshHidden();
+			}
+		});
 		toolBar.add(cBoxGesla);
 
+		//ScrollPane + table, da se prikazuje scrollbar 
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
