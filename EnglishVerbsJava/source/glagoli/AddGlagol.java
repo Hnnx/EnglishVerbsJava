@@ -100,14 +100,13 @@ public class AddGlagol extends SqliteConnect {
 		conn = poveziBazo();
 		fillComboBoxUcenci();
 		showFullTable();
-
+		
 		fillComboBoxGlagoli();
 	}
 
 // Funkcija za brisanje/resetiranje comboBoxov - brez tega se glagoli stackajo
 // ob vsakem kliku na gumb (iz baze napolni rw+ )
 	private static void resetComboBox() {
-
 		combo1.removeAllItems();
 		combo2.removeAllItems();
 		combo3.removeAllItems();
@@ -117,7 +116,7 @@ public class AddGlagol extends SqliteConnect {
 		combo7.removeAllItems();
 		combo8.removeAllItems();
 		combo8.removeAllItems();
-
+		
 	}
 
 	private void initialize() {
@@ -521,13 +520,15 @@ public class AddGlagol extends SqliteConnect {
 			rs = pSTMT.executeQuery();
 
 			while (rs.next()) {
-				for (int i = 0; i < cBoxList.size(); i++) {
-					cBoxList.get(i).addItem(rs.getString(1) + " " + rs.getInt(2));
-				}
+				
+				//TODO: FIX ERROR
+//				for (int i = 0; i < cBoxList.size(); i++) {
+//					cBoxList.get(i).addItem(rs.getString(1) + " " + rs.getInt(2));
+//				}
 			}
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.toString(), "Napaka :(",
 					JOptionPane.WARNING_MESSAGE);
 		}
 	}
