@@ -13,6 +13,8 @@ import DB.SqliteConnect;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -22,22 +24,21 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JCheckBox;
 import java.awt.Color;
-import javax.swing.JPasswordField;
 
 public class AddUporabnik extends SqliteConnect {
 
-	// Framee
+	// --> Okno
 	private JFrame frame;
 
-	// Podatki uporabnika
+	// --> Podatki uporabnika
 	private JTextField txtUporabnik;
 	private JTextField txtGeslo;
 
-	// Gumbi
+	//c--> Gumbi
 	private static JButton btnBack;
 	private static JButton btnAdd;
 
-	// --> WindowBuilder BOILERPLATE
+	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,7 +46,9 @@ public class AddUporabnik extends SqliteConnect {
 					AddUporabnik window = new AddUporabnik();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri zagonu okna za dodajanje uporabnika\nOpis napake: " + e.toString(), "Napaka",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -55,15 +58,22 @@ public class AddUporabnik extends SqliteConnect {
 		initialize();
 	}
 
-	private static boolean isValidEmail(String mail) {
-
-		return mail.length() >= 4 && mail.length() <= 40 ? true : false;
+	
+	// --> Metode za validacijo uporabniskega imena in gesla
+	private static boolean isValidPassword(String password, String rx) {
+		
+		Pattern pattern = Pattern.compile(rx);
+		Matcher matcher = pattern.matcher(password);
+		return matcher.matches();
 
 	}
 
-	private static boolean isValidUsername(String username) {
+	private static boolean isValidUsername(String username, String rx) {
+		
+		Pattern pattern = Pattern.compile(rx);
+		Matcher matcher = pattern.matcher(username);
+		return matcher.matches();
 
-		return username.length() >= 3 && username.length() >= 16 ? true : false;
 	}
 
 	private void initialize() {
@@ -134,7 +144,9 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_txtGeslo.gridy = 4;
 		userNamePwPanel.add(txtGeslo, gbc_txtGeslo);
 		txtGeslo.setColumns(10);
-
+		
+		
+		// --> Gumb Dodaj
 		btnAdd = new JButton("DODAJ");
 		btnAdd.setBackground(new Color(244, 164, 96));
 		btnAdd.setFont(new Font("Arial Black", Font.PLAIN, 15));
@@ -144,38 +156,50 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_btnAdd.gridx = 0;
 		gbc_btnAdd.gridy = 6;
 		userNamePwPanel.add(btnAdd, gbc_btnAdd);
+		
+		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				conn = poveziBazo();
 
 				String uporabnisko = txtUporabnik.getText();
-				String password = LoginForm.getMD(txtGeslo.getText());
+				String password = txtGeslo.getText();
 				
-				
-				
-
+				String regexZaUsername = "^[a-z0-9_-]{3,15}$";
+				String regexZaPassword = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$";
 				try {
+					
+					// Default opcija 3 = Ucenec - ce je CheckBox ucitelj izbran, spremeni role v 2 = Ucitelj
 					int role = 3;
 					if (cBoxUcitelj.isSelected()) {
 						role = 2;
 					}
-
-
+					
 					query = "INSERT INTO users2 (username, password, sequence, role) VALUES (?, ?, ?, ?)";
 
 					pSTMT = conn.prepareStatement(query);
 
 					// VALIDATION
-					if (!isValidUsername(uporabnisko) && !isValidEmail(password)) {
+					if (!isValidUsername(uporabnisko,regexZaUsername)) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko ime mora vsebovati med 3 in 16 znakov, geslo pa med 4 in 20", "Napaka",
+								"Uporabnisko lahko vsebuje alfanumericne, _ ter - znake\nDolzina mora biti med 3 in 16", "Napaka",
 								JOptionPane.WARNING_MESSAGE);
-					} else {
-						pSTMT.setString(1, uporabnisko.toLowerCase());
-						pSTMT.setString(2, password.toLowerCase());
-						pSTMT.setString(3, "1000");
-						pSTMT.setInt(4, role);
+					} 
+					else if(!isValidPassword(password, regexZaPassword)) {
+
+						JOptionPane.showMessageDialog(null,
+							"Geslo mora vsebovati vsaj:\n- 8 znakov\n- 1 malo črko\n- 1 veliko črko\n- 1 številko\n- 1 poseben znak", "Napaka",
+								JOptionPane.WARNING_MESSAGE);
+					}
+					
+					
+					
+					else {
+						pSTMT.setString(1, uporabnisko.toLowerCase()); // Shrani vse z malo da ni case sensitive
+						pSTMT.setString(2, LoginForm.getMD(password)); // Pred vnosom MD5 hash
+						pSTMT.setString(3, "1000"); // Default sekvenca 
+						pSTMT.setInt(4, role); 
 
 						pSTMT.execute();
 						pSTMT.close();
@@ -191,12 +215,13 @@ public class AddUporabnik extends SqliteConnect {
 								JOptionPane.DEFAULT_OPTION);
 
 					}
+					
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \nPrišlo je do napake pri vnosu novega uporabnika\n" + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri dodajanju uporabnika\n:Opis napake: " + e.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 				}
-
 			}
 		});
 
