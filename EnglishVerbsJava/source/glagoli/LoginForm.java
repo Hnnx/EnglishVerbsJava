@@ -39,8 +39,6 @@ public class LoginForm extends SqliteConnect {
 	protected static String sequence;
 	protected static int role;
 
-	// --> SECURITY
-
 	// --> LABEL, TEXT ITD
 	private JTextField userNameField;
 	private JPasswordField passwordField;
@@ -59,10 +57,10 @@ public class LoginForm extends SqliteConnect {
 					LoginForm window = new LoginForm();
 					window.frame.setVisible(true);
 
-//					AddGlagol.start();
-
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri zagonu okna za prijavo uporabnika", "Napaka",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -92,7 +90,7 @@ public class LoginForm extends SqliteConnect {
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
+							"Prišlo je do napake pri izhodu iz programa.", "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 				}
 
