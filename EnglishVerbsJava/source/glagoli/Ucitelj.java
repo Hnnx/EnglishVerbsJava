@@ -32,7 +32,7 @@ import javax.swing.JCheckBox;
 public class Ucitelj extends SqliteConnect {
 
 	// --> Okno
-	protected static JFrame frame;
+	private JFrame frame;
 	private static JTable table;
 
 	// --> Gumbi
@@ -45,13 +45,14 @@ public class Ucitelj extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
-			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri zagonu okna Ucitelj", "Napaka",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});

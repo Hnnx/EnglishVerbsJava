@@ -58,7 +58,6 @@ public class AddUporabnik extends SqliteConnect {
 		initialize();
 	}
 
-	
 	// --> Metode za validacijo uporabniskega imena in gesla
 	private static boolean isValidPassword(String password, String rx) {
 		
@@ -157,7 +156,6 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_btnAdd.gridy = 6;
 		userNamePwPanel.add(btnAdd, gbc_btnAdd);
 		
-		
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -194,7 +192,6 @@ public class AddUporabnik extends SqliteConnect {
 					}
 					
 					
-					
 					else {
 						pSTMT.setString(1, uporabnisko.toLowerCase()); // Shrani vse z malo da ni case sensitive
 						pSTMT.setString(2, LoginForm.getMD(password)); // Pred vnosom MD5 hash
@@ -213,9 +210,7 @@ public class AddUporabnik extends SqliteConnect {
 						
 						JOptionPane.showConfirmDialog(null, "Uporabnik "+ uporabnisko +" dodan", "Uspeh",
 								JOptionPane.DEFAULT_OPTION);
-
 					}
-					
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
