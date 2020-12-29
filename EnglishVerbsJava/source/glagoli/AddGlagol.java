@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
@@ -86,7 +87,7 @@ public class AddGlagol extends SqliteConnect {
 					AddGlagol window = new AddGlagol();
 					window.frame.setVisible(true);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri zagonu okna za upravljanje uporabnika",
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri zagonu okna za upravljanje uporabnika. \nOpis napake: " + ex.toString(),
 							"Napaka", JOptionPane.WARNING_MESSAGE);
 				}
 			}
@@ -100,6 +101,19 @@ public class AddGlagol extends SqliteConnect {
 		conn = poveziBazo();
 		fillComboBoxUcenci();
 		showFullTable();
+		
+		// Nafilaj cBoxList za nadaljno uporabi pri loopih
+		cBoxList = new ArrayList<JComboBox<String>>();
+
+		cBoxList.add(combo1);
+		cBoxList.add(combo2);
+		cBoxList.add(combo3);
+		cBoxList.add(combo4);
+		cBoxList.add(combo5);
+		cBoxList.add(combo6);
+		cBoxList.add(combo7);
+		cBoxList.add(combo8);
+		cBoxList.add(combo9);
 		
 		fillComboBoxGlagoli();
 	}
@@ -275,19 +289,6 @@ public class AddGlagol extends SqliteConnect {
 		cBoxUcenec.setFont(new Font("Arial", Font.BOLD, 16));
 		frame.getContentPane().add(cBoxUcenec);
 
-		// Nafilaj cBoxList za nadaljno uporabi pri loopih
-		cBoxList = new ArrayList<JComboBox<String>>();
-
-		cBoxList.add(combo1);
-		cBoxList.add(combo2);
-		cBoxList.add(combo3);
-		cBoxList.add(combo4);
-		cBoxList.add(combo5);
-		cBoxList.add(combo6);
-		cBoxList.add(combo7);
-		cBoxList.add(combo8);
-		cBoxList.add(combo9);
-
 // Panel z Comboboxi ki vsebujejo izbor glagolov
 		panelZComboBoxi = new JPanel();
 		panelZComboBoxi.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -355,6 +356,8 @@ public class AddGlagol extends SqliteConnect {
 						pSTMT.setInt(2, getRDM());
 						pSTMT.execute();
 					}
+					
+					
 					pSTMT.close();
 
 					refreshTable();
@@ -363,9 +366,17 @@ public class AddGlagol extends SqliteConnect {
 					// ---> NASTAVI KATERE COLUMNE IZPISE
 					setColumns();
 
-				} catch (Exception ex) {
+				}
+				
+				catch (SQLException ex) {
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(), "Napaka",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				
+				
+				catch (Exception ex) {
 					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -464,6 +475,7 @@ public class AddGlagol extends SqliteConnect {
 		});
 		btnShrani.setBounds(185, 24, 97, 30);
 		frame.getContentPane().add(btnShrani);
+		
 
 	}
 
@@ -518,13 +530,13 @@ public class AddGlagol extends SqliteConnect {
 
 			pSTMT = conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
+			
 
 			while (rs.next()) {
 				
-				//TODO: FIX ERROR
-//				for (int i = 0; i < cBoxList.size(); i++) {
-//					cBoxList.get(i).addItem(rs.getString(1) + " " + rs.getInt(2));
-//				}
+				for (int i = 0; i < cBoxList.size(); i++) {
+					cBoxList.get(i).addItem(rs.getString(1) + " " + rs.getInt(2));
+				}
 			}
 
 		} catch (Exception ex) {
