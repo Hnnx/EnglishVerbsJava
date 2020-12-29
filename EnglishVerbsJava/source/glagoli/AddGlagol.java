@@ -82,6 +82,7 @@ public class AddGlagol extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					AddGlagol window = new AddGlagol();
@@ -144,6 +145,7 @@ public class AddGlagol extends SqliteConnect {
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent we) {
 				try {
 					int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
@@ -180,6 +182,7 @@ public class AddGlagol extends SqliteConnect {
 		btnVrniLogin.setFont(new Font("Arial Black", Font.PLAIN, 12));
 		btnVrniLogin.setBackground(new Color(244, 164, 96));
 		btnVrniLogin.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -205,6 +208,7 @@ public class AddGlagol extends SqliteConnect {
 		btnVrniUcitelj.setFont(new Font("Arial Black", Font.PLAIN, 12));
 		btnVrniUcitelj.setBackground(new Color(244, 164, 96));
 		btnVrniUcitelj.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -334,6 +338,7 @@ public class AddGlagol extends SqliteConnect {
 		btnNakljucno.setToolTipText("Samodejno doloci nakljucne glagole");
 		btnNakljucno.setFont(new Font("Arial Black", Font.PLAIN, 12));
 		btnNakljucno.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					
@@ -400,6 +405,7 @@ public class AddGlagol extends SqliteConnect {
 		btnShrani.setToolTipText("Rocno doloci glagole");
 		btnShrani.setFont(new Font("Arial Black", Font.PLAIN, 12));
 		btnShrani.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {

@@ -56,6 +56,7 @@ public class LoginForm extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					LoginForm window = new LoginForm();
@@ -85,6 +86,7 @@ public class LoginForm extends SqliteConnect {
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent we) {
 				try {
 
@@ -207,6 +209,7 @@ public class LoginForm extends SqliteConnect {
 		
 		// --> LOGIN
 		btnPrijava.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {

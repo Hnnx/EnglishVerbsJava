@@ -45,6 +45,7 @@ public class Ucitelj extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Ucitelj window = new Ucitelj();
@@ -108,7 +109,8 @@ public class Ucitelj extends SqliteConnect {
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		frame.addWindowListener(new WindowAdapter() {
-			  public void windowClosing(WindowEvent we) {
+			  @Override
+			public void windowClosing(WindowEvent we) {
 					try {
 						int input = JOptionPane.showConfirmDialog(null, "Ali zelite zapreti program?", "Izhod",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -137,6 +139,7 @@ public class Ucitelj extends SqliteConnect {
 		btnAddUcenec.setBackground(new Color(244, 164, 96));
 		btnAddUcenec.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddUcenec.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					AddUporabnik.start();
@@ -154,6 +157,7 @@ public class Ucitelj extends SqliteConnect {
 		btnAddGlagol.setBackground(new Color(244, 164, 96));
 		btnAddGlagol.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnAddGlagol.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					AddGlagol.start();
@@ -171,6 +175,7 @@ public class Ucitelj extends SqliteConnect {
 		btnRemoveUcenec.setBackground(new Color(244, 164, 96));
 		btnRemoveUcenec.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnRemoveUcenec.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -205,6 +210,7 @@ public class Ucitelj extends SqliteConnect {
 		btnIzhod.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzhod.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 

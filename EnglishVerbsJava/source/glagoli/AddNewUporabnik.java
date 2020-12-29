@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -43,6 +45,7 @@ public class AddNewUporabnik extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					AddNewUporabnik window = new AddNewUporabnik();
@@ -160,7 +163,7 @@ public class AddNewUporabnik extends SqliteConnect {
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(430, 100, 365, 356);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JPanel userNamePwPanel = new JPanel();
 		userNamePwPanel.setBackground(SystemColor.inactiveCaption);
@@ -230,6 +233,7 @@ public class AddNewUporabnik extends SqliteConnect {
 		
 		// --> Gumb za registracijo - ustvari profil in doloci nakljucne glagole
 		btnRegister.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				conn = poveziBazo();
@@ -297,6 +301,7 @@ public class AddNewUporabnik extends SqliteConnect {
 				gbc_btnBack.gridy = 6;
 				userNamePwPanel.add(btnBack, gbc_btnBack);
 		btnBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				
