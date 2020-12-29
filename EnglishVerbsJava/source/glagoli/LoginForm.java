@@ -26,6 +26,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LoginForm extends SqliteConnect {
 
@@ -45,6 +47,7 @@ public class LoginForm extends SqliteConnect {
 	private JPasswordField passwordField;
 	private JLabel lblUporabnik;
 	private JLabel lblGeslo;
+	private JLabel lblRegister;
 
 	// --> GUMBI
 	private JButton btnPrijava;
@@ -167,6 +170,39 @@ public class LoginForm extends SqliteConnect {
 		gbc_btnPrijava.gridx = 0;
 		gbc_btnPrijava.gridy = 5;
 		panel.add(btnPrijava, gbc_btnPrijava);
+		
+		lblRegister = new JLabel("Še nimate profila? Ustvari tukaj");
+		lblRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+				lblRegister.setForeground(Color.black);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				
+				lblRegister.setForeground(Color.BLUE);
+				
+			}
+			@Override
+			
+			public void mouseClicked(MouseEvent e) {
+				
+				AddNewUporabnik.start();
+				frame.dispose();
+				
+				
+			}
+		});
+		
+		
+		lblRegister.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRegister.setForeground(Color.BLUE);
+		GridBagConstraints gbc_lblRegister = new GridBagConstraints();
+		gbc_lblRegister.insets = new Insets(0, 0, 5, 0);
+		gbc_lblRegister.gridx = 0;
+		gbc_lblRegister.gridy = 6;
+		panel.add(lblRegister, gbc_lblRegister);
 
 		
 		// --> LOGIN
@@ -319,5 +355,4 @@ public class LoginForm extends SqliteConnect {
 		}
 
 	}
-
 }

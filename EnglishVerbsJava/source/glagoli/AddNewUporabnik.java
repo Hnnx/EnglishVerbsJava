@@ -13,6 +13,7 @@ import DB.SqliteConnect;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
@@ -22,10 +23,9 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import javax.swing.JCheckBox;
 import java.awt.Color;
 
-public class AddUporabnik extends SqliteConnect {
+public class AddNewUporabnik extends SqliteConnect {
 
 	// --> Okno
 	private JFrame frame;
@@ -33,29 +33,35 @@ public class AddUporabnik extends SqliteConnect {
 	// --> Podatki uporabnika
 	private JTextField txtUporabnik;
 	private JTextField txtGeslo;
+	private static	int uporabnikID = 0;
 
-	//c--> Gumbi
+	//--> Gumbi
 	private static JButton btnBack;
-	private static JButton btnAdd;
+	private static JButton btnRegister;
+	
+	
+	
+	
 
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddUporabnik window = new AddUporabnik();
+					AddNewUporabnik window = new AddNewUporabnik();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null,
-							"Prišlo je do napake pri zagonu okna za dodajanje uporabnika\nOpis napake: " + e.toString(), "Napaka",
+							"Prišlo je do napake pri zagonu okna za registracijo.\nOpis napake: " + e.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
 	}
 
-	public AddUporabnik() {
+	public AddNewUporabnik() {
 		initialize();
+		conn = poveziBazo();
 	}
 
 	// --> Metode za validacijo uporabniskega imena in gesla
@@ -74,23 +80,100 @@ public class AddUporabnik extends SqliteConnect {
 		return matcher.matches();
 
 	}
+	
+	private static int getLastRowID() {
+		
+		try {
+			
+			// --> Get last ID
+			query = "SELECT MAX(id) FROM users2;";
+			
+			pSTMT = conn.prepareStatement(query);	 
+			rs = pSTMT.executeQuery();
+			
+			while(rs.next()) {
+				uporabnikID = rs.getInt(1);
+			}		
+			
+			pSTMT.close();
+			
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju ID-ja uporabnika.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+
+		}
+		 catch (Exception e) {
+			 JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju ID-ja uporabnika.\nOpis napake: " + e.toString(), "Napaka",
+						JOptionPane.WARNING_MESSAGE);
+
+		}
+		
+		return uporabnikID;
+		
+	}
+	
+	private void dolociRandom() {
+		try {
+			
+			uporabnikID = getLastRowID();
+			
+
+			// --> Brisanje dosedanjih entryjev iz helperTable
+			query = "DELETE FROM helperTable WHERE ucenec = ?";
+			pSTMT = conn.prepareStatement(query);
+			pSTMT.setInt(1, uporabnikID);
+			pSTMT.execute();
+			pSTMT.close();
+			
+			// --> Vnos random entryjev
+			
+			query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
+			pSTMT = conn.prepareStatement(query);
+			
+			for (int i = 0; i < 9; i++) {
+				pSTMT.setInt(1, uporabnikID);
+				pSTMT.setInt(2, getRDM());
+				pSTMT.execute();
+			}
+			
+		
+			
+			
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+		} 
+		
+		
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+
+		}
+		
+	}
+	
+	protected static int getRDM() {
+		return (int) (Math.random() * 64 + 1);
+	}
 
 	private void initialize() {
 		frame = new JFrame("Dodaj Uporabnika");
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
-		frame.setBounds(100, 100, 365, 403);
+		frame.setBounds(430, 100, 365, 356);
 		frame.getContentPane().setLayout(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel userNamePwPanel = new JPanel();
 		userNamePwPanel.setBackground(SystemColor.inactiveCaption);
-		userNamePwPanel.setBounds(10, 11, 329, 331);
+		userNamePwPanel.setBounds(10, 11, 329, 285);
 		frame.getContentPane().add(userNamePwPanel);
 		GridBagLayout gbl_userNamePwPanel = new GridBagLayout();
 		gbl_userNamePwPanel.columnWidths = new int[] { 329, 0 };
-		gbl_userNamePwPanel.rowHeights = new int[] { 59, 30, 0, 59, 30, 30, 0, 0, 30, 0 };
+		gbl_userNamePwPanel.rowHeights = new int[] { 59, 30, 59, 30, 30, 0, 0, 0 };
 		gbl_userNamePwPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_userNamePwPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_userNamePwPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		userNamePwPanel.setLayout(gbl_userNamePwPanel);
 
 		JLabel lblUporabnik = new JLabel("UPORABNIK");
@@ -114,15 +197,6 @@ public class AddUporabnik extends SqliteConnect {
 		userNamePwPanel.add(txtUporabnik, gbc_txtUporabnik);
 		txtUporabnik.setColumns(10);
 
-		JCheckBox cBoxUcitelj = new JCheckBox("Ucitelj");
-		cBoxUcitelj.setFont(new Font("Arial Black", Font.PLAIN, 11));
-		cBoxUcitelj.setBackground(SystemColor.inactiveCaption);
-		GridBagConstraints gbc_cBoxUcitelj = new GridBagConstraints();
-		gbc_cBoxUcitelj.insets = new Insets(0, 0, 5, 0);
-		gbc_cBoxUcitelj.gridx = 0;
-		gbc_cBoxUcitelj.gridy = 2;
-		userNamePwPanel.add(cBoxUcitelj, gbc_cBoxUcitelj);
-
 		JLabel lblGeslo = new JLabel("GESLO");
 		lblGeslo.setFont(new Font("Arial Black", Font.PLAIN, 18));
 		lblGeslo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -130,7 +204,7 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_lblGeslo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblGeslo.insets = new Insets(0, 0, 5, 0);
 		gbc_lblGeslo.gridx = 0;
-		gbc_lblGeslo.gridy = 3;
+		gbc_lblGeslo.gridy = 2;
 		userNamePwPanel.add(lblGeslo, gbc_lblGeslo);
 
 		txtGeslo = new JTextField();
@@ -140,23 +214,25 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_txtGeslo.fill = GridBagConstraints.BOTH;
 		gbc_txtGeslo.insets = new Insets(0, 0, 5, 0);
 		gbc_txtGeslo.gridx = 0;
-		gbc_txtGeslo.gridy = 4;
+		gbc_txtGeslo.gridy = 3;
 		userNamePwPanel.add(txtGeslo, gbc_txtGeslo);
 		txtGeslo.setColumns(10);
 		
 		
 		// --> Gumb Dodaj
-		btnAdd = new JButton("DODAJ");
-		btnAdd.setBackground(new Color(244, 164, 96));
-		btnAdd.setFont(new Font("Arial Black", Font.PLAIN, 15));
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.fill = GridBagConstraints.BOTH;
-		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAdd.gridx = 0;
-		gbc_btnAdd.gridy = 6;
-		userNamePwPanel.add(btnAdd, gbc_btnAdd);
+		btnRegister = new JButton("USTVARI");
+		btnRegister.setBackground(new Color(244, 164, 96));
+		btnRegister.setFont(new Font("Arial Black", Font.PLAIN, 15));
+		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
+		gbc_btnRegister.fill = GridBagConstraints.BOTH;
+		gbc_btnRegister.insets = new Insets(0, 0, 5, 0);
+		gbc_btnRegister.gridx = 0;
+		gbc_btnRegister.gridy = 5;
+		userNamePwPanel.add(btnRegister, gbc_btnRegister);
 		
-		btnAdd.addActionListener(new ActionListener() {
+		
+		// --> Gumb za registracijo - ustvari profil in doloci nakljucne glagole
+		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				conn = poveziBazo();
@@ -168,12 +244,6 @@ public class AddUporabnik extends SqliteConnect {
 				String regexZaPassword = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$";
 				try {
 					
-					// Default opcija 3 = Ucenec - ce je CheckBox ucitelj izbran, spremeni role v 2 = Ucitelj
-					int role = 3;
-					if (cBoxUcitelj.isSelected()) {
-						role = 2;
-					}
-					
 					query = "INSERT INTO users2 (username, password, sequence, role) VALUES (?, ?, ?, ?)";
 
 					pSTMT = conn.prepareStatement(query);
@@ -181,7 +251,7 @@ public class AddUporabnik extends SqliteConnect {
 					// VALIDATION
 					if (!isValidUsername(uporabnisko,regexZaUsername)) {
 						JOptionPane.showMessageDialog(null,
-								"Uporabnisko lahko vsebuje alfanumericne, _ ter - znake\nDolzina mora biti med 3 in 16", "Napaka",
+								"Uporabnisko lahko vsebuje alfanumerične, _ ter - znake\nDolzina mora biti med 3 in 16", "Napaka",
 								JOptionPane.WARNING_MESSAGE);
 					} 
 					else if(!isValidPassword(password, regexZaPassword)) {
@@ -192,45 +262,52 @@ public class AddUporabnik extends SqliteConnect {
 					}
 					
 					
+					
 					else {
 						pSTMT.setString(1, uporabnisko.toLowerCase()); // Shrani vse z malo da ni case sensitive
 						pSTMT.setString(2, LoginForm.getMD(password)); // Pred vnosom MD5 hash
 						pSTMT.setString(3, "1000"); // Default sekvenca 
-						pSTMT.setInt(4, role); 
+						pSTMT.setInt(4, 3); 
 
 						pSTMT.execute();
 						pSTMT.close();
-
-						if(Ucitelj.cBoxGesla.isSelected()) {
-							Ucitelj.refreshPassword();
-						}
-						else {
-							Ucitelj.refreshHidden();
+						
+						try {
+							dolociRandom();
+						} catch (Exception ex) {
+							JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(), "Napaka",
+									JOptionPane.WARNING_MESSAGE);
 						}
 						
-						JOptionPane.showConfirmDialog(null, "Uporabnik "+ uporabnisko +" dodan", "Uspeh",
+						JOptionPane.showConfirmDialog(null, "Uporabniski profil "+ uporabnisko +" ustvarjen - določeni so bili naključni glagoli", "Uspeh",
 								JOptionPane.DEFAULT_OPTION);
 					}
 
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
-							"Prišlo je do napake pri dodajanju uporabnika\n:Opis napake: " + e.toString(), "Napaka",
+							"Prišlo je do napake pri registraciji.\nOpis napake: " + e.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
-
-		btnBack = new JButton("NAZAJ");
-		btnBack.setBackground(new Color(244, 164, 96));
-		btnBack.setFont(new Font("Arial Black", Font.PLAIN, 15));
-		GridBagConstraints gbc_btnBack = new GridBagConstraints();
-		gbc_btnBack.fill = GridBagConstraints.BOTH;
-		gbc_btnBack.gridx = 0;
-		gbc_btnBack.gridy = 8;
-		userNamePwPanel.add(btnBack, gbc_btnBack);
+		
+				btnBack = new JButton("NAZAJ");
+				btnBack.setBackground(new Color(244, 164, 96));
+				btnBack.setFont(new Font("Arial Black", Font.PLAIN, 15));
+				GridBagConstraints gbc_btnBack = new GridBagConstraints();
+				gbc_btnBack.fill = GridBagConstraints.BOTH;
+				gbc_btnBack.gridx = 0;
+				gbc_btnBack.gridy = 6;
+				userNamePwPanel.add(btnBack, gbc_btnBack);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
+				
+				LoginForm prijavaOkno = new LoginForm();
+				prijavaOkno.frame.setVisible(true);
+				
+				
+				
 			}
 		});
 	}
