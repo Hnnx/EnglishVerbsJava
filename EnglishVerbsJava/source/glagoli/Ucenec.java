@@ -31,6 +31,7 @@ import javax.swing.JProgressBar;
 import java.awt.Font;
 import java.awt.SystemColor;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 public class Ucenec extends SqliteConnect {
 
@@ -113,11 +114,12 @@ public class Ucenec extends SqliteConnect {
 	// Boilerplate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucenec window = new Ucenec();
-					window.frame.setVisible(true);
+					Ucenec.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -183,6 +185,7 @@ public class Ucenec extends SqliteConnect {
 	// --> Spremeni default disabled color v crno
 	private static void defaultDisabled(JButton selectedBTN) {
 		selectedBTN.setUI(new MetalButtonUI() {
+			@Override
 			protected Color getDisabledTextColor() {
 				return Color.black;
 			}
@@ -346,9 +349,10 @@ public class Ucenec extends SqliteConnect {
 				+ LoginForm.uporabniskoIme.substring(1));
 		frame.setBounds(100, 100, 969, 638);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent we) {
 				btnIzhod.doClick();
 
@@ -383,6 +387,7 @@ public class Ucenec extends SqliteConnect {
 		btnIzpisiVse.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzpisiVse.setBackground(new Color(244, 164, 96));
 		btnIzpisiVse.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				
@@ -476,6 +481,7 @@ public class Ucenec extends SqliteConnect {
 		btnPreveri.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnPreveri.setBackground(new Color(244, 164, 96));
 		btnPreveri.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				// TODO: Dodaj tockjovanje v tabelo
@@ -530,6 +536,7 @@ public class Ucenec extends SqliteConnect {
 		btnIzhod.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzhod.setBackground(new Color(244, 164, 96));
 		btnIzhod.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 
@@ -554,6 +561,7 @@ public class Ucenec extends SqliteConnect {
 		btnPonastavi.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnPonastavi.setBackground(new Color(244, 164, 96));
 		btnPonastavi.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				// TOCKE + BAR
@@ -581,6 +589,7 @@ public class Ucenec extends SqliteConnect {
 		btnPridobiNove = new JButton("Pridobi Nove");
 		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
 		btnPridobiNove.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -643,6 +652,7 @@ public class Ucenec extends SqliteConnect {
 		gumbPrevod.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		gumbPrevod.setBackground(new Color(244, 164, 96));
 		gumbPrevod.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				totalPossibleScore -= 9;
@@ -685,6 +695,7 @@ public class Ucenec extends SqliteConnect {
 		gumbVerb.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		gumbVerb.setBackground(new Color(244, 164, 96));
 		gumbVerb.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				totalPossibleScore -= 9;
@@ -729,6 +740,7 @@ public class Ucenec extends SqliteConnect {
 		gumbPastSimple.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		gumbPastSimple.setBackground(new Color(244, 164, 96));
 		gumbPastSimple.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				totalPossibleScore -= 9;
@@ -751,6 +763,7 @@ public class Ucenec extends SqliteConnect {
 		gumbPastParticiple.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		gumbPastParticiple.setBackground(new Color(244, 164, 96));
 		gumbPastParticiple.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				totalPossibleScore -= 9;

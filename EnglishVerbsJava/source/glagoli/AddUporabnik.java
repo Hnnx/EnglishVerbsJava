@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -41,6 +43,7 @@ public class AddUporabnik extends SqliteConnect {
 	// --> Boilerplate/Zagon okna
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					AddUporabnik window = new AddUporabnik();
@@ -80,7 +83,7 @@ public class AddUporabnik extends SqliteConnect {
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 365, 403);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JPanel userNamePwPanel = new JPanel();
 		userNamePwPanel.setBackground(SystemColor.inactiveCaption);
@@ -157,6 +160,7 @@ public class AddUporabnik extends SqliteConnect {
 		userNamePwPanel.add(btnAdd, gbc_btnAdd);
 		
 		btnAdd.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				conn = poveziBazo();
@@ -229,6 +233,7 @@ public class AddUporabnik extends SqliteConnect {
 		gbc_btnBack.gridy = 8;
 		userNamePwPanel.add(btnBack, gbc_btnBack);
 		btnBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 			}
