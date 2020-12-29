@@ -36,11 +36,8 @@ public class AddNewUporabnik extends SqliteConnect {
 	private static	int uporabnikID = 0;
 
 	//--> Gumbi
-	private static JButton btnBack;
-	private static JButton btnRegister;
-	
-	
-	
+	private JButton btnBack;
+	private JButton btnRegister;
 	
 
 	// --> Boilerplate/Zagon okna

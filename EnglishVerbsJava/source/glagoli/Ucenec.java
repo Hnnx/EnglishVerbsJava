@@ -22,6 +22,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -81,10 +82,10 @@ public class Ucenec extends SqliteConnect {
 	private static ArrayList<String> pastParticipleArr = new ArrayList<String>();
 
 	// ArrayList ki zdruzi VSE TextJield-e za preverjanje
-	private static ArrayList<JTextField> fieldArray = new ArrayList<>();
+	private static ArrayList<JTextField> vsiJTextFieldi = new ArrayList<>();
 
 	// ArrayList ki zdruzi VSE glagole iz DB
-	static ArrayList<String> combined = new ArrayList<String>();
+	static ArrayList<String> vsiGlagoliIzDB = new ArrayList<String>();
 
 	// Barve
 	static Color incorrect = new Color(255, 99, 99);
@@ -97,20 +98,22 @@ public class Ucenec extends SqliteConnect {
 	protected static JButton gumbPastParticiple;
 
 	// GUMBI BOTTOM
-	private static JButton btnPonastavi;
+	private JButton btnPonastavi;
 	private JButton btnIzpisiVse;
 	private JButton btnPreveri;
-	private static JButton btnIzhod;
+	private JButton btnIzhod;
 
 	// User Score
 	private static int userScore = 0;
 	private static int totalPossibleScore = 36;
 	private static JProgressBar progressBar;
 	private static JLabel tockeTotal;
+	private JButton btnPridobiNove;
 
 	// Boilerplate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucenec window = new Ucenec();
@@ -123,15 +126,15 @@ public class Ucenec extends SqliteConnect {
 	}
 
 	public Ucenec() {
-		
+
 		initialize();
 
 		// Ob zagonu okna naj se poveze na DB in napolni ArrayList z vsemi glagoli za
 		// delo in upravljanje z njimi
 		conn = poveziBazo();
+
 		fillArrayWithVerbs();
 		fetchFromDB();
-		unsetUser();
 
 		getColumns();
 		disableButtons();
@@ -150,50 +153,6 @@ public class Ucenec extends SqliteConnect {
 		gumbPastSimple.setEnabled(false);
 		gumbPastParticiple.setEnabled(false);
 
-	}
-
-	private static void unsetUser() {
-
-		try {
-
-			query = "SELECT * FROM helperTable WHERE ucenec = ?";
-
-			pSTMT = conn.prepareStatement(query);
-			pSTMT.setInt(1, LoginForm.uporabnikID);
-
-			rs = pSTMT.executeQuery();
-
-			int count = 0;
-			while (rs.next())
-				count++;
-
-			if (count == 0) {
-
-				int input = JOptionPane.showConfirmDialog(null,
-						"Opis napake:\nUporabnik se nima dolocenih glagolov\nZelite dodati glagole zdaj?", "Napaka",
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-				if (input == 0) {
-					try {
-						frame.dispose();
-						LoginForm window = new LoginForm();
-						window.frame.setVisible(true);
-
-					} catch (Exception e2) {
-						JOptionPane.showMessageDialog(null,
-								"Opis napake: Prislo je do napake pri izhodu iz programa" + e2.getMessage(),
-								"Napaka :(", JOptionPane.WARNING_MESSAGE);
-					}
-
-				} else {
-					System.exit(0);
-				}
-
-			}
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 	}
 
 	private static void getColumns() {
@@ -237,11 +196,11 @@ public class Ucenec extends SqliteConnect {
 
 		JTextField pomenVar = jTextField;
 
-		if (!fieldArray.get(n).getText().isBlank()) {
-			checkInputVSexpected(pomenVar.getText(), combined.get(n), pomenVar);
+		if (!vsiJTextFieldi.get(n).getText().isBlank()) {
+			checkInputVSexpected(pomenVar.getText(), vsiGlagoliIzDB.get(n), pomenVar);
 
 			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expected: " + combined.get(n));
+			System.out.println("Expected: " + vsiGlagoliIzDB.get(n));
 			System.out.println();
 		} else {
 			pomenVar.setEditable(false);
@@ -265,67 +224,68 @@ public class Ucenec extends SqliteConnect {
 	// Spisana za lazje delanje z loopi, preverjanje, resetiranje itd
 	private static void fillArrayWithVerbs() {
 
-		fieldArray.add(pomenR1);
-		fieldArray.add(pomenR2);
-		fieldArray.add(pomenR3);
-		fieldArray.add(pomenR4);
-		fieldArray.add(pomenR5);
-		fieldArray.add(pomenR6);
-		fieldArray.add(pomenR7);
-		fieldArray.add(pomenR8);
-		fieldArray.add(pomenR9);
+		vsiJTextFieldi.add(pomenR1);
+		vsiJTextFieldi.add(pomenR2);
+		vsiJTextFieldi.add(pomenR3);
+		vsiJTextFieldi.add(pomenR4);
+		vsiJTextFieldi.add(pomenR5);
+		vsiJTextFieldi.add(pomenR6);
+		vsiJTextFieldi.add(pomenR7);
+		vsiJTextFieldi.add(pomenR8);
+		vsiJTextFieldi.add(pomenR9);
 
-		fieldArray.add(glagolR1);
-		fieldArray.add(glagolR2);
-		fieldArray.add(glagolR3);
-		fieldArray.add(glagolR4);
-		fieldArray.add(glagolR5);
-		fieldArray.add(glagolR6);
-		fieldArray.add(glagolR7);
-		fieldArray.add(glagolR8);
-		fieldArray.add(glagolR9);
+		vsiJTextFieldi.add(glagolR1);
+		vsiJTextFieldi.add(glagolR2);
+		vsiJTextFieldi.add(glagolR3);
+		vsiJTextFieldi.add(glagolR4);
+		vsiJTextFieldi.add(glagolR5);
+		vsiJTextFieldi.add(glagolR6);
+		vsiJTextFieldi.add(glagolR7);
+		vsiJTextFieldi.add(glagolR8);
+		vsiJTextFieldi.add(glagolR9);
 
-		fieldArray.add(tenseR1);
-		fieldArray.add(tenseR2);
-		fieldArray.add(tenseR3);
-		fieldArray.add(tenseR4);
-		fieldArray.add(tenseR5);
-		fieldArray.add(tenseR6);
-		fieldArray.add(tenseR7);
-		fieldArray.add(tenseR8);
-		fieldArray.add(tenseR9);
+		vsiJTextFieldi.add(tenseR1);
+		vsiJTextFieldi.add(tenseR2);
+		vsiJTextFieldi.add(tenseR3);
+		vsiJTextFieldi.add(tenseR4);
+		vsiJTextFieldi.add(tenseR5);
+		vsiJTextFieldi.add(tenseR6);
+		vsiJTextFieldi.add(tenseR7);
+		vsiJTextFieldi.add(tenseR8);
+		vsiJTextFieldi.add(tenseR9);
 
-		fieldArray.add(partR1);
-		fieldArray.add(partR2);
-		fieldArray.add(partR3);
-		fieldArray.add(partR4);
-		fieldArray.add(partR5);
-		fieldArray.add(partR6);
-		fieldArray.add(partR7);
-		fieldArray.add(partR8);
-		fieldArray.add(partR9);
+		vsiJTextFieldi.add(partR1);
+		vsiJTextFieldi.add(partR2);
+		vsiJTextFieldi.add(partR3);
+		vsiJTextFieldi.add(partR4);
+		vsiJTextFieldi.add(partR5);
+		vsiJTextFieldi.add(partR6);
+		vsiJTextFieldi.add(partR7);
+		vsiJTextFieldi.add(partR8);
+		vsiJTextFieldi.add(partR9);
 
 	}
 
 	// Funkcija prebere vnose iz DB in jih vnese v Array za nadaljno delo
 	private static void fetchFromDB() {
 
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+		pSTMT = null;
+		rs = null;
+		query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 				+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 				+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n" + "	WHERE users2.id = "
 				+ LoginForm.uporabnikID + ";";
 
 		try {
 
-			pstmt = conn.prepareStatement(query);
-			rs = pstmt.executeQuery();
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
 			String prevod = null;
 			String verb = null;
 			String pastSimple = null;
 			String pastParticiple = null;
 
+			// Za vsak loop pridobi String in ga vkljuci v array
 			while (rs.next()) {
 
 				prevod = rs.getString(1);
@@ -339,19 +299,22 @@ public class Ucenec extends SqliteConnect {
 
 				pastParticiple = rs.getString(4);
 				pastParticipleArr.add(pastParticiple);
+				
 
 			}
 
-			combined = new ArrayList<String>();
-			combined.addAll(prevodArr);
-			combined.addAll(verbArr);
-			combined.addAll(pastSimpleArr);
-			combined.addAll(pastParticipleArr);
+			// Izhod iz loopa naj zdruzi 4 liste v enega (addAll v vsiGlagoli)
 
-		} catch (Exception ex) {
-			// TODO: FIX ERROR MSG
-			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
-					JOptionPane.WARNING_MESSAGE);
+			vsiGlagoliIzDB = new ArrayList<String>();
+			vsiGlagoliIzDB.addAll(prevodArr);
+			vsiGlagoliIzDB.addAll(verbArr);
+			vsiGlagoliIzDB.addAll(pastSimpleArr);
+			vsiGlagoliIzDB.addAll(pastParticipleArr);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri pridobivanju glagolov iz baze podatkov.\nOpis napake: " + e.toString(),
+					"Napaka", JOptionPane.WARNING_MESSAGE);
 
 		}
 
@@ -413,23 +376,121 @@ public class Ucenec extends SqliteConnect {
 		bottomPanelZaGumb.setBackground(SystemColor.inactiveCaption);
 		frame.getContentPane().add(bottomPanelZaGumb, BorderLayout.SOUTH);
 
+		// --> IZPISI VSE za Debugging
+		// TODO: Odstrani iz koncne verzije!
+
 		btnIzpisiVse = new JButton("Izpisi Vse");
 		btnIzpisiVse.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzpisiVse.setBackground(new Color(244, 164, 96));
 		btnIzpisiVse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				PreparedStatement pstmt = null;
-				ResultSet rs = null;
-				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+				
+				
+				query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
 						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
 
 				try {
 
-					pstmt = conn.prepareStatement(myQuery);
-					rs = pstmt.executeQuery();
+					pSTMT = conn.prepareStatement(query);
+					rs = pSTMT.executeQuery();
+					String prevod = null;
+					String verb = null;
+					String pastSimple = null;
+					String pastParticiple = null;
+
+					while (rs.next()) {
+
+						prevod = rs.getString(1);
+						prevodArr.add(prevod);
+
+						verb = rs.getString(2);
+						verbArr.add(verb);
+
+						pastSimple = rs.getString(3);
+						pastSimpleArr.add(pastSimple);
+
+						pastParticiple = rs.getString(4);
+						pastParticipleArr.add(pastParticiple);
+
+						System.out.println("prevod: " + prevod);
+						System.out.println("verb: " + verb);
+						System.out.println("pastSimple: " + pastSimple);
+						System.out.println("pastParticiple: " + pastParticiple);
+						System.out.println();
+					}
+					
+					System.out.println("\n"+"******");
+
+					// PRIDOBI PODATKE IZ DB, NASTAVI (setText) NA VSAKIH 9 JTEXTFIELDOV
+					// PRIDOBLJEDNO VREDNOST
+					
+					//TODO: NE SPREMENI TEXT POLJA PO GUMBU "PRIDOBI NOVE"	
+					
+					int cntr = 0;
+					for (int j = 0; j < 9; j++) {
+						vsiJTextFieldi.get(j).setText(prevodArr.get(cntr));
+						cntr++;
+					}
+
+					cntr = 0;
+					for (int j = 9; j < 18; j++) {
+						vsiJTextFieldi.get(j).setText(verbArr.get(cntr));
+						cntr++;
+					}
+
+					cntr = 0;
+					for (int j = 18; j < 27; j++) {
+						vsiJTextFieldi.get(j).setText(pastSimpleArr.get(cntr));
+						cntr++;
+					}
+
+					for (int j = 27; j < 36; j++) {
+						vsiJTextFieldi.get(j).setText(pastParticipleArr.get(cntr));
+						cntr++;
+					}
+
+					// ZDRUZI PRIDOBLJENE PODATKE IZ RESULTSETA IN JIH VNESE V ENEGA
+					List<String> combined = new ArrayList<String>();
+					combined.addAll(prevodArr);
+					combined.addAll(verbArr);
+					combined.addAll(pastSimpleArr);
+					combined.addAll(pastParticipleArr);
+
+				} catch (SQLException ex) {
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju podatkov iz baze",
+							"Napaka", JOptionPane.WARNING_MESSAGE);
+				}
+
+				catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju podatkov iz baze",
+							"Napaka", JOptionPane.WARNING_MESSAGE);
+
+				}
+			}
+		});
+		bottomPanelZaGumb.add(btnIzpisiVse);
+
+		btnPreveri = new JButton("Preveri");
+		btnPreveri.setFont(new Font("Arial Black", Font.PLAIN, 13));
+		btnPreveri.setBackground(new Color(244, 164, 96));
+		btnPreveri.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// TODO: Dodaj tockjovanje v tabelo
+
+				pSTMT = null;
+				rs = null;
+				query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
+						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
+						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
+
+				try {
+
+					pSTMT = conn.prepareStatement(query);
+					rs = pSTMT.executeQuery();
 					String pomen = null;
 					String glagol = null;
 					String tense = null;
@@ -450,86 +511,9 @@ public class Ucenec extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					int cntr = 0;
-					for (int j = 0; j < 9; j++) {
-						fieldArray.get(j).setText(prevodArr.get(cntr));
-						cntr++;
-					}
 
-					cntr = 0;
-					for (int j = 9; j < 18; j++) {
-						fieldArray.get(j).setText(verbArr.get(cntr));
-						cntr++;
-					}
-
-					cntr = 0;
-					for (int j = 18; j < 27; j++) {
-						fieldArray.get(j).setText(pastSimpleArr.get(cntr));
-						cntr++;
-					}
-
-					for (int j = 27; j < 36; j++) {
-						fieldArray.get(j).setText(pastParticipleArr.get(cntr));
-						cntr++;
-					}
-
-					List<String> combined = new ArrayList<String>();
-					combined.addAll(prevodArr);
-					combined.addAll(verbArr);
-					combined.addAll(pastSimpleArr);
-					combined.addAll(pastParticipleArr);
-
-				} catch (Exception ex) {
-
-					JOptionPane.showMessageDialog(null,
-							"Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka :(",
-							JOptionPane.WARNING_MESSAGE);
-
-				}
-			}
-		});
-		bottomPanelZaGumb.add(btnIzpisiVse);
-
-		btnPreveri = new JButton("Preveri");
-		btnPreveri.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnPreveri.setBackground(new Color(244, 164, 96));
-		btnPreveri.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				PreparedStatement pstmt = null;
-				ResultSet rst = null;
-				String myQuery = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
-						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
-						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
-
-				try {
-
-					pstmt = conn.prepareStatement(myQuery);
-					rst = pstmt.executeQuery();
-					String pomen = null;
-					String glagol = null;
-					String tense = null;
-					String part = null;
-
-					while (rst.next()) {
-
-						pomen = rst.getString(1);
-						prevodArr.add(pomen);
-
-						glagol = rst.getString(2);
-						verbArr.add(glagol);
-
-						tense = rst.getString(3);
-						pastSimpleArr.add(tense);
-
-						part = rst.getString(4);
-						pastParticipleArr.add(part);
-
-					}
-
-					for (int i = 0; i < fieldArray.size(); i++) {
-						checkEmpty(fieldArray.get(i), i);
+					for (int i = 0; i < vsiJTextFieldi.size(); i++) {
+						checkEmpty(vsiJTextFieldi.get(i), i);
 					}
 
 				} catch (Exception ex) {
@@ -580,11 +564,11 @@ public class Ucenec extends SqliteConnect {
 
 				for (int i = 0; i < 36; i++) {
 
-					fieldArray.get(i).setText("");
-					fieldArray.get(i).setEditable(true);
-					fieldArray.get(i).setEnabled(true);
-					fieldArray.get(i).setBackground(Color.white);
-					fieldArray.get(i).setForeground(Color.black);
+					vsiJTextFieldi.get(i).setText("");
+					vsiJTextFieldi.get(i).setEditable(true);
+					vsiJTextFieldi.get(i).setEnabled(true);
+					vsiJTextFieldi.get(i).setBackground(Color.white);
+					vsiJTextFieldi.get(i).setForeground(Color.black);
 				}
 
 				getColumns();
@@ -593,6 +577,60 @@ public class Ucenec extends SqliteConnect {
 		});
 		bottomPanelZaGumb.add(btnPonastavi);
 		bottomPanelZaGumb.add(btnIzhod);
+
+		btnPridobiNove = new JButton("Pridobi Nove");
+		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
+		btnPridobiNove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				try {
+					
+					
+					//TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
+
+					// GET ID
+					int idUporabnika = LoginForm.uporabnikID;
+
+					// DELETE ENTRY
+					query = "DELETE FROM helperTable WHERE ucenec=?";
+					pSTMT = conn.prepareStatement(query);
+					pSTMT.setInt(1, idUporabnika);
+					pSTMT.execute();
+					pSTMT.close();
+
+					// ADD NEW VERB
+					query = "INSERT INTO helperTable (ucenec, glagol)" + "VALUES (?, ?);";
+					pSTMT = conn.prepareStatement(query);
+
+					for (int i = 0; i < 9; i++) {
+						pSTMT.setInt(1, idUporabnika);
+						pSTMT.setInt(2, getRDM());
+						pSTMT.execute();
+					}
+					
+					pSTMT.close();
+					
+					
+				} catch (SQLException ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(),
+							"Napaka", JOptionPane.WARNING_MESSAGE);
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(),
+							"Napaka", JOptionPane.WARNING_MESSAGE);
+				}
+
+
+			}
+
+			private int getRDM() {
+				return (int) (Math.random() * 64 + 1);
+			}
+		});
+		btnPridobiNove.setFont(new Font("Arial Black", Font.PLAIN, 13));
+		btnPridobiNove.setBackground(Color.RED);
+		bottomPanelZaGumb.add(btnPridobiNove);
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBackground(SystemColor.inactiveCaption);
@@ -628,9 +666,9 @@ public class Ucenec extends SqliteConnect {
 
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
-						fieldArray.get(j).setText(prevodArr.get(cntr));
+						vsiJTextFieldi.get(j).setText(prevodArr.get(cntr));
 						cntr++;
-						fieldArray.get(j).setEditable(false);
+						vsiJTextFieldi.get(j).setEditable(false);
 					}
 
 				} catch (Exception ex) {
@@ -671,9 +709,9 @@ public class Ucenec extends SqliteConnect {
 
 					int cntr = 0;
 					for (int j = 9; j < 18; j++) {
-						fieldArray.get(j).setText(verbArr.get(cntr));
+						vsiJTextFieldi.get(j).setText(verbArr.get(cntr));
 						cntr++;
-						fieldArray.get(j).setEditable(false);
+						vsiJTextFieldi.get(j).setEditable(false);
 					}
 
 				} catch (Exception ex) {
@@ -700,9 +738,9 @@ public class Ucenec extends SqliteConnect {
 
 				int cntr = 0;
 				for (int j = 18; j < 27; j++) {
-					fieldArray.get(j).setText(pastSimpleArr.get(cntr));
+					vsiJTextFieldi.get(j).setText(pastSimpleArr.get(cntr));
 					cntr++;
-					fieldArray.get(j).setEditable(false);
+					vsiJTextFieldi.get(j).setEditable(false);
 				}
 			}
 		});
@@ -722,15 +760,16 @@ public class Ucenec extends SqliteConnect {
 
 				int cntr = 0;
 				for (int j = 27; j < 36; j++) {
-					fieldArray.get(j).setText(pastParticipleArr.get(cntr));
+					vsiJTextFieldi.get(j).setText(pastParticipleArr.get(cntr));
 					cntr++;
-					fieldArray.get(j).setEditable(false);
+					vsiJTextFieldi.get(j).setEditable(false);
 				}
 
 			}
 		});
 		mainPanel.add(gumbPastParticiple);
 
+		// --> Samo vizualni del
 		pomenR1 = new JTextField();
 		pomenR1.setBackground(SystemColor.menu);
 		pomenR1.setHorizontalAlignment(SwingConstants.CENTER);

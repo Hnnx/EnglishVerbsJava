@@ -35,8 +35,8 @@ public class AddUporabnik extends SqliteConnect {
 	private JTextField txtGeslo;
 
 	//c--> Gumbi
-	private static JButton btnBack;
-	private static JButton btnAdd;
+	private JButton btnBack;
+	private JButton btnAdd;
 
 	// --> Boilerplate/Zagon okna
 	public static void start() {

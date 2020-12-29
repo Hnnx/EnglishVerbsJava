@@ -43,10 +43,10 @@ public class AddGlagol extends SqliteConnect {
 	private JPanel statusPanel;
 
 	// --> GUMBI
-	protected static JButton btnNakljucno;
-	private static JButton btnShrani;
-	private static JButton btnVrniLogin;
-	private static JButton btnVrniUcitelj;
+	private JButton btnNakljucno;
+	private JButton btnShrani;
+	private JButton btnVrniLogin;
+	private JButton btnVrniUcitelj;
 
 	// --> HashMap
 	private static HashMap<String, Integer> hmap = new HashMap<String, Integer>();
@@ -336,6 +336,7 @@ public class AddGlagol extends SqliteConnect {
 		btnNakljucno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					
 					// --> PRIDOBITEV UCENEC ID-JA ZA VNOS IN BRISANJE
 					idUporabnikaString = cBoxUcenec.getSelectedItem().toString();
 					idUporabnika = hmap.get(idUporabnikaString);
@@ -612,7 +613,7 @@ public class AddGlagol extends SqliteConnect {
 
 	}
 
-	protected static int getRDM() {
+	private static int getRDM() {
 		return (int) (Math.random() * 64 + 1);
 	}
 }
