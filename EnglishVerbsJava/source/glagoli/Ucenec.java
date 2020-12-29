@@ -579,6 +579,7 @@ public class Ucenec extends SqliteConnect {
 		bottomPanelZaGumb.add(btnIzhod);
 
 		btnPridobiNove = new JButton("Pridobi Nove");
+		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
 		btnPridobiNove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -628,7 +629,7 @@ public class Ucenec extends SqliteConnect {
 			}
 		});
 		btnPridobiNove.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnPridobiNove.setBackground(new Color(244, 164, 96));
+		btnPridobiNove.setBackground(Color.RED);
 		bottomPanelZaGumb.add(btnPridobiNove);
 
 		JPanel mainPanel = new JPanel();
