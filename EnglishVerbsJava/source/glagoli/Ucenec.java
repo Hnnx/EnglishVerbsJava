@@ -114,8 +114,6 @@ public class Ucenec extends SqliteConnect {
 	// Boilerplate
 	public static void start() {
 		EventQueue.invokeLater(new Runnable() {
-			@Override
-			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Ucenec window = new Ucenec();
@@ -218,7 +216,7 @@ public class Ucenec extends SqliteConnect {
 			columnName.doClick();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
-					"Opis napake:\nUporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka :(",
+					"Prišlo je do napake pri aktiviranju stolpcev. Uporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka",
 					JOptionPane.WARNING_MESSAGE);
 		}
 	}
@@ -387,7 +385,6 @@ public class Ucenec extends SqliteConnect {
 		btnIzpisiVse.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnIzpisiVse.setBackground(new Color(244, 164, 96));
 		btnIzpisiVse.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				
@@ -523,7 +520,7 @@ public class Ucenec extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri preverjanju glagolov. Opis napake:\n"+ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -615,9 +612,15 @@ public class Ucenec extends SqliteConnect {
 						pSTMT.setInt(1, idUporabnika);
 						pSTMT.setInt(2, getRDM());
 						pSTMT.execute();
+						
 					}
 					
 					pSTMT.close();
+					
+					// Nastavi nove vrednosti
+					
+					
+					
 					
 					
 				} catch (SQLException ex) {
@@ -660,17 +663,17 @@ public class Ucenec extends SqliteConnect {
 				tockeTotal.setText(userScore + " / " + totalPossibleScore);
 				gumbPrevod.setEnabled(false);
 
-				PreparedStatement pstmt = null;
-				ResultSet rst = null;
-				String myQuery = "SELECT prevod FROM glagoli";
+				pSTMT = null;
+				rs = null;
+				query = "SELECT prevod FROM glagoli";
 
 				try {
-					pstmt = conn.prepareStatement(myQuery);
-					rst = pstmt.executeQuery();
+					pSTMT = conn.prepareStatement(query);
+					rs = pSTMT.executeQuery();
 					String prevod = null;
 
-					while (rst.next()) {
-						prevod = rst.getString(1);
+					while (rs.next()) {
+						prevod = rs.getString(1);
 						prevodArr.add(prevod);
 					}
 
