@@ -441,6 +441,7 @@ public class Ucenec extends SqliteConnect {
 						cntr++;
 					}
 
+					cntr = 0;
 					for (int j = 27; j < 36; j++) {
 						vsiJTextFieldi.get(j).setText(pastParticipleArr.get(cntr));
 						cntr++;
@@ -477,9 +478,10 @@ public class Ucenec extends SqliteConnect {
 				try {
 
 					vsiJTextFieldi.forEach((n) -> System.out.println(n.getText()));
+					System.out.println(vsiJTextFieldi.size());
 					System.out.println("");
 					for (int i = 0; i < vsiJTextFieldi.size(); i++) {
-//						checkEmpty(vsiJTextFieldi.get(i), i);
+						checkEmpty(vsiJTextFieldi.get(i), i);
 						
 						
 					}
@@ -523,7 +525,6 @@ public class Ucenec extends SqliteConnect {
 		btnPonastavi.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnPonastavi.setBackground(new Color(244, 164, 96));
 		btnPonastavi.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				// TOCKE + BAR
@@ -550,6 +551,7 @@ public class Ucenec extends SqliteConnect {
 
 		btnPridobiNove = new JButton("Pridobi Nove");
 		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
+		btnPridobiNove.setBackground(new Color(244, 164, 96));
 		btnPridobiNove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -559,6 +561,11 @@ public class Ucenec extends SqliteConnect {
 					verbArr.clear();
 					pastSimpleArr.clear();
 					pastParticipleArr.clear();
+					
+					
+					//Flusha vseGlagoleIzDB arraya in jih takoj zatem na novo nafila z novimi glagoli
+					vsiGlagoliIzDB.clear();
+					fetchFromDB();
 					
 					
 					//TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
@@ -621,6 +628,23 @@ public class Ucenec extends SqliteConnect {
 					rs.close();
 					pSTMT.close();
 					
+
+					// TOCKE + BAR
+					userScore = 0;
+					totalPossibleScore = 36;
+					tockeTotal.setText(userScore + " / " + totalPossibleScore);
+					progressBar.setValue(0);
+
+					for (int i = 0; i < 36; i++) {
+
+						vsiJTextFieldi.get(i).setText("");
+						vsiJTextFieldi.get(i).setEditable(true);
+						vsiJTextFieldi.get(i).setEnabled(true);
+						vsiJTextFieldi.get(i).setBackground(Color.white);
+						vsiJTextFieldi.get(i).setForeground(Color.black);
+					}
+
+					getColumns();
 
 					
 					
