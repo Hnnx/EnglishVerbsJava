@@ -478,7 +478,6 @@ public class Ucenec extends SqliteConnect {
 		btnPreveri.setFont(new Font("Arial Black", Font.PLAIN, 13));
 		btnPreveri.setBackground(new Color(244, 164, 96));
 		btnPreveri.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				// TODO: Dodaj tockjovanje v tabelo
@@ -545,9 +544,9 @@ public class Ucenec extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null,
-							"Opis napake: Prislo je do napake pri izhodu iz programa" + ex.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri izhodu iz programa. Opis napake:\n"+ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
+
 				}
 			}
 		}
@@ -619,6 +618,39 @@ public class Ucenec extends SqliteConnect {
 					
 					// Nastavi nove vrednosti
 					
+					query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
+							+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
+							+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
+							+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
+					
+					pSTMT = conn.prepareStatement(query);
+					
+					rs = pSTMT.executeQuery();
+					
+					vsiGlagoliIzDB.clear();
+					fillArrayWithVerbs();
+					
+					prevodArr.clear();
+					verbArr.clear();
+					pastSimpleArr.clear();
+					pastParticipleArr.clear();
+					
+					int count = 0;
+					while(rs.next()) {
+						prevodArr.add(rs.getString(1));
+						
+						for (int i = 0; i < 9; i++) {
+							vsiJTextFieldi.get(i).setText(rs.getString(1));
+							
+						}
+						
+						System.out.println(prevodArr.get(count)+"**");
+						count++;
+						
+					}
+					
+					pSTMT.close();
+					rs.close();
 					
 					
 					
