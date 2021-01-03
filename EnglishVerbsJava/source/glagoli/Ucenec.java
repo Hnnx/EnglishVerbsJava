@@ -176,8 +176,6 @@ public class Ucenec extends SqliteConnect {
 		if (Integer.parseInt(cetrtoPolje) == 1)
 			activateColumn(gumbPastParticiple);
 
-		disableButtons();
-
 	}
 
 	// --> Spremeni default disabled color v crno
@@ -476,41 +474,14 @@ public class Ucenec extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				// TODO: Dodaj tockjovanje v tabelo
-
-				pSTMT = null;
-				rs = null;
-				query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
-						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
-						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
-						+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
-
 				try {
 
-					pSTMT = conn.prepareStatement(query);
-					rs = pSTMT.executeQuery();
-					String pomen = null;
-					String glagol = null;
-					String tense = null;
-					String part = null;
-
-					while (rs.next()) {
-
-						pomen = rs.getString(1);
-						prevodArr.add(pomen);
-
-						glagol = rs.getString(2);
-						verbArr.add(glagol);
-
-						tense = rs.getString(3);
-						pastSimpleArr.add(tense);
-
-						part = rs.getString(4);
-						pastParticipleArr.add(part);
-
-					}
-
+					vsiJTextFieldi.forEach((n) -> System.out.println(n.getText()));
+					System.out.println("");
 					for (int i = 0; i < vsiJTextFieldi.size(); i++) {
-						checkEmpty(vsiJTextFieldi.get(i), i);
+//						checkEmpty(vsiJTextFieldi.get(i), i);
+						
+						
 					}
 
 				} catch (Exception ex) {
@@ -584,9 +555,6 @@ public class Ucenec extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-//					vsiGlagoliIzDB.clear();
-//					fillArrayWithVerbs();
-					
 					prevodArr.clear();
 					verbArr.clear();
 					pastSimpleArr.clear();
