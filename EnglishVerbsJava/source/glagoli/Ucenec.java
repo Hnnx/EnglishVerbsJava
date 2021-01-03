@@ -387,6 +387,9 @@ public class Ucenec extends SqliteConnect {
 		btnIzpisiVse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				List<String> combined = new ArrayList<String>();
+				combined.clear();
+				
 				
 				query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
@@ -416,19 +419,11 @@ public class Ucenec extends SqliteConnect {
 						pastParticiple = rs.getString(4);
 						pastParticipleArr.add(pastParticiple);
 
-						System.out.println("prevod: " + prevod);
-						System.out.println("verb: " + verb);
-						System.out.println("pastSimple: " + pastSimple);
-						System.out.println("pastParticiple: " + pastParticiple);
-						System.out.println();
 					}
 					
-					System.out.println("\n"+"******");
 
 					// PRIDOBI PODATKE IZ DB, NASTAVI (setText) NA VSAKIH 9 JTEXTFIELDOV
 					// PRIDOBLJEDNO VREDNOST
-					
-					//TODO: NE SPREMENI TEXT POLJA PO GUMBU "PRIDOBI NOVE"	
 					
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
@@ -454,7 +449,7 @@ public class Ucenec extends SqliteConnect {
 					}
 
 					// ZDRUZI PRIDOBLJENE PODATKE IZ RESULTSETA IN JIH VNESE V ENEGA
-					List<String> combined = new ArrayList<String>();
+					
 					combined.addAll(prevodArr);
 					combined.addAll(verbArr);
 					combined.addAll(pastSimpleArr);
@@ -589,6 +584,13 @@ public class Ucenec extends SqliteConnect {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
+//					vsiGlagoliIzDB.clear();
+//					fillArrayWithVerbs();
+					
+					prevodArr.clear();
+					verbArr.clear();
+					pastSimpleArr.clear();
+					pastParticipleArr.clear();
 					
 					
 					//TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
@@ -627,32 +629,31 @@ public class Ucenec extends SqliteConnect {
 					
 					rs = pSTMT.executeQuery();
 					
-					vsiGlagoliIzDB.clear();
-					fillArrayWithVerbs();
-					
-					prevodArr.clear();
-					verbArr.clear();
-					pastSimpleArr.clear();
-					pastParticipleArr.clear();
-					
-					int count = 0;
-					while(rs.next()) {
-						prevodArr.add(rs.getString(1));
-						
-						for (int i = 0; i < 9; i++) {
-							vsiJTextFieldi.get(i).setText(rs.getString(1));
-							
-						}
-						
-						System.out.println(prevodArr.get(count)+"**");
-						count++;
-						
+					String pomen = null;
+					String glagol = null;
+					String tense = null;
+					String part = null;
+
+					while (rs.next()) {
+
+						pomen = rs.getString(1);
+						prevodArr.add(pomen);
+
+						glagol = rs.getString(2);
+						verbArr.add(glagol);
+
+						tense = rs.getString(3);
+						pastSimpleArr.add(tense);
+
+						part = rs.getString(4);
+						pastParticipleArr.add(part);
+
 					}
 					
-					pSTMT.close();
 					rs.close();
+					pSTMT.close();
 					
-					
+
 					
 					
 				} catch (SQLException ex) {
