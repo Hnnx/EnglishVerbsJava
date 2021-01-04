@@ -11,16 +11,6 @@ public class Inserter extends SqliteConnect {
 		try {
 			conn = poveziBazo();
 
-			// Preveri, ce gre za prvi zagon/prazeno tabelo
-			query = "SELECT * FROM glagoli";
-			pSTMT = conn.prepareStatement(query);
-			rs = pSTMT.executeQuery();
-
-			int count = 0;
-			while (rs.next()) {
-				count++;
-			}
-
 				query = "INSERT INTO glagoli (prevod, verb, pastSimple, pastParticiple) VALUES (?, ?, ?, ?)";
 				pSTMT = conn.prepareStatement(query);
 				

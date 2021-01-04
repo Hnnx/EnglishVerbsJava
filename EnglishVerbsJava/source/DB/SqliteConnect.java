@@ -209,34 +209,53 @@ public class SqliteConnect {
 	}
 	private static void populateVerbs() {
 		
-		// Funkcija prednalozi glagole za uporabo programa - kasneje lahko uporabnik doda svoje
+		
+		
+		
 		Inserter i = new Inserter();
 		
-		i.add("bivati", "abode", "abode", "abide");
-		i.add("postati", "become", "became", "become");
-		i.add("začeti", "begin", "began", "begun");
-		i.add("staviti", "bet", "bet", "bet");
-		i.add("vezati", "bind", "bound", "bound");
-		i.add("krvaveti", "bleed", "bled", "bled");
-		i.add("ujeti", "catch", "caught", "caught");
-		i.add("priti", "come", "came", "come");
-		i.add("izbrati", "choose", "chose", "chosen");
-		i.add("počiti", "burst", "burst", "burst");
-		i.add("graditi", "build", "built", "built");
-		i.add("prinesti", "bring", "brought", "brought");
-		i.add("zlomiti", "break", "broken", "broken");
-		i.add("pihati", "blow", "blew", "blown");
-		i.add("gristi", "bite", "bit", "bitten");
-		i.add("jesti", "eat", "ate", "eaten");
-		i.add("čutiti", "feel", "felt", "felt");
-		i.add("najdi", "find", "found", "found");
-		i.add("bežati", "flee", "flew", "flown");
-		i.add("prepovedati", "fobid", "forbade", "forbidden");
-		i.add("pozabiti", "forget", "forgot", "forgotten");
-		i.add("vreči", "fling", "flung", "flung");
-		i.add("predvidevati", "forsee", "forsaw", "forseen");
-		
-		
+		try {
+			
+			// Preveri, ce gre za prvi zagon/prazeno tabelo
+			query = "SELECT * FROM glagoli";
+			pSTMT = conn.prepareStatement(query);
+			rs = pSTMT.executeQuery();
+
+			int count = 0;
+			while (rs.next()) {
+				count++;
+			}
+			
+			if(count == 0) {
+				i.add("bivati", "abode", "abode", "abide");
+				i.add("postati", "become", "became", "become");
+				i.add("začeti", "begin", "began", "begun");
+				i.add("staviti", "bet", "bet", "bet");
+				i.add("vezati", "bind", "bound", "bound");
+				i.add("krvaveti", "bleed", "bled", "bled");
+				i.add("ujeti", "catch", "caught", "caught");
+				i.add("priti", "come", "came", "come");
+				i.add("izbrati", "choose", "chose", "chosen");
+				i.add("počiti", "burst", "burst", "burst");
+				i.add("graditi", "build", "built", "built");
+				i.add("prinesti", "bring", "brought", "brought");
+				i.add("zlomiti", "break", "broken", "broken");
+				i.add("pihati", "blow", "blew", "blown");
+				i.add("gristi", "bite", "bit", "bitten");
+				i.add("jesti", "eat", "ate", "eaten");
+				i.add("čutiti", "feel", "felt", "felt");
+				i.add("najdi", "find", "found", "found");
+				i.add("bežati", "flee", "flew", "flown");
+				i.add("prepovedati", "fobid", "forbade", "forbidden");
+				i.add("pozabiti", "forget", "forgot", "forgotten");
+				i.add("vreči", "fling", "flung", "flung");
+				i.add("predvidevati", "forsee", "forsaw", "forseen");
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		
 	}
