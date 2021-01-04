@@ -91,6 +91,11 @@ public class Ucenec extends SqliteConnect {
 	// Barve
 	static Color incorrect = new Color(255, 99, 99);
 	static Color correct = new Color(163, 222, 146);
+	static Color barvaGumba = new Color(244, 164, 96);
+
+	// Font
+	static Font fontGumbi = new Font("Arial Black", Font.PLAIN, 13);
+	static Font fontTekst = new Font("Arial", Font.PLAIN, 13);
 
 	// Gumbi TOP
 	protected static JButton gumbPrevod;
@@ -203,7 +208,7 @@ public class Ucenec extends SqliteConnect {
 			System.out.println();
 		} else {
 			pomenVar.setEditable(false);
-			pomenVar.setBackground(new Color(244, 164, 96));
+			pomenVar.setBackground(barvaGumba);
 			pomenVar.setForeground(Color.black);
 			pomenVar.setText("/");
 		}
@@ -214,8 +219,8 @@ public class Ucenec extends SqliteConnect {
 			columnName.doClick();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
-					"Prišlo je do napake pri aktiviranju stolpcev. Uporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.", "Napaka",
-					JOptionPane.WARNING_MESSAGE);
+					"Prišlo je do napake pri aktiviranju stolpcev. Uporabnik se nima dolocenih glagolov\nProsim, dodajte glagole.",
+					"Napaka", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -298,7 +303,6 @@ public class Ucenec extends SqliteConnect {
 
 				pastParticiple = rs.getString(4);
 				pastParticipleArr.add(pastParticiple);
-				
 
 			}
 
@@ -369,7 +373,7 @@ public class Ucenec extends SqliteConnect {
 		uporabnikToolbar.add(progressBar);
 
 		tockeTotal = new JLabel(userScore + " / " + totalPossibleScore);
-		tockeTotal.setFont(new Font("Arial Black", Font.PLAIN, 13));
+		tockeTotal.setFont(fontGumbi);
 		uporabnikToolbar.add(tockeTotal);
 
 		JPanel bottomPanelZaGumb = new JPanel();
@@ -380,15 +384,21 @@ public class Ucenec extends SqliteConnect {
 		// TODO: Odstrani iz koncne verzije!
 
 		btnIzpisiVse = new JButton("Izpisi Vse");
-		btnIzpisiVse.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnIzpisiVse.setBackground(new Color(244, 164, 96));
+		btnIzpisiVse.setFont(fontGumbi);
+		btnIzpisiVse.setBackground(barvaGumba);
+		btnIzpisiVse.setVisible(false);
+		
+		if(LoginForm.role == 1) {
+			btnIzpisiVse.setVisible(true);
+		}
+		
+		
 		btnIzpisiVse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				List<String> combined = new ArrayList<String>();
 				combined.clear();
-				
-				
+
 				query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 						+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 						+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
@@ -418,11 +428,10 @@ public class Ucenec extends SqliteConnect {
 						pastParticipleArr.add(pastParticiple);
 
 					}
-					
 
 					// PRIDOBI PODATKE IZ DB, NASTAVI (setText) NA VSAKIH 9 JTEXTFIELDOV
 					// PRIDOBLJEDNO VREDNOST
-					
+
 					int cntr = 0;
 					for (int j = 0; j < 9; j++) {
 						vsiJTextFieldi.get(j).setText(prevodArr.get(cntr));
@@ -448,7 +457,7 @@ public class Ucenec extends SqliteConnect {
 					}
 
 					// ZDRUZI PRIDOBLJENE PODATKE IZ RESULTSETA IN JIH VNESE V ENEGA
-					
+
 					combined.addAll(prevodArr);
 					combined.addAll(verbArr);
 					combined.addAll(pastSimpleArr);
@@ -469,8 +478,8 @@ public class Ucenec extends SqliteConnect {
 		bottomPanelZaGumb.add(btnIzpisiVse);
 
 		btnPreveri = new JButton("Preveri");
-		btnPreveri.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnPreveri.setBackground(new Color(244, 164, 96));
+		btnPreveri.setFont(fontGumbi);
+		btnPreveri.setBackground(barvaGumba);
 		btnPreveri.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -482,12 +491,12 @@ public class Ucenec extends SqliteConnect {
 					System.out.println("");
 					for (int i = 0; i < vsiJTextFieldi.size(); i++) {
 						checkEmpty(vsiJTextFieldi.get(i), i);
-						
-						
+
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri preverjanju glagolov. Opis napake:\n"+ex.toString(), "Napaka",
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri preverjanju glagolov. Opis napake:\n" + ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -497,8 +506,8 @@ public class Ucenec extends SqliteConnect {
 		bottomPanelZaGumb.add(btnPreveri);
 
 		btnIzhod = new JButton("Izhod");
-		btnIzhod.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnIzhod.setBackground(new Color(244, 164, 96));
+		btnIzhod.setFont(fontGumbi);
+		btnIzhod.setBackground(barvaGumba);
 		btnIzhod.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -512,7 +521,8 @@ public class Ucenec extends SqliteConnect {
 					}
 
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri izhodu iz programa. Opis napake:\n"+ex.toString(), "Napaka",
+					JOptionPane.showMessageDialog(null,
+							"Prišlo je do napake pri izhodu iz programa. Opis napake:\n" + ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -522,8 +532,8 @@ public class Ucenec extends SqliteConnect {
 		);
 
 		btnPonastavi = new JButton("Ponastavi");
-		btnPonastavi.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnPonastavi.setBackground(new Color(244, 164, 96));
+		btnPonastavi.setFont(fontGumbi);
+		btnPonastavi.setBackground(barvaGumba);
 		btnPonastavi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -543,6 +553,7 @@ public class Ucenec extends SqliteConnect {
 				}
 
 				getColumns();
+				disableButtons();
 
 			}
 		});
@@ -551,7 +562,8 @@ public class Ucenec extends SqliteConnect {
 
 		btnPridobiNove = new JButton("Pridobi Nove");
 		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
-		btnPridobiNove.setBackground(new Color(244, 164, 96));
+		btnPridobiNove.setBackground(barvaGumba);
+		btnPridobiNove.setFont(fontGumbi);
 		btnPridobiNove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -561,14 +573,13 @@ public class Ucenec extends SqliteConnect {
 					verbArr.clear();
 					pastSimpleArr.clear();
 					pastParticipleArr.clear();
-					
-					
-					//Flusha vseGlagoleIzDB arraya in jih takoj zatem na novo nafila z novimi glagoli
+
+					// Flusha vseGlagoleIzDB arraya in jih takoj zatem na novo nafila z novimi
+					// glagoli
 					vsiGlagoliIzDB.clear();
 					fetchFromDB();
-					
-					
-					//TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
+
+					// TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
 
 					// GET ID
 					int idUporabnika = LoginForm.uporabnikID;
@@ -588,22 +599,22 @@ public class Ucenec extends SqliteConnect {
 						pSTMT.setInt(1, idUporabnika);
 						pSTMT.setInt(2, getRDM());
 						pSTMT.execute();
-						
+
 					}
-					
+
 					pSTMT.close();
-					
+
 					// Nastavi nove vrednosti
-					
+
 					query = "SELECT glagoli.prevod, glagoli.verb, glagoli.pastSimple, glagoli.pastParticiple\n"
 							+ "FROM users2 LEFT OUTER JOIN helperTable\n" + "	ON users2.id = helperTable.ucenec\n"
 							+ "LEFT OUTER JOIN glagoli\n" + "	ON glagoli.id = helperTable.glagol\n"
 							+ "	WHERE users2.id = " + LoginForm.uporabnikID + ";";
-					
+
 					pSTMT = conn.prepareStatement(query);
-					
+
 					rs = pSTMT.executeQuery();
-					
+
 					String pomen = null;
 					String glagol = null;
 					String tense = null;
@@ -624,10 +635,9 @@ public class Ucenec extends SqliteConnect {
 						pastParticipleArr.add(part);
 
 					}
-					
+
 					rs.close();
 					pSTMT.close();
-					
 
 					// TOCKE + BAR
 					userScore = 0;
@@ -646,8 +656,6 @@ public class Ucenec extends SqliteConnect {
 
 					getColumns();
 
-					
-					
 				} catch (SQLException ex) {
 					JOptionPane.showMessageDialog(null,
 							"Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(),
@@ -658,15 +666,12 @@ public class Ucenec extends SqliteConnect {
 							"Napaka", JOptionPane.WARNING_MESSAGE);
 				}
 
-
 			}
 
 			private int getRDM() {
 				return (int) (Math.random() * 64 + 1);
 			}
 		});
-		btnPridobiNove.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		btnPridobiNove.setBackground(Color.RED);
 		bottomPanelZaGumb.add(btnPridobiNove);
 
 		JPanel mainPanel = new JPanel();
@@ -677,8 +682,8 @@ public class Ucenec extends SqliteConnect {
 		// POSAMEZNI GUMBI
 		// PREVOD
 		gumbPrevod = new JButton("Prevod");
-		gumbPrevod.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		gumbPrevod.setBackground(new Color(244, 164, 96));
+		gumbPrevod.setFont(fontGumbi);
+		gumbPrevod.setBackground(barvaGumba);
 		gumbPrevod.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -720,8 +725,8 @@ public class Ucenec extends SqliteConnect {
 
 		// VERB SIMPLE TENSE
 		gumbVerb = new JButton("Verb (infinitive)");
-		gumbVerb.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		gumbVerb.setBackground(new Color(244, 164, 96));
+		gumbVerb.setFont(fontGumbi);
+		gumbVerb.setBackground(barvaGumba);
 		gumbVerb.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -765,8 +770,8 @@ public class Ucenec extends SqliteConnect {
 
 		// PAST SIMPLE GUMB
 		gumbPastSimple = new JButton("Past simple form");
-		gumbPastSimple.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		gumbPastSimple.setBackground(new Color(244, 164, 96));
+		gumbPastSimple.setFont(fontGumbi);
+		gumbPastSimple.setBackground(barvaGumba);
 		gumbPastSimple.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -789,7 +794,7 @@ public class Ucenec extends SqliteConnect {
 		// PAST PARTICIPLE GUMB
 		gumbPastParticiple = new JButton("Past participle");
 		gumbPastParticiple.setFont(new Font("Arial Black", Font.PLAIN, 13));
-		gumbPastParticiple.setBackground(new Color(244, 164, 96));
+		gumbPastParticiple.setBackground(barvaGumba);
 		gumbPastParticiple.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -814,252 +819,252 @@ public class Ucenec extends SqliteConnect {
 		pomenR1 = new JTextField();
 		pomenR1.setBackground(SystemColor.menu);
 		pomenR1.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR1.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR1.setFont(new Font("Arial", Font.PLAIN, 13));
 		mainPanel.add(pomenR1);
 		pomenR1.setColumns(10);
 
 		glagolR1 = new JTextField();
 		glagolR1.setBackground(SystemColor.menu);
 		glagolR1.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR1.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR1.setFont(fontTekst);
 		mainPanel.add(glagolR1);
 		glagolR1.setColumns(10);
 
 		tenseR1 = new JTextField();
 		tenseR1.setBackground(SystemColor.menu);
 		tenseR1.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR1.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR1.setFont(fontTekst);
 		mainPanel.add(tenseR1);
 		tenseR1.setColumns(10);
 
 		partR1 = new JTextField();
 		partR1.setBackground(SystemColor.menu);
 		partR1.setHorizontalAlignment(SwingConstants.CENTER);
-		partR1.setFont(new Font("Arial", Font.BOLD, 13));
+		partR1.setFont(fontTekst);
 		mainPanel.add(partR1);
 		partR1.setColumns(10);
 
 		pomenR2 = new JTextField();
 		pomenR2.setBackground(SystemColor.menu);
 		pomenR2.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR2.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR2.setFont(fontTekst);
 		pomenR2.setColumns(10);
 		mainPanel.add(pomenR2);
 
 		glagolR2 = new JTextField();
 		glagolR2.setBackground(SystemColor.menu);
 		glagolR2.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR2.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR2.setFont(fontTekst);
 		glagolR2.setColumns(10);
 		mainPanel.add(glagolR2);
 
 		tenseR2 = new JTextField();
 		tenseR2.setBackground(SystemColor.menu);
 		tenseR2.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR2.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR2.setFont(fontTekst);
 		tenseR2.setColumns(10);
 		mainPanel.add(tenseR2);
 
 		partR2 = new JTextField();
 		partR2.setBackground(SystemColor.menu);
 		partR2.setHorizontalAlignment(SwingConstants.CENTER);
-		partR2.setFont(new Font("Arial", Font.BOLD, 13));
+		partR2.setFont(fontTekst);
 		partR2.setColumns(10);
 		mainPanel.add(partR2);
 
 		pomenR3 = new JTextField();
 		pomenR3.setBackground(SystemColor.menu);
 		pomenR3.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR3.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR3.setFont(fontTekst);
 		pomenR3.setColumns(10);
 		mainPanel.add(pomenR3);
 
 		glagolR3 = new JTextField();
 		glagolR3.setBackground(SystemColor.menu);
 		glagolR3.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR3.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR3.setFont(fontTekst);
 		glagolR3.setColumns(10);
 		mainPanel.add(glagolR3);
 
 		tenseR3 = new JTextField();
 		tenseR3.setBackground(SystemColor.menu);
 		tenseR3.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR3.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR3.setFont(fontTekst);
 		tenseR3.setColumns(10);
 		mainPanel.add(tenseR3);
 
 		partR3 = new JTextField();
 		partR3.setBackground(SystemColor.menu);
 		partR3.setHorizontalAlignment(SwingConstants.CENTER);
-		partR3.setFont(new Font("Arial", Font.BOLD, 13));
+		partR3.setFont(fontTekst);
 		partR3.setColumns(10);
 		mainPanel.add(partR3);
 
 		pomenR4 = new JTextField();
 		pomenR4.setBackground(SystemColor.menu);
 		pomenR4.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR4.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR4.setFont(fontTekst);
 		pomenR4.setColumns(10);
 		mainPanel.add(pomenR4);
 
 		glagolR4 = new JTextField();
 		glagolR4.setBackground(SystemColor.menu);
 		glagolR4.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR4.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR4.setFont(fontTekst);
 		glagolR4.setColumns(10);
 		mainPanel.add(glagolR4);
 
 		tenseR4 = new JTextField();
 		tenseR4.setBackground(SystemColor.menu);
 		tenseR4.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR4.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR4.setFont(fontTekst);
 		tenseR4.setColumns(10);
 		mainPanel.add(tenseR4);
 
 		partR4 = new JTextField();
 		partR4.setBackground(SystemColor.menu);
 		partR4.setHorizontalAlignment(SwingConstants.CENTER);
-		partR4.setFont(new Font("Arial", Font.BOLD, 13));
+		partR4.setFont(fontTekst);
 		partR4.setColumns(10);
 		mainPanel.add(partR4);
 
 		pomenR5 = new JTextField();
 		pomenR5.setBackground(SystemColor.menu);
 		pomenR5.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR5.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR5.setFont(fontTekst);
 		pomenR5.setColumns(10);
 		mainPanel.add(pomenR5);
 
 		glagolR5 = new JTextField();
 		glagolR5.setBackground(SystemColor.menu);
 		glagolR5.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR5.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR5.setFont(fontTekst);
 		glagolR5.setColumns(10);
 		mainPanel.add(glagolR5);
 
 		tenseR5 = new JTextField();
 		tenseR5.setBackground(SystemColor.menu);
 		tenseR5.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR5.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR5.setFont(fontTekst);
 		tenseR5.setColumns(10);
 		mainPanel.add(tenseR5);
 
 		partR5 = new JTextField();
 		partR5.setBackground(SystemColor.menu);
 		partR5.setHorizontalAlignment(SwingConstants.CENTER);
-		partR5.setFont(new Font("Arial", Font.BOLD, 13));
+		partR5.setFont(fontTekst);
 		partR5.setColumns(10);
 		mainPanel.add(partR5);
 
 		pomenR6 = new JTextField();
 		pomenR6.setBackground(SystemColor.menu);
 		pomenR6.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR6.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR6.setFont(fontTekst);
 		pomenR6.setColumns(10);
 		mainPanel.add(pomenR6);
 
 		glagolR6 = new JTextField();
 		glagolR6.setBackground(SystemColor.menu);
 		glagolR6.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR6.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR6.setFont(fontTekst);
 		glagolR6.setColumns(10);
 		mainPanel.add(glagolR6);
 
 		tenseR6 = new JTextField();
 		tenseR6.setBackground(SystemColor.menu);
 		tenseR6.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR6.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR6.setFont(fontTekst);
 		tenseR6.setColumns(10);
 		mainPanel.add(tenseR6);
 
 		partR6 = new JTextField();
 		partR6.setBackground(SystemColor.menu);
 		partR6.setHorizontalAlignment(SwingConstants.CENTER);
-		partR6.setFont(new Font("Arial", Font.BOLD, 13));
+		partR6.setFont(fontTekst);
 		partR6.setColumns(10);
 		mainPanel.add(partR6);
 
 		pomenR7 = new JTextField();
 		pomenR7.setBackground(SystemColor.menu);
 		pomenR7.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR7.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR7.setFont(fontTekst);
 		pomenR7.setColumns(10);
 		mainPanel.add(pomenR7);
 
 		glagolR7 = new JTextField();
 		glagolR7.setBackground(SystemColor.menu);
 		glagolR7.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR7.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR7.setFont(fontTekst);
 		glagolR7.setColumns(10);
 		mainPanel.add(glagolR7);
 
 		tenseR7 = new JTextField();
 		tenseR7.setBackground(SystemColor.menu);
 		tenseR7.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR7.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR7.setFont(fontTekst);
 		tenseR7.setColumns(10);
 		mainPanel.add(tenseR7);
 
 		partR7 = new JTextField();
 		partR7.setBackground(SystemColor.menu);
 		partR7.setHorizontalAlignment(SwingConstants.CENTER);
-		partR7.setFont(new Font("Arial", Font.BOLD, 13));
+		partR7.setFont(fontTekst);
 		partR7.setColumns(10);
 		mainPanel.add(partR7);
 
 		pomenR8 = new JTextField();
 		pomenR8.setBackground(SystemColor.menu);
 		pomenR8.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR8.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR8.setFont(fontTekst);
 		pomenR8.setColumns(10);
 		mainPanel.add(pomenR8);
 
 		glagolR8 = new JTextField();
 		glagolR8.setBackground(SystemColor.menu);
 		glagolR8.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR8.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR8.setFont(fontTekst);
 		glagolR8.setColumns(10);
 		mainPanel.add(glagolR8);
 
 		tenseR8 = new JTextField();
 		tenseR8.setBackground(SystemColor.menu);
 		tenseR8.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR8.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR8.setFont(fontTekst);
 		tenseR8.setColumns(10);
 		mainPanel.add(tenseR8);
 
 		partR8 = new JTextField();
 		partR8.setBackground(SystemColor.menu);
 		partR8.setHorizontalAlignment(SwingConstants.CENTER);
-		partR8.setFont(new Font("Arial", Font.BOLD, 13));
+		partR8.setFont(fontTekst);
 		partR8.setColumns(10);
 		mainPanel.add(partR8);
 
 		pomenR9 = new JTextField();
 		pomenR9.setBackground(SystemColor.menu);
 		pomenR9.setHorizontalAlignment(SwingConstants.CENTER);
-		pomenR9.setFont(new Font("Arial", Font.BOLD, 13));
+		pomenR9.setFont(fontTekst);
 		pomenR9.setColumns(10);
 		mainPanel.add(pomenR9);
 
 		glagolR9 = new JTextField();
 		glagolR9.setBackground(SystemColor.menu);
 		glagolR9.setHorizontalAlignment(SwingConstants.CENTER);
-		glagolR9.setFont(new Font("Arial", Font.BOLD, 13));
+		glagolR9.setFont(fontTekst);
 		glagolR9.setColumns(10);
 		mainPanel.add(glagolR9);
 
 		tenseR9 = new JTextField();
 		tenseR9.setBackground(SystemColor.menu);
 		tenseR9.setHorizontalAlignment(SwingConstants.CENTER);
-		tenseR9.setFont(new Font("Arial", Font.BOLD, 13));
+		tenseR9.setFont(fontTekst);
 		tenseR9.setColumns(10);
 		mainPanel.add(tenseR9);
 
 		partR9 = new JTextField();
 		partR9.setBackground(SystemColor.menu);
 		partR9.setHorizontalAlignment(SwingConstants.CENTER);
-		partR9.setFont(new Font("Arial", Font.BOLD, 13));
+		partR9.setFont(fontTekst);
 		partR9.setColumns(10);
 		mainPanel.add(partR9);
 
