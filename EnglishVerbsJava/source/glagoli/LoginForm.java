@@ -72,6 +72,7 @@ public class LoginForm extends SqliteConnect {
 	}
 
 	public LoginForm() {
+		conn = poveziBazo();
 		initialize();
 	}
 
