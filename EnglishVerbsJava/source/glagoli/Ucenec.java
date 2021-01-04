@@ -203,9 +203,6 @@ public class Ucenec extends SqliteConnect {
 		if (!vsiJTextFieldi.get(n).getText().isBlank()) {
 			checkInputVSexpected(pomenVar.getText(), vsiGlagoliIzDB.get(n), pomenVar);
 
-			System.out.println("Input: " + pomenVar.getText());
-			System.out.println("Expected: " + vsiGlagoliIzDB.get(n));
-			System.out.println();
 		} else {
 			pomenVar.setEditable(false);
 			pomenVar.setBackground(barvaGumba);
@@ -387,12 +384,11 @@ public class Ucenec extends SqliteConnect {
 		btnIzpisiVse.setFont(fontGumbi);
 		btnIzpisiVse.setBackground(barvaGumba);
 		btnIzpisiVse.setVisible(false);
-		
-		if(LoginForm.role == 1) {
+
+		if (LoginForm.role == 1) {
 			btnIzpisiVse.setVisible(true);
 		}
-		
-		
+
 		btnIzpisiVse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -483,17 +479,10 @@ public class Ucenec extends SqliteConnect {
 		btnPreveri.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// TODO: Dodaj tockjovanje v tabelo
 				try {
-
-					vsiJTextFieldi.forEach((n) -> System.out.println(n.getText()));
-					System.out.println(vsiJTextFieldi.size());
-					System.out.println("");
 					for (int i = 0; i < vsiJTextFieldi.size(); i++) {
 						checkEmpty(vsiJTextFieldi.get(i), i);
-
 					}
-
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
 							"Prišlo je do napake pri preverjanju glagolov. Opis napake:\n" + ex.toString(), "Napaka",
@@ -579,8 +568,6 @@ public class Ucenec extends SqliteConnect {
 					vsiGlagoliIzDB.clear();
 					fetchFromDB();
 
-					// TODO: DOKONCAJ/POPRAVI PRIDOBI NOVE
-
 					// GET ID
 					int idUporabnika = LoginForm.uporabnikID;
 
@@ -639,6 +626,8 @@ public class Ucenec extends SqliteConnect {
 					rs.close();
 					pSTMT.close();
 
+					
+					// SPODNJI DEL DO CATCH BLOCKA SLUZI SAMO ZA RESET
 					// TOCKE + BAR
 					userScore = 0;
 					totalPossibleScore = 36;
