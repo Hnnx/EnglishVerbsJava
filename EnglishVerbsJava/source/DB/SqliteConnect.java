@@ -3,43 +3,69 @@ package DB;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import javax.swing.*;
 
 public class SqliteConnect {
 
-	static String dbName = "source//DB//vilka.db";
 	public static Connection conn = null;
 	public static String query = "";
 	public static ResultSet rs = null;
 	public static PreparedStatement pSTMT = null;
 	public Statement stmt = null;
-	
-	public static void copyFile( File from, File to ) throws IOException {
-	    Files.copy( from.toPath(), to.toPath() );
-	} 
+
+	public static void copyFile(File from, File to) throws IOException {
+		Files.copy(from.toPath(), to.toPath());
+	}
 
 	public static Connection poveziBazo() {
 		try {
+			
+			// Dobi path kjer je nalozen program
+			Path x = Paths.get("");
+			String path = x.toAbsolutePath().toString();
 
-			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+			// Ustvari folder db kjer je nalozen program
+			File file = new File(path + "\\db");
 			
-			String dbFile = "C:\\Users\\nejcs\\git\\EnglishVerbsJava\\EnglishVerbsJava\\bin\\DB\\vilka.db";
-			String destination = "C:\\Users\\nejcs\\git\\EnglishVerbsJava\\EnglishVerbsJava\\bin\\vilka.db";
-			File file = new File(dbFile); 
 			
+			if(!file.exists()) {
+				
+				if (file.mkdirs()) {
+					System.out.println("Directory created successfully");
+				} else {
+					System.out.println("Sorry couldnt create specified directory");
+				}
+			}
+			
+			
+			
+			// Premakni dbFile v folder db, ki bi mogu bit kreiran ob zagonu programa
+
+			String dbFile = path + "\\bin\\DB\\vilka.db";
+			String destination = path+"\\db\\vilka.db";
+			File file1 = new File(dbFile);
+
 			File dirFrom = new File(dbFile);
 			File dirTo = new File(destination);
 
 			try {
-			        copyFile(dirFrom, dirTo);
-			        System.out.println("narjeno");
+				copyFile(dirFrom, dirTo);
+				System.out.println("narjeno");
 			} catch (IOException ex) {
 
 			}
+
+			String dbName = path+"\\db\\vilka.db";
 			
-	          
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
+			
+			
+			
+			
 			
 			return conn;
 
