@@ -23,48 +23,21 @@ public class SqliteConnect {
 	public static Connection poveziBazo() {
 		try {
 			
-			// Dobi path kjer je nalozen program
-			Path x = Paths.get("");
-			String path = x.toAbsolutePath().toString();
-
-			// Ustvari folder db kjer je nalozen program
-			File file = new File(path + "\\db");
-			
-			
-			if(!file.exists()) {
-				
-				if (file.mkdirs()) {
-					System.out.println("Directory created successfully");
-				} else {
-					System.out.println("Sorry couldnt create specified directory");
-				}
-			}
-			
-			
-			
-			// Premakni dbFile v folder db, ki bi mogu bit kreiran ob zagonu programa
-
-			String dbFile = path + "\\vilka.db";
-			String destination = path+"\\db\\vilka.db";
-			File file1 = new File(dbFile);
-
-			File dirFrom = new File(dbFile);
-			File dirTo = new File(destination);
-
-			try {
-				copyFile(dirFrom, dirTo);
-				System.out.println("narjeno");
-			} catch (IOException ex) {
-
-			}
-
-			String dbName = path+"\\db\\vilka.db";
-			
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);
 			
 			
+			Path g = Paths.get("");
+			String path = g.toAbsolutePath().toString();
 			
+			File f = new File(path+"//vilka.db");
+			
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			
+			String dbName = "vilka.db";
+			
+			conn = DriverManager.getConnection("jdbc:sqlite:"+dbName);
 			
 			
 			return conn;
@@ -98,7 +71,7 @@ public class SqliteConnect {
 	private static void kreirajTabGlagol() throws SQLException {
 
 
-		query ="CREATE TABLE \"glagoli\" (\r\n" + 
+		query = "CREATE TABLE IF NOT EXISTS \"glagoli\" (\r\n" + 
 				"	\"id\"	INTEGER NOT NULL,\r\n" + 
 				"	\"prevod\"	TEXT,\r\n" + 
 				"	\"verb\"	TEXT,\r\n" + 
@@ -114,7 +87,7 @@ public class SqliteConnect {
 
 	private static void kreirajTabRoles() throws SQLException {
 
-		query = "CREATE TABLE \"roles\" (\r\n" + 
+		query = "CREATE TABLE IF NOT EXISTS \"roles\" (\r\n" + 
 				"	\"id\"	INTEGER NOT NULL,\r\n" + 
 				"	\"role\"	TEXT,\r\n" + 
 				"	PRIMARY KEY(\"id\" AUTOINCREMENT)\r\n" + 
@@ -127,9 +100,9 @@ public class SqliteConnect {
 	}
 
 	private static void kreirajTabhelperTable() throws SQLException {
-		query = "CREATE TABLE \"helperTable\" (\r\n" + 
+		query = "CREATE TABLE IF NOT EXISTS \"helperTable\" (\r\n" + 
 				"	\"id\"	INTEGER,\r\n" + 
-				"	\"ucenec\"	TEXT,\r\n" + 
+				"	\"ucenec\"	TEXT UNIQUE,\r\n" + 
 				"	\"glagol\"	TEXT,\r\n" + 
 				"	FOREIGN KEY(\"ucenec\") REFERENCES \"users2\"(\"id\") ON DELETE CASCADE,\r\n" + 
 				"	FOREIGN KEY(\"glagol\") REFERENCES \"glagoli\"(\"id\"),\r\n" + 
@@ -143,7 +116,7 @@ public class SqliteConnect {
 
 	private static void kreirajTabeloUsers2() throws SQLException {
 
-		query = "CREATE TABLE \"users2\" (\r\n" + 
+		query = "CREATE TABLE IF NOT EXISTS \"users2\" (\r\n" + 
 				"	\"id\"	INTEGER NOT NULL,\r\n" + 
 				"	\"username\"	TEXT,\r\n" + 
 				"	\"password\"	TEXT,\r\n" + 
@@ -162,13 +135,34 @@ public class SqliteConnect {
 	private static void populateUsers() {
 		
 		try {
-			query = "INSERT INTO users2 (username, password, sequence, role) VALUES (?, ?, ?, ?)";
-			pSTMT = conn.prepareStatement(query);	
 			
-			pSTMT.setString(1, "admin");
-			pSTMT.setString(2, "21232f297a57a5a743894a0e4a801fc3");
-			pSTMT.setString(3, "1000");
-			pSTMT.setInt(4, 2);
+			query = "SELECT * FROM users2";
+			
+			pSTMT = conn.prepareStatement(query);
+			
+			rs = pSTMT.executeQuery();
+			
+			int count = 0;
+			while(rs.next()) {
+				count++;
+			}
+			
+			if(count == 0) {
+				query = "INSERT INTO users2 (username, password, sequence, role) VALUES (?, ?, ?, ?)";
+				pSTMT = conn.prepareStatement(query);	
+				
+				pSTMT.setString(1, "admin");
+				pSTMT.setString(2, "21232f297a57a5a743894a0e4a801fc3");
+				pSTMT.setString(3, "1000");
+				pSTMT.setInt(4, 2);
+				
+				pSTMT.execute();
+				
+				pSTMT.close();
+				
+			}
+			
+			
 			
 		} catch (Exception e) {
 			// TODO: handle exception
