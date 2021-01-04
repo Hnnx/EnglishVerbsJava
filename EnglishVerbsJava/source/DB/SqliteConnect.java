@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class SqliteConnect {
 	
-	static String dbName = "vilka.db";
+	static String dbName = "source//vilka.db";
 	public static Connection conn = null;
 	public static String query = "";
 	public static ResultSet rs = null;
