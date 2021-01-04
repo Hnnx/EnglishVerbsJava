@@ -62,6 +62,7 @@ public class SqliteConnect {
 			kreirajTabeloUsers2();
 			populateUsers();
 			populateVerbs();
+			populateRoles();
 
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri povezovanju z bazo podatkov" + e.toString(),
@@ -162,7 +163,50 @@ public class SqliteConnect {
 
 	}
 
-	
+	private static void populateRoles() {
+		
+		try {
+			
+			query = "SELECT * FROM roles";
+			pSTMT = conn.prepareStatement(query);
+			
+			int count = 0;
+			
+			rs = pSTMT.executeQuery();
+			
+			while(rs.next()) {
+				count++;
+			}
+			
+			if(count == 0) {
+				
+				
+				query = "INSERT INTO roles (role) VALUES (?)";
+				pSTMT = conn.prepareStatement(query);
+				pSTMT.setString(1, "admin");
+				pSTMT.execute();
+				
+				query = "INSERT INTO roles (role) VALUES (?)";
+				pSTMT = conn.prepareStatement(query);
+				pSTMT.setString(1, "ucitelj");
+				pSTMT.execute();
+				
+				query = "INSERT INTO roles (role) VALUES (?)";
+				pSTMT = conn.prepareStatement(query);
+				pSTMT.setString(1, "ucenec");
+				pSTMT.execute();
+				
+			}
+			
+			pSTMT.close();
+			rs.close();
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
 	private static void populateVerbs() {
 		
 		// Funkcija prednalozi glagole za uporabo programa - kasneje lahko uporabnik doda svoje

@@ -21,7 +21,6 @@ public class Inserter extends SqliteConnect {
 				count++;
 			}
 
-			if (count == 0) {
 				query = "INSERT INTO glagoli (prevod, verb, pastSimple, pastParticiple) VALUES (?, ?, ?, ?)";
 				pSTMT = conn.prepareStatement(query);
 				
@@ -34,7 +33,6 @@ public class Inserter extends SqliteConnect {
 				
 				pSTMT.close();
 				
-			}
 
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri dodajanju glagolov v tabelo. Opis napake:\n" + e.toString(),

@@ -75,6 +75,8 @@ public class Ucitelj extends SqliteConnect {
 			pSTMT = conn.prepareStatement(query);
 			rs = pSTMT.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+			
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null,
 					"Prišlo je do napake pri izpisu tabele - opis napake:\n" + ex.toString(), "Napaka",
