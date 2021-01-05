@@ -83,7 +83,7 @@ public class AddUporabnik extends SqliteConnect {
 		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
 		frame.setBounds(100, 100, 365, 403);
 		frame.getContentPane().setLayout(null);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		JPanel userNamePwPanel = new JPanel();
 		userNamePwPanel.setBackground(SystemColor.inactiveCaption);
