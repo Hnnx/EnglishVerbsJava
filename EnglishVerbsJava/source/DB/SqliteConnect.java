@@ -157,7 +157,7 @@ public class SqliteConnect {
 
 		catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
-					"Prišlo je do sološne napake pri vnosu podatkov v bazo. Opis napake:\n" + e.toString(), "Napaka",
+					"Prišlo je do splošne napake pri vnosu podatkov v bazo. Opis napake:\n" + e.toString(), "Napaka",
 					JOptionPane.WARNING_MESSAGE);
 		}
 
@@ -202,8 +202,17 @@ public class SqliteConnect {
 			rs.close();
 			
 			
-		} catch (Exception e) {
-			// TODO: handle exception
+		}  catch (SQLException e) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri vnosu vlog v bazo. Opis napake:\n" + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+		}
+		
+		
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do splošne napake pri vnosu vlog v bazo. Opis napake:\n" + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
 		}
 		
 	}
@@ -244,17 +253,67 @@ public class SqliteConnect {
 				i.add("gristi", "bite", "bit", "bitten");
 				i.add("jesti", "eat", "ate", "eaten");
 				i.add("čutiti", "feel", "felt", "felt");
-				i.add("najdi", "find", "found", "found");
+				i.add("najti", "find", "found", "found");
 				i.add("bežati", "flee", "flew", "flown");
 				i.add("prepovedati", "fobid", "forbade", "forbidden");
 				i.add("pozabiti", "forget", "forgot", "forgotten");
 				i.add("vreči", "fling", "flung", "flung");
 				i.add("predvidevati", "forsee", "forsaw", "forseen");
+				i.add("zamrzniti", "freeze", "froze", "frozen");
+				i.add("dati", "give", "gave", "given");
+				i.add("iti", "go", "went", "gone");
+				i.add("imeti", "have", "had", "had");
+				i.add("slišati", "hear", "heard", "heard");
+				i.add("držati", "hold", "held", "held");
+				i.add("posoditi", "lend", "lent", "lent");
+				i.add("ležati", "lie", "lay", "lain");
+				i.add("pustiti", "let", "let", "let");
+				i.add("izgubiti", "lose", "lost", "lost");
+				i.add("narediti", "make", "made", "made");
+				i.add("srečati", "meet", "met", "met");
+				i.add("založiti", "mislay", "mislaid", "mislaid");
+				i.add("plačati", "pay", "paid", "paid");
+				i.add("položiti", "put", "put", "put");
+				i.add("zvoniti", "ring", "rang", "rung");
+				i.add("teči", "run", "ran", "run");
+				i.add("videti", "see", "saw", "seen");
+				i.add("prodati", "sell", "sold", "sold");
+				i.add("tresti", "shake", "shook", "shaken");
+				i.add("sijati", "shine", "shone", "shone");
+				i.add("peti", "sing", "sang", "sung");
+				i.add("ubiti", "slay", "slew", "slain");
+				i.add("spati", "sleep", "slept", "slept");
+				i.add("drseti", "slide", "slid", "slid");
+				i.add("govoriti", "speak", "spoke", "spoken");
+				i.add("skakati", "spring", "sprang", "sprung");
+				i.add("krasti", "steal", "stole", "stolen");
+				i.add("napeti", "string", "strung", "strung");
+				i.add("plavati", "swim", "swam", "swum");
+				i.add("vzeti", "take", "took", "taken");
+				i.add("učiti", "teach", "taught", "taught");
+				i.add("nihati", "swing", "swung", "swung");
+				i.add("strmeti", "stive", "strove", "striven");
+				i.add("povedati", "tell", "told", "told");
+				i.add("misliti", "think", "thought", "thought");
+				i.add("raztrgati", "tear", "tore", "torn");
+				i.add("nositi", "wear", "worn", "worn");
+				i.add("razumeti", "understand", "understood", "understood");
+				i.add("zmagati", "win", "won", "won");
+				i.add("jokati", "weep", "wept", "wept");
+				i.add("pisati", "write", "wrote", "written");
 				
 			}
 			
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do napake pri vnosu glagolov v bazo. Opis napake:\n" + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+		} 
+		
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Prišlo je do splošne napake pri vnosu glagolov v bazo. Opis napake:\n" + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
 		}
 		
 		

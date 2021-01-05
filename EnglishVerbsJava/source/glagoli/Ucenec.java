@@ -550,7 +550,6 @@ public class Ucenec extends SqliteConnect {
 		bottomPanelZaGumb.add(btnIzhod);
 
 		btnPridobiNove = new JButton("Pridobi Nove");
-		btnPridobiNove.setToolTipText("BETA - NE DELA PRAVILNO");
 		btnPridobiNove.setBackground(barvaGumba);
 		btnPridobiNove.setFont(fontGumbi);
 		btnPridobiNove.addActionListener(new ActionListener() {
@@ -620,12 +619,10 @@ public class Ucenec extends SqliteConnect {
 
 						part = rs.getString(4);
 						pastParticipleArr.add(part);
-
 					}
 
 					rs.close();
 					pSTMT.close();
-
 					
 					// SPODNJI DEL DO CATCH BLOCKA SLUZI SAMO ZA RESET
 					// TOCKE + BAR
@@ -644,6 +641,7 @@ public class Ucenec extends SqliteConnect {
 					}
 
 					getColumns();
+					disableButtons();
 
 				} catch (SQLException ex) {
 					JOptionPane.showMessageDialog(null,

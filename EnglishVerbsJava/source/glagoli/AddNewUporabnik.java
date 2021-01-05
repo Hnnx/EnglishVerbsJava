@@ -154,7 +154,7 @@ public class AddNewUporabnik extends SqliteConnect {
 		
 	}
 	
-	protected static int getRDM() {
+	private static int getRDM() {
 		return (int) (Math.random() * 64 + 1);
 	}
 

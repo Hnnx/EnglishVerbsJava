@@ -371,7 +371,7 @@ public class AddGlagol extends SqliteConnect {
 
 					// ---> NASTAVI KATERE COLUMNE IZPISE
 					setColumns();
-
+					
 				}
 				
 				catch (SQLException ex) {
@@ -382,11 +382,15 @@ public class AddGlagol extends SqliteConnect {
 				
 				catch (Exception ex) {
 					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(), "Napaka",
+					JOptionPane.showMessageDialog(null, "Prišlo je do splošne napake pri samodejnemu določanju glagolov.\nOpis napake: " + ex.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
+				
 
+			}
+			private int getRDM() {
+				return (int) (Math.random() * 64 + 1);
 			}
 		});
 
@@ -471,9 +475,7 @@ public class AddGlagol extends SqliteConnect {
 					setColumns();
 
 				} catch (Exception e2) {
-
-					e2.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Opis napake: \n " + e2.getMessage(), "Napaka :(",
+					JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju glagolov iz baze podatkov.\nOpis napake: " + e2.toString(), "Napaka",
 							JOptionPane.WARNING_MESSAGE);
 
 				}
@@ -523,7 +525,9 @@ public class AddGlagol extends SqliteConnect {
 			pSTMT.close();
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju glagolov iz baze podatkov.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+
 		}
 	}
 
@@ -547,8 +551,9 @@ public class AddGlagol extends SqliteConnect {
 			}
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Opis napake: \n " + ex.toString(), "Napaka :(",
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju glagolov iz baze podatkov.\nOpis napake: " + ex.toString(), "Napaka",
 					JOptionPane.WARNING_MESSAGE);
+
 		}
 	}
 
@@ -566,8 +571,9 @@ public class AddGlagol extends SqliteConnect {
 			rs.close();
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Opis napake: \n " + e.getMessage(), "Napaka :(",
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri prikazovanju tabele z glagoli.\nOpis napake: " + e.toString(), "Napaka",
 					JOptionPane.WARNING_MESSAGE);
+
 		}
 	}
 
@@ -588,10 +594,16 @@ public class AddGlagol extends SqliteConnect {
 			pSTMT.close();
 			rs.close();
 
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,
-					"Opis napake: Prislo je do napake pri osvezevanje tabele " + e.getMessage(), "Napaka :(",
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri osveževanju tabele z glagoli.\nOpis napake: " + e.toString(), "Napaka",
 					JOptionPane.WARNING_MESSAGE);
+
+		} 
+		
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do splošne napake pri osveževanju tabele z glagoli.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+
 		}
 
 	}
@@ -611,15 +623,19 @@ public class AddGlagol extends SqliteConnect {
 			rs.close();
 			pSTMT.close();
 
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,
-					"Opis napake: Prišlo je do napake pri vnašanju učencev v seznam\n " + e.getMessage(), "Napaka :(",
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do napake pri pridobivanju seznama učencev.\nOpis napake: " + e.toString(), "Napaka",
 					JOptionPane.WARNING_MESSAGE);
+
+		} 
+		
+		
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Prišlo je do splošne napake pri pridobivanju seznama učencev.\nOpis napake: " + e.toString(), "Napaka",
+					JOptionPane.WARNING_MESSAGE);
+
 		}
 
 	}
 
-	private static int getRDM() {
-		return (int) (Math.random() * 64 + 1);
-	}
 }
